@@ -2,17 +2,40 @@ package appDemineur.form;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
 
-public class AppFrame extends JFrame
+/**
+ * La classe AppFrame permet de créer une fenêtre qui sert de contenant
+ * pour le plateau de jeu du Démineur.
+ * 
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
+ * 
+ */
+
+public class AppFrame extends JFrame implements ComponentListener
 {
+	// Dimension initiale de la fenêtre
 	private static final Dimension INIT_SIZE = new Dimension(800, 600);
-	private static final String INIT_TITLE = "Minesweeper";
 	
+	// Largeur minimale de la fenêtre
+	private static final int MIN_WIDTH = 320;
+
+	// Hauteur minimale de la fenêtre
+	private static final int MIN_HEIGHT = 240;
+	
+	// Titre de la fenêtre
+	private static final String INIT_TITLE = "Démineur par Alexandre Tremblay et Christian Lesage";
+	
+	// Objet du plateau de jeu
 	private Board mBoard; 
 	
+	/**
+	 * Crée une nouvelle fenêtre contenant un nouveau plateau de jeu.
+	 */
 	public AppFrame()
 	{
 		super();
@@ -20,13 +43,12 @@ public class AppFrame extends JFrame
 		this.setTitle(AppFrame.INIT_TITLE);
 		this.setSize(AppFrame.INIT_SIZE);
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.mBoard = new Board();
 		this.getContentPane().add(this.mBoard);
 		
-		this.pack();
+		this.addComponentListener(this);
 	}
 	
 	/**
@@ -42,6 +64,78 @@ public class AppFrame extends JFrame
 	{
 		super.paint(g);
 		this.mBoard.redraw();		
+	}
+
+	/** 
+	 * Méthode appelée quand la fenêtre est cachée.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
+	 * 
+	 * @param e événement déclencheur
+	 */
+	@Override
+	public void componentHidden(ComponentEvent arg0)
+	{
+	}
+	
+	/**
+	 * Méthode appelée quand la fenêtre est déplacée.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
+	 * 
+	 * @param e événement déclencheur
+	 */
+	@Override
+	public void componentMoved(ComponentEvent arg0)
+	{
+	}
+
+	/**
+	 * Méthode appelée quand la fenêtre est redimensionnée.
+	 * On s'assure que ses dimensions respectent la largeur et la hauteur minimales permises.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
+	 * 
+	 * @param e événement déclencheur
+	 */
+	@Override
+	public void componentResized(ComponentEvent arg0)
+	{
+		int width = getWidth();
+		int height = getHeight();
+		// Vérifie si la largeur et la hauteur sont inférieures 
+		// à la valeur minimale permise pour chacune
+		boolean resize = false;
+		if (width < AppFrame.MIN_WIDTH)
+		{
+			resize = true;
+			width = AppFrame.MIN_WIDTH;
+		}
+		if (height < AppFrame.MIN_HEIGHT)
+		{
+			resize = true;
+			height = AppFrame.MIN_HEIGHT;
+		}
+		if (resize)
+		{
+			setSize(width, height);
+		}
+	}
+
+	/**
+	 * Méthode appelée quand la fenêtre est affichée.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
+	 * 
+	 * @param e événement déclencheur
+	 */
+	@Override
+	public void componentShown(ComponentEvent arg0)
+	{
 	}
 	
 }
