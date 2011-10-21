@@ -1,5 +1,6 @@
 package appDemineur.model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -61,28 +62,47 @@ public class Matrix
 	
 	private void addMines(int amount)
 	{
-		Random rnd = new Random();		
-		int i = 0;
+		// «Chapeau» duquel on va tirer des numéros de cellule 
+		ArrayList<Integer> allCells = new ArrayList<Integer>();
 		
-		while (i < amount)
+		// Ajoute chaque numéro de cellule dans le chapeau
+		for(int i = 0; i < this.width * this.height; i++)
 		{
-			int x = rnd.nextInt(this.getWidth());
-			int y = rnd.nextInt(this.getHeight());
+			allCells.add(i);
+		}
+		
+		// Tire un nombre «amount» de cellules du chapeau
+		for(int i = 0; i < amount; i++)
+		{
+			Random rand = new Random();
+
+			int cellIdx = rand.nextInt(allCells.size());
 			
-			if (!this.getElement(x, y).isMine())
+			int cellNum = allCells.remove(cellIdx);
+			
+			int x = cellNum % this.width;
+			int y = cellNum / this.height;
+						
+			// On place une mine dans cette cellule
+			this.getElement(x, y).setAsMine(true);
+			
+			// On incrémente le compteur de mines adjacentes de chacune des mines adjacentes
+			for (int r = y - 1 ; r <= y + 1; r++)
 			{
-				this.getElement(x, y).setAsMine(true);
-				
-				if (this.getElement(x - 1, y - 1) != null) this.getElement(x - 1, y - 1).setAdjacentMines(this.getElement(x - 1, y - 1).getAdjacentMines() + 1);
-				if (this.getElement(x,     y - 1) != null) this.getElement(x    , y - 1).setAdjacentMines(this.getElement(x    , y - 1).getAdjacentMines() + 1);
-				if (this.getElement(x + 1, y - 1) != null) this.getElement(x + 1, y - 1).setAdjacentMines(this.getElement(x + 1, y - 1).getAdjacentMines() + 1);
-				if (this.getElement(x - 1, y    ) != null) this.getElement(x - 1, y    ).setAdjacentMines(this.getElement(x - 1, y    ).getAdjacentMines() + 1);
-				if (this.getElement(x + 1, y    ) != null) this.getElement(x + 1, y    ).setAdjacentMines(this.getElement(x + 1, y    ).getAdjacentMines() + 1);
-				if (this.getElement(x - 1, y + 1) != null) this.getElement(x - 1, y + 1).setAdjacentMines(this.getElement(x - 1, y + 1).getAdjacentMines() + 1);
-				if (this.getElement(x    , y + 1) != null) this.getElement(x    , y + 1).setAdjacentMines(this.getElement(x    , y + 1).getAdjacentMines() + 1);
-				if (this.getElement(x + 1, y + 1) != null) this.getElement(x + 1, y + 1).setAdjacentMines(this.getElement(x + 1, y + 1).getAdjacentMines() + 1);
-				
-				i++;
+				for (int c = x - 1 ; c <= x + 1; c++)
+				{
+					// Si ce n'est pas la cellule courante
+					if (!(r == y && c == x))
+					{
+						Cell cell = this.getElement(c, r);
+						// S'il y a vraiment une cellule à ces coordonnées
+						if (cell != null)
+						{
+							// Incrémente le compteur de mines adjacentes
+							cell.setAdjacentMines(cell.getAdjacentMines() + 1);
+						}
+					}
+				}
 			}
 		}
 	}
