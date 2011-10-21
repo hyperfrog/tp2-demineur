@@ -51,8 +51,12 @@ public class Matrix
 	private void populate()
 	{
 		for (int i = 0; i < this.getWidth(); i++)
+		{
 			for (int j = 0; j < this.getHeight(); j++)
+			{
 				this.setElement(i, j, new Cell());
+			}
+		}
 	}
 	
 	private void addMines(int amount)
