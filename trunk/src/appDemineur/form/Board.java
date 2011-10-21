@@ -2,9 +2,9 @@ package appDemineur.form;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -13,7 +13,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import appDemineur.model.Cell;
+import appDemineur.model.Cell.CellState;
 import appDemineur.model.Game;
 
 /**
@@ -43,7 +43,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
-	 * et contient 40 mines. 
+	 * et contient 40 mines.
 	 */
 	public Board()
 	{
@@ -66,7 +66,6 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.add(gamePanel, BorderLayout.CENTER);
 		
 		// Spécifie les écouteurs pour les boutons
-//		this.addMouseListener(this);
 		this.gamePanel.addMouseListener(this);
 		this.newGridButton.addActionListener(this);
 		
@@ -79,6 +78,31 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	{
 		// Crée une nouvelle partie
 		this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
+	}
+	
+	// Retourne la plus grande taille de grille possible d'entrer à l'intérieur des dimensions du « gamePanel ».
+	private float getMaximumGridSize()
+	{
+		float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
+		float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
+		
+		float size = sizeWidth;
+		
+		if (sizeHeight < sizeWidth)
+		{
+			size = sizeHeight;
+		}
+		
+		return size;
+	}
+	
+	// Retourne le point indiquant la coordonnée pour centrer la grille de jeu.
+	private Point getCenterPoint()
+	{
+		int x = (int) ((this.gamePanel.getWidth() / 2) - ((Board.GRID_SIZE * this.getMaximumGridSize()) / 2));
+		int y = (int) ((this.gamePanel.getHeight() / 2) - ((Board.GRID_SIZE * this.getMaximumGridSize()) / 2));
+		
+		return new Point(x, y);
 	}
 	
 	/**
@@ -102,18 +126,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		if (g != null && buffer != null)
 		{
 			buffer.setClip(0, 0, this.gamePanel.getWidth(), this.gamePanel.getHeight());
-			
-			float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
-			float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
-			float size = sizeWidth;
-			
-			if (sizeHeight < sizeWidth)
-			{
-				size = sizeHeight;
-			}
-			
-			this.currentGame.redraw(buffer, size);
-			
+			this.currentGame.redraw(buffer, this.getMaximumGridSize(), this.getCenterPoint());
 			g.drawImage(bufferImg, 0, 0, this);
 		}
 	}
@@ -130,33 +143,47 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	{
 		if (evt.getActionCommand().equals("NEW_GRID"))
 		{
-			this.currentGame.newGame(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
+			this.currentGame.startNewGame(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
 			this.redraw();
 		}
 	}
 	
 	/**
-	 * Reçoit et traite les événements relatifs à la souris
+	 * Reçoit et traite les événements relatifs au clic de souris.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
 	 * 
-	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.ActionEvent)
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 * 
 	 * @param evt événement déclencheur
 	 */
 	public void mouseClicked(MouseEvent evt)
 	{
+		boolean changed = false;
 		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
 		
-		float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
-		float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
-		float size = sizeWidth;
-		
-		if (sizeHeight < sizeWidth)
+		// Work in progress ....
+		if (evt.getButton() == MouseEvent.BUTTON1)
+		{			
+			if (this.currentGame.changeCellState(
+					(int) ((evt.getX() - this.getCenterPoint().x) / this.getMaximumGridSize()), 
+					(int) ((evt.getY() - this.getCenterPoint().y) / this.getMaximumGridSize()),
+					CellState.SHOWN))
+			{
+				changed = true;
+			}
+		}
+		else if (evt.getButton() == MouseEvent.BUTTON3)
 		{
-			size = sizeHeight;
+			if (this.currentGame.changeCellState(
+					(int) ((evt.getX() - this.getCenterPoint().x) / this.getMaximumGridSize()), 
+					(int) ((evt.getY() - this.getCenterPoint().y) / this.getMaximumGridSize()),
+					CellState.FLAGGED))
+			{
+				changed = true;
+			}
 		}
 		
-		if (this.currentGame.changeCellState((int)(evt.getX() / size), (int)(evt.getY() / size)))
+		if (changed)
 		{
 			this.redraw();
 		}
