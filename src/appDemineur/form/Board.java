@@ -66,7 +66,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.add(gamePanel, BorderLayout.CENTER);
 		
 		// Spécifie les écouteurs pour les boutons
-		this.addMouseListener(this);
+//		this.addMouseListener(this);
+		this.gamePanel.addMouseListener(this);
 		this.newGridButton.addActionListener(this);
 		
 		// Replay va se charger de créer une nouvelle partie 
@@ -144,6 +145,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	 */
 	public void mouseClicked(MouseEvent evt)
 	{
+		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
+		
 		float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
 		float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
 		float size = sizeWidth;
@@ -153,7 +156,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 			size = sizeHeight;
 		}
 		
-		if (this.currentGame.changeCellState((int) (evt.getX() / size), (int) (evt.getY() / size)))
+		if (this.currentGame.changeCellState((int)(evt.getX() / size), (int)(evt.getY() / size)))
 		{
 			this.redraw();
 		}
