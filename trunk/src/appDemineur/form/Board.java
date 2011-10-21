@@ -65,9 +65,6 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.add(buttonPanel, BorderLayout.PAGE_END);
 		this.add(gamePanel, BorderLayout.CENTER);
 		
-		// Spécifie la taille nécessaire pour afficher le plateau de jeu correctement
-		//this.setPreferredSize(new Dimension(Board.GRID_SIZE * Cell.CELL_SIZE, (Board.GRID_SIZE * Cell.CELL_SIZE) + 45));
-		
 		// Spécifie les écouteurs pour les boutons
 		this.addMouseListener(this);
 		this.newGridButton.addActionListener(this);
@@ -104,7 +101,17 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		if (g != null && buffer != null)
 		{
 			buffer.setClip(0, 0, this.gamePanel.getWidth(), this.gamePanel.getHeight());
-			this.currentGame.redraw(buffer);
+			
+			float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
+			float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
+			float size = sizeWidth;
+			
+			if (sizeHeight < sizeWidth)
+			{
+				size = sizeHeight;
+			}
+			
+			this.currentGame.redraw(buffer, size);
 			
 			g.drawImage(bufferImg, 0, 0, this);
 		}
@@ -137,7 +144,16 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	 */
 	public void mouseClicked(MouseEvent evt)
 	{
-		if (this.currentGame.changeCellState(evt.getX() / Cell.CELL_SIZE, evt.getY() / Cell.CELL_SIZE))
+		float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
+		float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
+		float size = sizeWidth;
+		
+		if (sizeHeight < sizeWidth)
+		{
+			size = sizeHeight;
+		}
+		
+		if (this.currentGame.changeCellState((int) (evt.getX() / size), (int) (evt.getY() / size)))
 		{
 			this.redraw();
 		}

@@ -20,27 +20,31 @@ public class Cell
 		this.state = CellState.HIDDEN;
 	}
 	
-	public void redraw(Graphics g)
+	public void redraw(Graphics g, float size)
 	{
 		if (g != null)
 		{
 			if (!this.getState().equals(CellState.SHOWN))
 			{
 				g.setColor(Color.GRAY);
-				g.fill3DRect(0, 0, Cell.CELL_SIZE, Cell.CELL_SIZE, true);
+				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
 				
 				g.setColor(Color.WHITE);
-				g.setFont(new Font(null, Font.BOLD, 12));
+				g.setFont(new Font(null, Font.BOLD, Math.round((12 * size) / 20)));
 				
 				if (this.getState().equals(CellState.DUBIOUS))
-					g.drawString("?", 7, 15);
+				{
+					g.drawString("?", (int) ((7 * size) / 20), (int) ((15 * size) / 20));
+				}
 				else if (this.getState().equals(CellState.FLAGGED))
-					g.drawString("F", 7, 15);
+				{
+					g.drawString("F", (int) ((7 * size) / 20), (int) ((15 * size) / 20));
+				}
 			}
 			else if (this.getState().equals(CellState.SHOWN) && !this.isMine())
 			{
 				g.setColor(Color.WHITE);
-				g.fill3DRect(0, 0, Cell.CELL_SIZE, Cell.CELL_SIZE, true);
+				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
 				
 				switch (this.getAdjacentMines())
 				{
@@ -54,13 +58,13 @@ public class Cell
 					case 8: g.setColor(new Color(128, 0,   0  )); break;
 				}
 				
-				g.setFont(new Font(null, Font.BOLD, 12));
-				g.drawString("" + this.getAdjacentMines(), 7, 15);
+				g.setFont(new Font(null, Font.BOLD, Math.round((12 * size) / 20)));
+				g.drawString("" + this.getAdjacentMines(), (int) ((7 * size) / 20), (int) ((15 * size) / 20));
 			}
 			else if (this.getState().equals(CellState.SHOWN) && this.isMine())
 			{
 				g.setColor(Color.BLACK);
-				g.fill3DRect(0, 0, Cell.CELL_SIZE, Cell.CELL_SIZE, true);
+				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
 				g.setColor(Color.RED);
 				g.fillOval(5, 5, 10, 10);
 			}
@@ -103,17 +107,5 @@ public class Cell
 	public boolean isMine()
 	{
 		return this.isMine;
-	}
-	
-	public String toString()
-	{
-		String s = new String("");
-		
-		if (this.isMine())
-			s = "*";
-		else
-			s = this.getAdjacentMines() + "";
-		
-		return s;
 	}
 }
