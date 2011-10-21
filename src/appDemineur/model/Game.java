@@ -1,6 +1,8 @@
 package appDemineur.model;
 
 import java.awt.Graphics;
+import java.awt.Point;
+
 import javax.swing.JPanel;
 
 import appDemineur.form.Board;
@@ -12,15 +14,15 @@ public class Game extends JPanel
 	
 	public Game(int width, int height, int mineAmount)
 	{
-		this.newGame(width, height, mineAmount);
+		this.startNewGame(width, height, mineAmount);
 	}
 	
-	public void newGame(int width, int height, int mineAmount)
+	public void startNewGame(int width, int height, int mineAmount)
 	{
 		this.matrix = new Matrix(width, height, mineAmount);
 	}
 	
-	public void redraw(Graphics g, float size)
+	public void redraw(Graphics g, float size, Point centerPoint)
 	{
 		if (g != null)
 		{	
@@ -28,33 +30,56 @@ public class Game extends JPanel
 			{
 				for (int j = 0; j < this.matrix.getHeight(); j++)
 				{
-					Graphics g2 = g.create(Math.round(i * size), Math.round(j * size), Math.round(size), Math.round(size));
-					this.matrix.getElement(i, j).redraw(g2, size);
+					if (this.matrix.getElement(i, j) != null)
+					{
+						Graphics g2 = g.create(
+								Math.round(i * size) + centerPoint.x, 
+								Math.round(j * size) + centerPoint.y, Math.round(size), 
+								Math.round(size));
+						this.matrix.getElement(i, j).redraw(g2, size);
+					}
 				}
 			}
 		}
 	}
 	
-	public boolean changeCellState(int x, int y)
+	// Work in progress ...
+	public boolean changeCellState(int x, int y, CellState state)
 	{
 		boolean succeed = false;
 		
 		if (this.matrix.getElement(x, y) != null)
 		{
-			if (this.matrix.getElement(x, y).isMine())
+			switch (state)
 			{
-				// Partie perdue.
-			}
-			else if (!this.matrix.getElement(x, y).getState().equals(CellState.SHOWN))
-			{
-				this.showCell(x, y, 8);
-				succeed = true;
+			case SHOWN:
+				if (this.matrix.getElement(x, y).isMine())
+				{
+					// Partie perdue.
+				}
+				else if (!this.matrix.getElement(x, y).getState().equals(CellState.SHOWN) && !this.matrix.getElement(x, y).getState().equals(CellState.FLAGGED))
+				{
+					this.showCell(x, y, 8);
+					succeed = true;
+				}
+				break;
+				
+			case FLAGGED:
+			case DUBIOUS:
+			case HIDDEN:
+				if (!this.matrix.getElement(x, y).getState().equals(CellState.SHOWN))
+				{
+					this.matrix.getElement(x, y).setState(state);
+					succeed = true;
+				}
+				break;
 			}
 		}
 		
 		return succeed;
 	}
 	
+	// Work in progress ... à refaire...
 	private void showCell(int x, int y, int dir)
 	{
 		if (this.matrix.getElement(x, y) != null)

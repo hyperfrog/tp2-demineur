@@ -7,7 +7,6 @@ import java.awt.Graphics;
 public class Cell
 {
 	public enum CellState { HIDDEN, SHOWN, DUBIOUS, FLAGGED }
-	public static final int CELL_SIZE = 20;
 	
 	private boolean isMine;
 	private int adjacentMines;
@@ -107,5 +106,17 @@ public class Cell
 	public boolean isMine()
 	{
 		return this.isMine;
+	}
+	
+	public String toString()
+	{
+		String s = new String("");
+		
+		if (this.isMine())
+			s = "*";
+		else
+			s = this.getAdjacentMines() + "";
+		
+		return s;
 	}
 }

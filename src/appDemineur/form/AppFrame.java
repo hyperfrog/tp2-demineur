@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 public class AppFrame extends JFrame implements ComponentListener
 {
 	// Dimension initiale de la fenêtre
-	private static final Dimension INIT_SIZE = new Dimension(800, 600);
+	private static final Dimension INIT_SIZE = new Dimension(624, 683);
 	
 	// Largeur minimale de la fenêtre
 	private static final int MIN_WIDTH = 320;
