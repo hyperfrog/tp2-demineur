@@ -16,48 +16,92 @@ import javax.swing.JPanel;
 import appDemineur.model.Cell;
 import appDemineur.model.Game;
 
+/**
+ * La classe Board gère l'interface du jeu du Démineur.
+ * C'est elle qui gère les évènements de l'interface utilisateur.
+ * 
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
+ *
+ */
 public class Board extends JPanel implements ActionListener, MouseListener
 {
+	// 
 	public static final int GRID_SIZE = 16;
+	// 
 	public static final int GRID_MINE = 40;
-	
-	private Game currentGame;
+
+	// Objet de la partie courante
+	private Game currentGame = null;
+	// 
 	private JPanel buttonPanel;
+	// 
 	private JPanel gamePanel;
-	private JButton bNewGrid;
+	// 
+	private JButton newGridButton;
 	
+	/**
+	 * Construit un plateau de jeu.
+	 * Le plateau d'une partie initiale est d'une dimension de 16x16
+	 * et contient 40 mines. 
+	 */
 	public Board()
 	{
 		super();
 		
-		this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
-		
+        // Initialise les composantes
 		this.buttonPanel = new JPanel();
 		this.gamePanel = new JPanel();
+		this.newGridButton = new JButton();
 		
 		this.setLayout(new BorderLayout());
-        this.add(gamePanel, BorderLayout.CENTER);
-        this.gamePanel.setBackground(Color.LIGHT_GRAY);
 		
-		this.bNewGrid = new JButton("New Grid");
-		this.bNewGrid.setActionCommand("NEW_GRID");
-		this.bNewGrid.addActionListener(this);
+		this.newGridButton.setText("Nouvelle grille");
+		this.newGridButton.setActionCommand("NEW_GRID");
 		
-		this.buttonPanel.add(this.bNewGrid);
+		this.buttonPanel.add(this.newGridButton);
 		this.buttonPanel.setBackground(Color.WHITE);
-		this.add(buttonPanel, BorderLayout.SOUTH);
 		
-		this.setPreferredSize(new Dimension(Board.GRID_SIZE * Cell.CELL_SIZE, (Board.GRID_SIZE * Cell.CELL_SIZE) + 45));
+		this.add(buttonPanel, BorderLayout.PAGE_END);
+		this.add(gamePanel, BorderLayout.CENTER);
+		
+		// Spécifie la taille nécessaire pour afficher le plateau de jeu correctement
+		//this.setPreferredSize(new Dimension(Board.GRID_SIZE * Cell.CELL_SIZE, (Board.GRID_SIZE * Cell.CELL_SIZE) + 45));
+		
+		// Spécifie les écouteurs pour les boutons
 		this.addMouseListener(this);
+		this.newGridButton.addActionListener(this);
+		
+		// Replay va se charger de créer une nouvelle partie 
+		this.replay();
 	}
 	
-	public void redraw()
+	// Réinitialise la partie
+	private void replay()
 	{
-		Graphics g = this.gamePanel.getGraphics();
-		Image bufferImg = this.createImage(this.gamePanel.getWidth(), this.gamePanel.getHeight());
-	    Graphics buffer = bufferImg.getGraphics();
+		// Crée une nouvelle partie
+		this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
+	}
+	
+	/**
+	 * Redessine le plateau de jeu.
+	 * Vous ne devriez pas à appeler cette méthode directement.
+	 * Sa visibilité est à «package» pour que AppFrame puisse l'appeler.   
+	 */
+	void redraw()
+	{
+		Graphics buffer = null;
+		Image bufferImg = null;
 		
-		if (g != null)
+		if (this.gamePanel.getWidth() > 0 && this.gamePanel.getHeight() > 0)
+		{
+			bufferImg = this.createImage(this.gamePanel.getWidth(), this.gamePanel.getHeight());
+			buffer = bufferImg.getGraphics();
+		}
+		
+		Graphics g = this.gamePanel.getGraphics();
+		
+		if (g != null && buffer != null)
 		{
 			buffer.setClip(0, 0, this.gamePanel.getWidth(), this.gamePanel.getHeight());
 			this.currentGame.redraw(buffer);
@@ -66,6 +110,14 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		}
 	}
 	
+	/**
+	 * Reçoit et traite les événements relatifs aux boutons
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * 
+	 * @param evt événement déclencheur
+	 */
 	public void actionPerformed(ActionEvent evt)
 	{
 		if (evt.getActionCommand().equals("NEW_GRID"))
@@ -75,10 +127,20 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		}
 	}
 	
-	public void mouseClicked(MouseEvent e)
+	/**
+	 * Reçoit et traite les événements relatifs à la souris
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.ActionEvent)
+	 * 
+	 * @param evt événement déclencheur
+	 */
+	public void mouseClicked(MouseEvent evt)
 	{
-		if (this.currentGame.changeCellState(e.getX() / Cell.CELL_SIZE, e.getY() / Cell.CELL_SIZE))
+		if (this.currentGame.changeCellState(evt.getX() / Cell.CELL_SIZE, evt.getY() / Cell.CELL_SIZE))
+		{
 			this.redraw();
+		}
 	}
 	
 	public void mouseEntered(MouseEvent e) {}
