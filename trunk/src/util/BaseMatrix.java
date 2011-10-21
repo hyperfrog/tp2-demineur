@@ -32,14 +32,13 @@ public class BaseMatrix
 	 */
 	public BaseMatrix(int width, int height)
 	{
+		this.m = new Object[width][height];
 		
-		Object[][] newM = new Object[width][height];
-		
-		this.width = newM[0].length;
-		this.height = newM.length;
-		this.m = newM;
-		
-//		this.populate();
+		if (this.m != null)
+		{
+			this.width = width;
+			this.height = height;
+		}
 	}
 
 	/**
