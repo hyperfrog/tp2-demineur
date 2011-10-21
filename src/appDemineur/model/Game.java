@@ -3,6 +3,7 @@ package appDemineur.model;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+import appDemineur.form.Board;
 import appDemineur.model.Cell.CellState;
 
 public class Game extends JPanel
@@ -19,7 +20,7 @@ public class Game extends JPanel
 		this.matrix = new Matrix(width, height, mineAmount);
 	}
 	
-	public void redraw(Graphics g)
+	public void redraw(Graphics g, float size)
 	{
 		if (g != null)
 		{	
@@ -27,8 +28,8 @@ public class Game extends JPanel
 			{
 				for (int j = 0; j < this.matrix.getHeight(); j++)
 				{
-					Graphics g2 = g.create(i * Cell.CELL_SIZE, j * Cell.CELL_SIZE, Cell.CELL_SIZE, Cell.CELL_SIZE);
-					this.matrix.getElement(i, j).redraw(g2);
+					Graphics g2 = g.create(Math.round(i * size), Math.round(j * size), Math.round(size), Math.round(size));
+					this.matrix.getElement(i, j).redraw(g2, size);
 				}
 			}
 		}
