@@ -29,7 +29,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	// 
 	public static final int GRID_SIZE = 16;
 	// 
-	public static final int GRID_MINE = 40;
+	public static final int MINE_AMOUNT = 40;
 
 	// Objet de la partie courante
 	private Game currentGame = null;
@@ -77,30 +77,25 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	private void replay()
 	{
 		// Crée une nouvelle partie
-		this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
+		this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.MINE_AMOUNT);
 	}
 	
-	// Retourne la plus grande taille de grille possible d'entrer à l'intérieur des dimensions du « gamePanel ».
-	private float getMaximumGridSize()
+	// Retourne la plus grande taille de cellule possible en fonction des dimensions du « gamePanel ».
+	private float getCellSize()
 	{
 		float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
 		float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
 		
-		float size = sizeWidth;
+		return sizeHeight < sizeWidth ? sizeHeight : sizeWidth;
 		
-		if (sizeHeight < sizeWidth)
-		{
-			size = sizeHeight;
-		}
-		
-		return size;
 	}
 	
 	// Retourne le point indiquant la coordonnée pour centrer la grille de jeu.
-	private Point getCenterPoint()
+	private Point getGridOffset()
 	{
-		int x = (int) ((this.gamePanel.getWidth() / 2) - ((Board.GRID_SIZE * this.getMaximumGridSize()) / 2));
-		int y = (int) ((this.gamePanel.getHeight() / 2) - ((Board.GRID_SIZE * this.getMaximumGridSize()) / 2));
+		float cellSize = this.getCellSize();
+		int x = (int) ((this.gamePanel.getWidth() - (Board.GRID_SIZE * cellSize)) / 2);
+		int y = (int) ((this.gamePanel.getHeight() - (Board.GRID_SIZE * cellSize)) / 2);
 		
 		return new Point(x, y);
 	}
@@ -114,10 +109,13 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	{
 		Graphics buffer = null;
 		Image bufferImg = null;
+
+		float cellSize = this.getCellSize();
+		int gridSize = Math.round(cellSize * Board.GRID_SIZE);
 		
 		if (this.gamePanel.getWidth() > 0 && this.gamePanel.getHeight() > 0)
 		{
-			bufferImg = this.createImage(this.gamePanel.getWidth(), this.gamePanel.getHeight());
+			bufferImg = this.createImage(gridSize, gridSize);
 			buffer = bufferImg.getGraphics();
 		}
 		
@@ -125,9 +123,10 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		
 		if (g != null && buffer != null)
 		{
-			buffer.setClip(0, 0, this.gamePanel.getWidth(), this.gamePanel.getHeight());
-			this.currentGame.redraw(buffer, this.getMaximumGridSize(), this.getCenterPoint());
-			g.drawImage(bufferImg, 0, 0, this);
+			Point gridOffset = this.getGridOffset();
+
+			this.currentGame.redraw(buffer, cellSize);
+			g.drawImage(bufferImg, gridOffset.x, gridOffset.y, this);
 		}
 	}
 	
@@ -143,7 +142,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	{
 		if (evt.getActionCommand().equals("NEW_GRID"))
 		{
-			this.currentGame.startNewGame(Board.GRID_SIZE, Board.GRID_SIZE, Board.GRID_MINE);
+			this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.MINE_AMOUNT);
 			this.redraw();
 		}
 	}
@@ -161,12 +160,15 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		boolean changed = false;
 		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
 		
+		Point gridOffset = this.getGridOffset();
+		float cellSize = this.getCellSize();
+		
 		// Work in progress ....
 		if (evt.getButton() == MouseEvent.BUTTON1)
 		{			
 			if (this.currentGame.changeCellState(
-					(int) ((evt.getX() - this.getCenterPoint().x) / this.getMaximumGridSize()), 
-					(int) ((evt.getY() - this.getCenterPoint().y) / this.getMaximumGridSize()),
+					(int) ((evt.getX() - gridOffset.x) / cellSize), 
+					(int) ((evt.getY() - gridOffset.y) / cellSize),
 					CellState.SHOWN))
 			{
 				changed = true;
@@ -175,8 +177,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		else if (evt.getButton() == MouseEvent.BUTTON3)
 		{
 			if (this.currentGame.changeCellState(
-					(int) ((evt.getX() - this.getCenterPoint().x) / this.getMaximumGridSize()), 
-					(int) ((evt.getY() - this.getCenterPoint().y) / this.getMaximumGridSize()),
+					(int) ((evt.getX() - gridOffset.x) / cellSize), 
+					(int) ((evt.getY() - gridOffset.y) / cellSize),
 					CellState.FLAGGED))
 			{
 				changed = true;

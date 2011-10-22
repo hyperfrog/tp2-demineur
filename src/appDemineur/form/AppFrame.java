@@ -22,10 +22,10 @@ public class AppFrame extends JFrame implements ComponentListener
 	private static final Dimension INIT_SIZE = new Dimension(624, 683);
 	
 	// Largeur minimale de la fenêtre
-	private static final int MIN_WIDTH = 320;
+	private static final int MIN_WIDTH = 400;
 
 	// Hauteur minimale de la fenêtre
-	private static final int MIN_HEIGHT = 240;
+	private static final int MIN_HEIGHT = 300;
 	
 	// Titre de la fenêtre
 	private static final String INIT_TITLE = "Démineur par Alexandre Tremblay et Christian Lesage";

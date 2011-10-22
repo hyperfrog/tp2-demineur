@@ -1,6 +1,8 @@
 package appDemineur.model;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
 import javax.swing.JPanel;
@@ -14,15 +16,10 @@ public class Game extends JPanel
 	
 	public Game(int width, int height, int mineAmount)
 	{
-		this.startNewGame(width, height, mineAmount);
-	}
-	
-	public void startNewGame(int width, int height, int mineAmount)
-	{
 		this.matrix = new Matrix(width, height, mineAmount);
 	}
 	
-	public void redraw(Graphics g, float size, Point centerPoint)
+	public void redraw(Graphics g, float cellSize)
 	{
 		if (g != null)
 		{	
@@ -33,12 +30,37 @@ public class Game extends JPanel
 					if (this.matrix.getElement(i, j) != null)
 					{
 						Graphics g2 = g.create(
-								Math.round(i * size) + centerPoint.x, 
-								Math.round(j * size) + centerPoint.y, Math.round(size), 
-								Math.round(size));
-						this.matrix.getElement(i, j).redraw(g2, size);
+								Math.round(i * cellSize), 
+								Math.round(j * cellSize), 
+								Math.round(cellSize), 
+								Math.round(cellSize));
+
+						Cell c = this.matrix.getElement(i, j);
+						if (c != null)
+						{
+							c.redraw(g2, cellSize);
+						}
 					}
 				}
+			}
+	
+			// Dessine un quadrillage 
+			
+	        Graphics2D g2d = (Graphics2D) g;
+	        g2d.setStroke(new BasicStroke(3));
+			
+			for (int i = 0; i <= this.matrix.getWidth(); i++)
+			{
+				int x = Math.round(i * cellSize);
+				
+				g2d.drawLine(x, 0, x, Math.round(this.matrix.getHeight() * cellSize));
+			}
+			
+			for (int i = 0; i <= this.matrix.getHeight(); i++)
+			{
+				int y = Math.round(i * cellSize);
+				
+				g2d.drawLine(0, y, Math.round(this.matrix.getWidth() * cellSize), y);
 			}
 		}
 	}
@@ -48,16 +70,18 @@ public class Game extends JPanel
 	{
 		boolean succeed = false;
 		
-		if (this.matrix.getElement(x, y) != null)
+		Cell c = this.matrix.getElement(x, y);
+		
+		if (c != null)
 		{
 			switch (state)
 			{
 			case SHOWN:
-				if (this.matrix.getElement(x, y).isMine())
+				if (c.isMine())
 				{
 					// Partie perdue.
 				}
-				else if (!this.matrix.getElement(x, y).getState().equals(CellState.SHOWN) && !this.matrix.getElement(x, y).getState().equals(CellState.FLAGGED))
+				else if (!c.getState().equals(CellState.SHOWN) && !c.getState().equals(CellState.FLAGGED))
 				{
 					this.showCell(x, y, 8);
 					succeed = true;
@@ -67,9 +91,9 @@ public class Game extends JPanel
 			case FLAGGED:
 			case DUBIOUS:
 			case HIDDEN:
-				if (!this.matrix.getElement(x, y).getState().equals(CellState.SHOWN))
+				if (!c.getState().equals(CellState.SHOWN))
 				{
-					this.matrix.getElement(x, y).setState(state);
+					c.setState(state);
 					succeed = true;
 				}
 				break;
@@ -82,9 +106,11 @@ public class Game extends JPanel
 	// Work in progress ... à refaire...
 	private void showCell(int x, int y, int dir)
 	{
-		if (this.matrix.getElement(x, y) != null)
+		Cell c = this.matrix.getElement(x, y);
+
+		if (c != null)
 		{
-			if (this.matrix.getElement(x, y).getAdjacentMines() == 0 && !this.matrix.getElement(x, y).getState().equals(CellState.SHOWN))
+			if (c.getAdjacentMines() == 0 && !c.getState().equals(CellState.SHOWN))
 			{
 				switch (dir)
 				{
@@ -141,7 +167,7 @@ public class Game extends JPanel
 				}
 			}
 			
-			this.matrix.getElement(x, y).setState(CellState.SHOWN);
+			c.setState(CellState.SHOWN);
 		}
 	}
 	
