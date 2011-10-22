@@ -116,13 +116,6 @@ public class Cell
 	
 	public String toString()
 	{
-		String s = new String("");
-		
-		if (this.isMine())
-			s = "*";
-		else
-			s = this.getAdjacentMines() + "";
-		
-		return s;
+		return this.isMine() ? "*" : this.getAdjacentMines() + "";
 	}
 }
