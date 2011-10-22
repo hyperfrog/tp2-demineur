@@ -165,7 +165,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		
 		// Work in progress ....
 		if (evt.getButton() == MouseEvent.BUTTON1)
-		{			
+		{
 			if (this.currentGame.changeCellState(
 					(int) ((evt.getX() - gridOffset.x) / cellSize), 
 					(int) ((evt.getY() - gridOffset.y) / cellSize),
