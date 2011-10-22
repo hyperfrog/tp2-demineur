@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 public class Cell
 {
-	public enum CellState { HIDDEN, SHOWN, DUBIOUS, FLAGGED }
+	public enum CellState { HIDDEN, DUBIOUS, FLAGGED, SHOWN }
 	
 	private boolean isMine;
 	private int adjacentMines;
@@ -23,7 +23,7 @@ public class Cell
 	{
 		if (g != null)
 		{
-			if (!this.getState().equals(CellState.SHOWN))
+			if (!this.getState().equals(CellState.SHOWN) && !this.isMine())
 			{
 				g.setColor(Color.GRAY);
 //				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
@@ -61,11 +61,12 @@ public class Cell
 				g.setFont(new Font(null, Font.BOLD, Math.round((12 * size) / 20)));
 				g.drawString("" + this.getAdjacentMines(), (int) ((7 * size) / 20), (int) ((15 * size) / 20));
 			}
-			else if (this.getState().equals(CellState.SHOWN) && this.isMine())
+			else if (this.getState().equals(CellState.HIDDEN) && this.isMine())
 			{
 				g.setColor(Color.BLACK);
 				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
 				g.setColor(Color.RED);
+				// TODO : Corriger le cercle
 				g.fillOval(5, 5, 10, 10);
 			}
 		}
