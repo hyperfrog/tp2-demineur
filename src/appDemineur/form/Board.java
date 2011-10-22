@@ -163,7 +163,6 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		Point gridOffset = this.getGridOffset();
 		float cellSize = this.getCellSize();
 		
-		// Work in progress ....
 		if (evt.getButton() == MouseEvent.BUTTON1)
 		{
 			if (this.currentGame.changeCellState(

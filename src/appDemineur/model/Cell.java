@@ -3,10 +3,46 @@ package appDemineur.model;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cell
 {
-	public enum CellState { HIDDEN, DUBIOUS, FLAGGED, SHOWN }
+	public enum CellState
+	{
+		HIDDEN (0),
+		FLAGGED (1),
+		DUBIOUS (2),
+		SHOWN (3);
+		
+		private static final Map<Integer, CellState> lookupMap = new HashMap<Integer, CellState>();
+		
+		public static CellState get(int id)
+		{ 
+			return lookupMap.get(id); 
+		}
+		
+		static
+		{
+			for(CellState cs : EnumSet.allOf(CellState.class))
+			{
+				lookupMap.put(cs.getId(), cs);
+			}
+		}
+
+		private int id;
+		
+		CellState(int id)
+		{
+			this.id = id;
+		}
+		
+		int getId()
+		{
+			return this.id;
+		}
+	}
 	
 	private boolean isMine;
 	private int adjacentMines;
@@ -25,10 +61,12 @@ public class Cell
 		int chrY = Math.round(size * 0.75f);
 		int fontSize = Math.round(size * 0.60f);
 		int cellSize = Math.round(size);
+		int minePos = Math.round(size * 0.25f);
+		int mineSize = Math.round(size * 0.50f);
 		
 		if (g != null)
 		{
-			if (!this.getState().equals(CellState.SHOWN) && !this.isMine())
+			if (!this.getState().equals(CellState.SHOWN))
 			{
 				g.setColor(Color.GRAY);
 				g.fillRect(0, 0, cellSize, cellSize);
@@ -44,6 +82,14 @@ public class Cell
 				{
 					g.drawString("F", chrX, chrY);
 				}
+			}
+			else if (this.getState().equals(CellState.SHOWN) && this.isMine()) 
+			{
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, cellSize, cellSize);
+				
+				g.setColor(Color.RED);
+				g.fillOval(minePos, minePos, mineSize, mineSize);
 			}
 			else if (this.getState().equals(CellState.SHOWN) && !this.isMine())
 			{
@@ -64,14 +110,6 @@ public class Cell
 
 				g.setFont(new Font(null, Font.BOLD, fontSize));
 				g.drawString("" + this.getAdjacentMines(), chrX, chrY);
-			}
-			else if (this.getState().equals(CellState.HIDDEN) && this.isMine()) 
-			{
-				g.setColor(Color.BLACK);
-				g.fillRect(0, 0, cellSize, cellSize);
-				g.setColor(Color.RED);
-				// TODO : Corriger le cercle
-				g.fillOval(5, 5, 10, 10);
 			}
 		}
 	}

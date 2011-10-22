@@ -84,7 +84,14 @@ public class Game extends JPanel
 		}
 	}
 	
-	// Work in progress ...
+	/**
+	 * 
+	 * 
+	 * @param x
+	 * @param y
+	 * @param state
+	 * @return
+	 */
 	public boolean changeCellState(int x, int y, CellState state)
 	{
 		boolean succeed = false;
@@ -98,13 +105,14 @@ public class Game extends JPanel
 			case SHOWN:
 				if (c.isMine())
 				{
+					System.out.println("Perdu!");
+					c.setState(CellState.SHOWN);
+					
 					this.isOver = true;
 				}
 				else if (!c.getState().equals(CellState.SHOWN) 
 						&& !c.getState().equals(CellState.FLAGGED))
 				{
-//					List<Point> pos = new ArrayList<Point>();
-//					this.showCell(x, y, pos);
 					this.showCell(x, y, null);
 					succeed = true;
 				}
@@ -115,7 +123,7 @@ public class Game extends JPanel
 			case HIDDEN:
 				if (!c.getState().equals(CellState.SHOWN))
 				{
-					c.setState(state);
+					c.setState(CellState.get((c.getState().getId() + 1) % 3));
 					succeed = true;
 				}
 				break;
@@ -134,58 +142,6 @@ public class Game extends JPanel
 	// cellules ayant été visité par la méthode auparavant. La méthode ce rappelle
 	// elle-même pour toutes les positions voisines qui ne faisaient pas parties
 	// de la liste d'anciennes positions.
-	//
-//	private void showCell(int x, int y, List<Point> oldPos)
-//	{
-//		Cell cl = this.matrix.getElement(x, y);
-//		
-//		if (cl != null 
-//				&& !cl.getState().equals(CellState.SHOWN)
-//				&& !cl.getState().equals(CellState.FLAGGED))
-//		{
-//			if (cl.getAdjacentMines() == 0)
-//			{
-//				List<Point> possiblePos = new ArrayList<Point>();
-//				
-//				for (int r = y - 1 ; r <= y + 1; r++)
-//				{
-//					for (int c = x - 1 ; c <= x + 1; c++)
-//					{
-//						Cell t = this.matrix.getElement(c, r);
-//						
-//						if (t != null && !(r == y && c == x))
-//						{
-//							boolean found = false;
-//								
-//							if (oldPos.size() > 0)
-//							{
-//								for (int i = 0; i < oldPos.size(); i++)
-//								{
-//									if (oldPos.equals(new Point(c, r)))
-//									{
-//										found = true;
-//									}
-//								}
-//							}
-//							
-//							if (!found)
-//							{
-//								possiblePos.add(new Point(c, r));
-//							}
-//						}
-//					}
-//				}
-//				
-//				for (int i = 0; i < possiblePos.size(); i++)
-//				{
-//					this.showCell(possiblePos.get(i).x, possiblePos.get(i).y, possiblePos);
-//				}
-//			}
-//				
-//			cl.setState(CellState.SHOWN);
-//		}
-//	}
-
 	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
 		Cell curCell = this.matrix.getElement(x, y);
@@ -227,11 +183,9 @@ public class Game extends JPanel
 				{
 					this.showCell(p.x, p.y, visitedCells);
 				}
-				
 			}
 		}
 	}
-
 	
 	/**
 	 * Vérifie si la partie est terminée.
