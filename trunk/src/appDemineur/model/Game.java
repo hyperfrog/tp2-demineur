@@ -103,8 +103,9 @@ public class Game extends JPanel
 				else if (!c.getState().equals(CellState.SHOWN) 
 						&& !c.getState().equals(CellState.FLAGGED))
 				{
-					List<Point> pos = new ArrayList<Point>();
-					this.showCell(x, y, pos);
+//					List<Point> pos = new ArrayList<Point>();
+//					this.showCell(x, y, pos);
+					this.showCell(x, y, new ArrayList<Cell>());
 					succeed = true;
 				}
 				break;
@@ -134,56 +135,101 @@ public class Game extends JPanel
 	// elle-même pour toutes les positions voisines qui ne faisaient pas parties
 	// de la liste d'anciennes positions.
 	//
-	private void showCell(int x, int y, List<Point> oldPos)
+//	private void showCell(int x, int y, List<Point> oldPos)
+//	{
+//		Cell cl = this.matrix.getElement(x, y);
+//		
+//		if (cl != null 
+//				&& !cl.getState().equals(CellState.SHOWN)
+//				&& !cl.getState().equals(CellState.FLAGGED))
+//		{
+//			if (cl.getAdjacentMines() == 0)
+//			{
+//				List<Point> possiblePos = new ArrayList<Point>();
+//				
+//				for (int r = y - 1 ; r <= y + 1; r++)
+//				{
+//					for (int c = x - 1 ; c <= x + 1; c++)
+//					{
+//						Cell t = this.matrix.getElement(c, r);
+//						
+//						if (t != null && !(r == y && c == x))
+//						{
+//							boolean found = false;
+//								
+//							if (oldPos.size() > 0)
+//							{
+//								for (int i = 0; i < oldPos.size(); i++)
+//								{
+//									if (oldPos.equals(new Point(c, r)))
+//									{
+//										found = true;
+//									}
+//								}
+//							}
+//							
+//							if (!found)
+//							{
+//								possiblePos.add(new Point(c, r));
+//							}
+//						}
+//					}
+//				}
+//				
+//				for (int i = 0; i < possiblePos.size(); i++)
+//				{
+//					this.showCell(possiblePos.get(i).x, possiblePos.get(i).y, possiblePos);
+//				}
+//			}
+//				
+//			cl.setState(CellState.SHOWN);
+//		}
+//	}
+
+	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
-		Cell cl = this.matrix.getElement(x, y);
+		Cell curCell = this.matrix.getElement(x, y);
 		
-		if (cl != null 
-				&& !cl.getState().equals(CellState.SHOWN)
-				&& !cl.getState().equals(CellState.FLAGGED))
+		if (curCell != null 
+				&& !curCell.getState().equals(CellState.SHOWN)
+				&& !curCell.getState().equals(CellState.FLAGGED))
 		{
-			if (cl.getAdjacentMines() == 0)
+			curCell.setState(CellState.SHOWN);
+
+			if (curCell.getAdjacentMines() == 0)
 			{
-				List<Point> possiblePos = new ArrayList<Point>();
+				List<Point> cellsToVisit = new ArrayList<Point>();
 				
 				for (int r = y - 1 ; r <= y + 1; r++)
 				{
 					for (int c = x - 1 ; c <= x + 1; c++)
 					{
-						Cell t = this.matrix.getElement(c, r);
+						Cell adjCell = this.matrix.getElement(c, r);
 						
-						if (t != null && !(r == y && c == x))
+						if (adjCell != null)
 						{
-							boolean found = false;
-								
-							if (oldPos.size() > 0)
+							if (!visitedCells.contains(adjCell))
 							{
-								for (int i = 0; i < oldPos.size(); i++)
+								if  (!(r == y && c == x))
 								{
-									if (oldPos.equals(new Point(c, r)))
-									{
-										found = true;
-									}
+									cellsToVisit.add(new Point(c, r));
 								}
-							}
-							
-							if (!found)
-							{
-								possiblePos.add(new Point(c, r));
+								
+								visitedCells.add(adjCell);
 							}
 						}
 					}
 				}
 				
-				for (int i = 0; i < possiblePos.size(); i++)
+				for (Point p : cellsToVisit)
 				{
-					this.showCell(possiblePos.get(i).x, possiblePos.get(i).y, possiblePos);
+					this.showCell(p.x, p.y, visitedCells);
 				}
-			}
 				
-			cl.setState(CellState.SHOWN);
+			}
 		}
 	}
+
 	
 	/**
 	 * Vérifie si la partie est terminée.
