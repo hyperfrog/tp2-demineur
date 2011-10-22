@@ -39,50 +39,50 @@ public class Game extends JPanel
 	 * @param centerPoint
 	 */
 	public void redraw(Graphics g, float cellSize)
-    {
-            if (g != null)
-            {       
-                    for (int i = 0; i < this.matrix.getWidth(); i++)
-                    {
-                            for (int j = 0; j < this.matrix.getHeight(); j++)
-                            {
-                                    if (this.matrix.getElement(i, j) != null)
-                                    {
-                                            Graphics g2 = g.create(
-                                                            Math.round(i * cellSize), 
-                                                            Math.round(j * cellSize), 
-                                                            Math.round(cellSize), 
-                                                            Math.round(cellSize));
+	{
+		if (g != null)
+		{       
+			for (int i = 0; i < this.matrix.getWidth(); i++)
+			{
+				for (int j = 0; j < this.matrix.getHeight(); j++)
+				{
+					if (this.matrix.getElement(i, j) != null)
+					{
+						Graphics g2 = g.create(
+								Math.round(i * cellSize), 
+								Math.round(j * cellSize), 
+								Math.round(cellSize), 
+								Math.round(cellSize));
 
-                                            Cell c = this.matrix.getElement(i, j);
-                                            if (c != null)
-                                            {
-                                                    c.redraw(g2, cellSize);
-                                            }
-                                    }
-                            }
-                    }
-    
-                    // Dessine un quadrillage 
-                    
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setStroke(new BasicStroke(3));
-                    
-                    for (int i = 0; i <= this.matrix.getWidth(); i++)
-                    {
-                            int x = Math.round(i * cellSize);
-                            
-                            g2d.drawLine(x, 0, x, Math.round(this.matrix.getHeight() * cellSize));
-                    }
-                    
-                    for (int i = 0; i <= this.matrix.getHeight(); i++)
-                    {
-                            int y = Math.round(i * cellSize);
-                            
-                            g2d.drawLine(0, y, Math.round(this.matrix.getWidth() * cellSize), y);
-                    }
-            }
-    }
+						Cell c = this.matrix.getElement(i, j);
+						if (c != null)
+						{
+							c.redraw(g2, cellSize);
+						}
+					}
+				}
+			}
+
+			// Dessine un quadrillage 
+
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setStroke(new BasicStroke(3));
+
+			for (int i = 0; i <= this.matrix.getWidth(); i++)
+			{
+				int x = Math.round(i * cellSize);
+
+				g2d.drawLine(x, 0, x, Math.round(this.matrix.getHeight() * cellSize));
+			}
+
+			for (int i = 0; i <= this.matrix.getHeight(); i++)
+			{
+				int y = Math.round(i * cellSize);
+
+				g2d.drawLine(0, y, Math.round(this.matrix.getWidth() * cellSize), y);
+			}
+		}
+	}
 	
 	// Work in progress ...
 	public boolean changeCellState(int x, int y, CellState state)
@@ -105,7 +105,7 @@ public class Game extends JPanel
 				{
 //					List<Point> pos = new ArrayList<Point>();
 //					this.showCell(x, y, pos);
-					this.showCell(x, y, new ArrayList<Cell>());
+					this.showCell(x, y, null);
 					succeed = true;
 				}
 				break;
@@ -198,6 +198,11 @@ public class Game extends JPanel
 
 			if (curCell.getAdjacentMines() == 0)
 			{
+				if (visitedCells == null)
+				{
+					visitedCells = new ArrayList<Cell>();
+				}
+
 				List<Point> cellsToVisit = new ArrayList<Point>();
 				
 				for (int r = y - 1 ; r <= y + 1; r++)
