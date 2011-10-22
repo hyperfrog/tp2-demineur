@@ -26,7 +26,8 @@ public class Cell
 			if (!this.getState().equals(CellState.SHOWN))
 			{
 				g.setColor(Color.GRAY);
-				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
+//				g.fill3DRect(0, 0, Math.round(size), Math.round(size), true);
+				g.fillRect(0, 0, Math.round(size), Math.round(size));
 				
 				g.setColor(Color.WHITE);
 				g.setFont(new Font(null, Font.BOLD, Math.round((12 * size) / 20)));
