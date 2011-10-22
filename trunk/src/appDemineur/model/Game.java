@@ -211,17 +211,14 @@ public class Game extends JPanel
 					{
 						Cell adjCell = this.matrix.getElement(c, r);
 						
-						if (adjCell != null)
+						if (adjCell != null && !visitedCells.contains(adjCell))
 						{
-							if (!visitedCells.contains(adjCell))
+							if  (!(r == y && c == x))
 							{
-								if  (!(r == y && c == x))
-								{
-									cellsToVisit.add(new Point(c, r));
-								}
-								
-								visitedCells.add(adjCell);
+								cellsToVisit.add(new Point(c, r));
 							}
+
+							visitedCells.add(adjCell);
 						}
 					}
 				}
