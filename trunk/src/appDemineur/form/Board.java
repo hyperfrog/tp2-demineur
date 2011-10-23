@@ -96,20 +96,23 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	// Retourne la plus grande taille de cellule possible en fonction des dimensions du « gamePanel ».
 	private float getCellSize()
 	{
-		float width = this.gamePanel.getWidth() > 0 ? (float) this.gamePanel.getWidth() / Board.GRID_SIZE : 0;
-		float height = this.gamePanel.getHeight() > 0 ? (float) this.gamePanel.getHeight() / Board.GRID_SIZE : 0;
+		float width = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
+		float height = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
 		
-		return height < width ? height : width;
+		float size = height < width ? height : width;
+		
+		return size > 0 ? size : 0;
 	}
 	
-	// Retourne le point indiquant la coordonnée pour centrer la grille de jeu.
+	// Retourne le point du coin supérieur droit de la grille de jeu 
+	// de manière à centrer celle-ci.
 	private Point getGridOffset()
 	{
 		float cellSize = this.getCellSize();
 		int x = Math.round((this.gamePanel.getWidth() - (Board.GRID_SIZE * cellSize)) / 2);
 		int y = Math.round((this.gamePanel.getHeight() - (Board.GRID_SIZE * cellSize)) / 2);
 		
-		return new Point(x, y);
+		return new Point(x > 0 ? x : 0, y > 0 ? y : 0);
 	}
 	
 	/**
@@ -125,7 +128,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		float cellSize = this.getCellSize();
 		int gridSize = Math.round(cellSize * Board.GRID_SIZE) >= 1 ? Math.round(cellSize * Board.GRID_SIZE) : 1;
 		
-		System.out.println(cellSize + ", " + gridSize);
+//		System.out.println(cellSize + ", " + gridSize);
 		
 		bufferImg = this.createImage(gridSize, gridSize);
 		buffer = bufferImg.getGraphics();
