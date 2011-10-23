@@ -148,14 +148,14 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	}
 	
 	/**
-	 * Reçoit et traite les événements relatifs au clic de souris.
+	 * Reçoit et traite les événements relatifs aux clics de la souris.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
 	 * 
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 * 
 	 * @param evt événement déclencheur
 	 */
-	public void mouseClicked(MouseEvent evt)
+	public void mouseReleased(MouseEvent evt)
 	{
 		boolean changed = false;
 		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
@@ -193,5 +193,5 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void mousePressed(MouseEvent e) {}
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {}
 }
