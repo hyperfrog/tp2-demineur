@@ -89,48 +89,44 @@ public class Game extends JPanel
 	 * 
 	 * @param x
 	 * @param y
-	 * @param state
+	 * @param newState
 	 * @return
 	 */
-	public boolean changeCellState(int x, int y, CellState state)
+	public boolean changeCellState(int x, int y, CellState newState)
 	{
-		boolean succeed = false;
+		boolean changed = false;
 		
 		Cell c = this.matrix.getElement(x, y);
 		
-		if (c != null)
+		if (c != null && !c.getState().equals(CellState.SHOWN))
 		{
-			switch (state)
+			switch (newState)
 			{
 			case SHOWN:
-				if (c.isMine())
+				if (!c.getState().equals(CellState.FLAGGED))
 				{
-					System.out.println("Perdu!");
-					c.setState(CellState.SHOWN);
-					
-					this.isOver = true;
-				}
-				else if (!c.getState().equals(CellState.SHOWN) 
-						&& !c.getState().equals(CellState.FLAGGED))
-				{
+					if (c.isMine())
+					{
+						System.out.println("Perdu!");
+						c.setState(CellState.SHOWN);
+
+						this.isOver = true;
+					}
+
 					this.showCell(x, y, null);
-					succeed = true;
+					changed = true;
 				}
 				break;
 				
+			case HIDDEN:
 			case FLAGGED:
 			case DUBIOUS:
-			case HIDDEN:
-				if (!c.getState().equals(CellState.SHOWN))
-				{
-					c.setState(CellState.get((c.getState().getId() + 1) % 3));
-					succeed = true;
-				}
+				changed = c.setState(CellState.get((c.getState().getId() + 1) % 3));
 				break;
 			}
 		}
 		
-		return succeed;
+		return changed;
 	}
 	
 	// Fonction récursive qui affiche toutes les cellules ayant un nombre de

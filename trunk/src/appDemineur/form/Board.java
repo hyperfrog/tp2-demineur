@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import appDemineur.model.Cell.CellState;
@@ -76,33 +77,44 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	// Réinitialise la partie
 	private void replay()
 	{
-		// Crée une nouvelle partie
-		this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.MINE_AMOUNT);
+		int response = 0;
+		
+		// Demande une confirmation si une partie est en cours
+		if (this.currentGame != null && !this.currentGame.isOver())
+		{
+			response = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir commencer une nouvelle partie ? \nLa partie en cours n'est pas terminée.",
+				"Confirmation", JOptionPane.YES_NO_OPTION);
+		}
+		// Si le joueur est certain de vouloir recommencer 
+		if (response == 0)
+		{
+			// Crée une nouvelle partie
+			this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.MINE_AMOUNT);
+		}
 	}
 	
 	// Retourne la plus grande taille de cellule possible en fonction des dimensions du « gamePanel ».
 	private float getCellSize()
 	{
-		float sizeWidth = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
-		float sizeHeight = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
+		float width = this.gamePanel.getWidth() > 0 ? (float) this.gamePanel.getWidth() / Board.GRID_SIZE : 0;
+		float height = this.gamePanel.getHeight() > 0 ? (float) this.gamePanel.getHeight() / Board.GRID_SIZE : 0;
 		
-		return sizeHeight < sizeWidth ? sizeHeight : sizeWidth;
-		
+		return height < width ? height : width;
 	}
 	
 	// Retourne le point indiquant la coordonnée pour centrer la grille de jeu.
 	private Point getGridOffset()
 	{
 		float cellSize = this.getCellSize();
-		int x = (int) ((this.gamePanel.getWidth() - (Board.GRID_SIZE * cellSize)) / 2);
-		int y = (int) ((this.gamePanel.getHeight() - (Board.GRID_SIZE * cellSize)) / 2);
+		int x = Math.round((this.gamePanel.getWidth() - (Board.GRID_SIZE * cellSize)) / 2);
+		int y = Math.round((this.gamePanel.getHeight() - (Board.GRID_SIZE * cellSize)) / 2);
 		
 		return new Point(x, y);
 	}
 	
 	/**
 	 * Redessine le plateau de jeu.
-	 * Vous ne devriez pas à appeler cette méthode directement.
+	 * Vous ne devriez pas avoir à appeler cette méthode directement.
 	 * Sa visibilité est à «package» pour que AppFrame puisse l'appeler.   
 	 */
 	void redraw()
@@ -111,13 +123,12 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		Image bufferImg = null;
 
 		float cellSize = this.getCellSize();
-		int gridSize = Math.round(cellSize * Board.GRID_SIZE);
+		int gridSize = Math.round(cellSize * Board.GRID_SIZE) >= 1 ? Math.round(cellSize * Board.GRID_SIZE) : 1;
 		
-		if (this.gamePanel.getWidth() > 0 && this.gamePanel.getHeight() > 0)
-		{
-			bufferImg = this.createImage(gridSize, gridSize);
-			buffer = bufferImg.getGraphics();
-		}
+		System.out.println(cellSize + ", " + gridSize);
+		
+		bufferImg = this.createImage(gridSize, gridSize);
+		buffer = bufferImg.getGraphics();
 		
 		Graphics g = this.gamePanel.getGraphics();
 		
@@ -142,7 +153,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	{
 		if (evt.getActionCommand().equals("NEW_GRID"))
 		{
-			this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.MINE_AMOUNT);
+			this.replay();
 			this.redraw();
 		}
 	}
@@ -157,36 +168,34 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	 */
 	public void mouseReleased(MouseEvent evt)
 	{
-		boolean changed = false;
-		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
+//		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
 		
-		Point gridOffset = this.getGridOffset();
-		float cellSize = this.getCellSize();
-		
-		if (evt.getButton() == MouseEvent.BUTTON1)
+		if (!this.currentGame.isOver())
 		{
-			if (this.currentGame.changeCellState(
-					(int) ((evt.getX() - gridOffset.x) / cellSize), 
-					(int) ((evt.getY() - gridOffset.y) / cellSize),
-					CellState.SHOWN))
+			CellState newState = null;
+
+			if (evt.getButton() == MouseEvent.BUTTON1)
 			{
-				changed = true;
+				newState = CellState.SHOWN;
 			}
-		}
-		else if (evt.getButton() == MouseEvent.BUTTON3)
-		{
-			if (this.currentGame.changeCellState(
-					(int) ((evt.getX() - gridOffset.x) / cellSize), 
-					(int) ((evt.getY() - gridOffset.y) / cellSize),
-					CellState.FLAGGED))
+			else if (evt.getButton() == MouseEvent.BUTTON3)
 			{
-				changed = true;
+				newState = CellState.FLAGGED;
 			}
-		}
-		
-		if (changed)
-		{
-			this.redraw();
+
+			if (newState != null)
+			{
+				Point gridOffset = this.getGridOffset();
+				float cellSize = this.getCellSize();
+
+				if (this.currentGame.changeCellState(
+						(int)((evt.getX() - gridOffset.x) / cellSize), 
+						(int)((evt.getY() - gridOffset.y) / cellSize),
+						newState))
+				{
+					this.redraw();
+				}
+			}
 		}
 	}
 	
