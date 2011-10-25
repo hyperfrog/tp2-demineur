@@ -68,8 +68,8 @@ public class Matrix extends BaseMatrix
 			int cellNum = allCells.remove(cellIdx);
 			
 			int x = cellNum % this.getWidth();
-			int y = cellNum / this.getHeight();
-						
+			int y = cellNum / this.getWidth();
+				
 			// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
 			for (int r = y - 1 ; r <= y + 1; r++)
 			{

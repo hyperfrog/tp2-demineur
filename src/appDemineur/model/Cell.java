@@ -83,7 +83,7 @@ public class Cell
 					g.drawString("F", chrX, chrY);
 				}
 			}
-			else if (this.getState().equals(CellState.SHOWN) && this.isMine()) 
+			else if (this.getState().equals(CellState.SHOWN) && this.isMine())
 			{
 				g.setColor(Color.BLACK);
 				g.fillRect(0, 0, cellSize, cellSize);
