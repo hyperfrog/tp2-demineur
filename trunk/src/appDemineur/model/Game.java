@@ -9,10 +9,15 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import util.StopWatch;
+
 import appDemineur.model.Cell.CellState;
 
 public class Game extends JPanel
 {
+	
+	private StopWatch sw;
+	
 	// Matrice contenant la grille de jeu
 	private Matrix matrix;
 	
@@ -29,6 +34,9 @@ public class Game extends JPanel
 	public Game(int width, int height, int mineAmount)
 	{
 		this.matrix = new Matrix(width, height, mineAmount);
+		// Initialise le timer
+		this.sw = new StopWatch();
+		this.sw.start();
 	}
 
 	/**
