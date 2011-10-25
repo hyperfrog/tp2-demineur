@@ -2,6 +2,7 @@ package appDemineur.form;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -27,10 +28,23 @@ import appDemineur.model.Game;
  */
 public class Board extends JPanel implements ActionListener, MouseListener
 {
-	// 
-	public static final int GRID_SIZE = 16;
-	// 
-	public static final int MINE_AMOUNT = 40;
+	//
+	static class Level
+	{
+		public final Dimension dim;
+		public final int mineAmount;
+		
+		public Level(Dimension dim, int mineAmount)
+		{
+			this.dim = dim;
+			this.mineAmount = mineAmount;
+		}
+	}
+	
+	//
+	public static final Level[] LEVELS = new Level[] { new Level(new Dimension(9, 9), 10), new Level(new Dimension(16, 16), 40), new Level(new Dimension(30, 16), 99) };
+	//
+	public static final int CURRENT_LEVEL = 2;
 
 	// Objet de la partie courante
 	private Game currentGame = null;
@@ -89,15 +103,15 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		if (response == 0)
 		{
 			// Crée une nouvelle partie
-			this.currentGame = new Game(Board.GRID_SIZE, Board.GRID_SIZE, Board.MINE_AMOUNT);
+			this.currentGame = new Game(Board.LEVELS[Board.CURRENT_LEVEL].dim.width, Board.LEVELS[Board.CURRENT_LEVEL].dim.height, Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
 		}
 	}
 	
 	// Retourne la plus grande taille de cellule possible en fonction des dimensions du « gamePanel ».
 	private float getCellSize()
 	{
-		float width = (float) this.gamePanel.getWidth() / Board.GRID_SIZE;
-		float height = (float) this.gamePanel.getHeight() / Board.GRID_SIZE;
+		float width = (float) this.gamePanel.getWidth() / Board.LEVELS[Board.CURRENT_LEVEL].dim.width;
+		float height = (float) this.gamePanel.getHeight() / Board.LEVELS[Board.CURRENT_LEVEL].dim.height;
 		
 		float size = height < width ? height : width;
 		
@@ -109,8 +123,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	private Point getGridOffset()
 	{
 		float cellSize = this.getCellSize();
-		int x = Math.round((this.gamePanel.getWidth() - (Board.GRID_SIZE * cellSize)) / 2);
-		int y = Math.round((this.gamePanel.getHeight() - (Board.GRID_SIZE * cellSize)) / 2);
+		int x = Math.round((this.gamePanel.getWidth() - (Board.LEVELS[Board.CURRENT_LEVEL].dim.width * cellSize)) / 2);
+		int y = Math.round((this.gamePanel.getHeight() - (Board.LEVELS[Board.CURRENT_LEVEL].dim.height * cellSize)) / 2);
 		
 		return new Point(x > 0 ? x : 0, y > 0 ? y : 0);
 	}
@@ -126,11 +140,12 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		Image bufferImg = null;
 
 		float cellSize = this.getCellSize();
-		int gridSize = Math.round(cellSize * Board.GRID_SIZE) >= 1 ? Math.round(cellSize * Board.GRID_SIZE) : 1;
+		int gridWidth = Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.width) >= 1 ? Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.width) : 1;
+		int gridHeight = Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.height) >= 1 ? Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.height) : 1;
 		
 //		System.out.println(cellSize + ", " + gridSize);
 		
-		bufferImg = this.createImage(gridSize, gridSize);
+		bufferImg = this.createImage(gridWidth, gridHeight);
 		buffer = bufferImg.getGraphics();
 		
 		Graphics g = this.gamePanel.getGraphics();
