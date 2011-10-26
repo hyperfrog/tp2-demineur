@@ -71,10 +71,10 @@ public class Game //extends JPanel
 	}
 
 	/**
+	 * Redessine la partie
 	 * 
-	 * 
-	 * @param g
-	 * @param size
+	 * @param g Graphics dans lequel dessiner la partie
+	 * @param cellSize taille d'une cellule en pixels 
 	 */
 	public void redraw(Graphics g, float cellSize)
 	{
@@ -86,7 +86,7 @@ public class Game //extends JPanel
 	 * 
 	 * @param x
 	 * @param y
-	 * @param newState
+	 * @param show
 	 * @return
 	 */
 	public boolean changeCellState(int x, int y, boolean show)

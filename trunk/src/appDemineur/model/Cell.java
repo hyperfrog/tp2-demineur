@@ -44,7 +44,8 @@ public class Cell
 				}
 				else if (this.getState().equals(CellState.FLAGGED))
 				{
-					g.drawString("F", chrX, chrY);
+					g.setColor(new Color(200, 0, 0));
+					g.drawString("¶", chrX, chrY);
 				}
 			}
 			else if (this.getState().equals(CellState.SHOWN) && this.isMine())
