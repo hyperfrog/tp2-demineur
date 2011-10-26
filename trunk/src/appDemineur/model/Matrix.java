@@ -1,5 +1,8 @@
 package appDemineur.model;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
@@ -50,10 +53,10 @@ public class Matrix extends BaseMatrix
 	// et détermine, pour chaque cellule, le nombre de mines adjacentes
 	private void addMines(int amount)
 	{
-		// «Chapeau» duquel on va tirer des numéros de cellule 
+		// «Chapeau» duquel on va tirer des cellules 
 		ArrayList<Point> allCells = new ArrayList<Point>();
 	
-		// Ajoute chaque numéro de cellule dans le chapeau
+		// Ajoute la coordonnée de chaque cellule dans le chapeau
 		for (int i = 0; i < this.getWidth(); i++)
 		{
 			for (int j = 0; j < this.getHeight(); j++)
@@ -92,6 +95,56 @@ public class Matrix extends BaseMatrix
 						}
 					}
 				}
+			}
+		}
+	}
+	
+	/**
+	 * @param g
+	 * @param cellSize
+	 */
+	public void redraw(Graphics g, float cellSize)
+	{
+		if (g != null)
+		{       
+			for (int i = 0; i < this.getWidth(); i++)
+			{
+				for (int j = 0; j < this.getHeight(); j++)
+				{
+					if (this.getElement(i, j) != null)
+					{
+						Graphics g2 = g.create(
+								Math.round(i * cellSize), 
+								Math.round(j * cellSize), 
+								Math.round(cellSize), 
+								Math.round(cellSize));
+
+						Cell c = this.getElement(i, j);
+						if (c != null)
+						{
+							c.redraw(g2, cellSize);
+						}
+					}
+				}
+			}
+
+			// Dessine un quadrillage 
+
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setStroke(new BasicStroke(3));
+
+			for (int i = 0; i <= this.getWidth(); i++)
+			{
+				int x = Math.round(i * cellSize);
+
+				g2d.drawLine(x, 0, x, Math.round(this.getHeight() * cellSize));
+			}
+
+			for (int i = 0; i <= this.getHeight(); i++)
+			{
+				int y = Math.round(i * cellSize);
+
+				g2d.drawLine(0, y, Math.round(this.getWidth() * cellSize), y);
 			}
 		}
 	}

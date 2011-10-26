@@ -3,9 +3,6 @@ package appDemineur.model;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Cell
 {

@@ -2,7 +2,6 @@ package appDemineur.form;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -18,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import appDemineur.model.Cell.CellState;
 import appDemineur.model.Game;
 
 /**
@@ -31,23 +29,8 @@ import appDemineur.model.Game;
  */
 public class Board extends JPanel implements ActionListener, MouseListener
 {
-	//
-	static class Level
-	{
-		public final Dimension dim;
-		public final int mineAmount;
-		
-		public Level(Dimension dim, int mineAmount)
-		{
-			this.dim = dim;
-			this.mineAmount = mineAmount;
-		}
-	}
-	
-	//
-	public static final Level[] LEVELS = new Level[] { new Level(new Dimension(9, 9), 10), new Level(new Dimension(16, 16), 40), new Level(new Dimension(30, 16), 99) };
-	//
-	public static final int CURRENT_LEVEL = 2;
+	// TODO : Remplacer par un menu
+	private int currentLevel = 1;
 
 	// Objet de la partie courante
 	private Game currentGame = null;
@@ -101,6 +84,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.newGridButton.addActionListener(this);
 		
 		this.timer = new Timer(1000, this);
+		this.timer.setActionCommand("TICK");
 		this.timer.start();
 		
 		// Replay va se charger de créer une nouvelle partie 
@@ -122,10 +106,11 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		if (response == 0)
 		{
 			// Crée une nouvelle partie
-			this.currentGame = new Game(Board.LEVELS[Board.CURRENT_LEVEL].dim.width, Board.LEVELS[Board.CURRENT_LEVEL].dim.height, Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
+//			this.currentGame = new Game(Board.LEVELS[Board.CURRENT_LEVEL].dim.width, Board.LEVELS[Board.CURRENT_LEVEL].dim.height, Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
+			this.currentGame = new Game(this.currentLevel);
 			
 			this.timerLabel.setText("Temps : 0");
-			this.flagsLabel.setText("Mines : " + Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
+			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
 			
 			this.elapsedTime = 0;
 			this.timer.restart();
@@ -135,12 +120,17 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	// Retourne la plus grande taille de cellule possible en fonction des dimensions du « gamePanel ».
 	private float getCellSize()
 	{
-		float width = (float) this.gamePanel.getWidth() / Board.LEVELS[Board.CURRENT_LEVEL].dim.width;
-		float height = (float) this.gamePanel.getHeight() / Board.LEVELS[Board.CURRENT_LEVEL].dim.height;
+		float size = 0;
 		
-		float size = height < width ? height : width;
+		if (this.currentGame.getWidth() > 0 && this.currentGame.getHeight() > 0)
+		{
+			float width = (float) this.gamePanel.getWidth() / this.currentGame.getWidth();
+			float height = (float) this.gamePanel.getHeight() / this.currentGame.getHeight();
+
+			size = height < width ? height : width;
+		}
 		
-		return size > 0 ? size : 0;
+		return size >= 0 ? size : 0;
 	}
 	
 	// Retourne le point du coin supérieur droit de la grille de jeu 
@@ -148,8 +138,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	private Point getGridOffset()
 	{
 		float cellSize = this.getCellSize();
-		int x = Math.round((this.gamePanel.getWidth() - (Board.LEVELS[Board.CURRENT_LEVEL].dim.width * cellSize)) / 2);
-		int y = Math.round((this.gamePanel.getHeight() - (Board.LEVELS[Board.CURRENT_LEVEL].dim.height * cellSize)) / 2);
+		int x = Math.round((this.gamePanel.getWidth() - (this.currentGame.getWidth() * cellSize)) / 2);
+		int y = Math.round((this.gamePanel.getHeight() - (this.currentGame.getHeight() * cellSize)) / 2);
 		
 		return new Point(x > 0 ? x : 0, y > 0 ? y : 0);
 	}
@@ -165,8 +155,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		Image bufferImg = null;
 
 		float cellSize = this.getCellSize();
-		int gridWidth = Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.width) >= 1 ? Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.width) : 1;
-		int gridHeight = Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.height) >= 1 ? Math.round(cellSize * Board.LEVELS[Board.CURRENT_LEVEL].dim.height) : 1;
+		int gridWidth = Math.round(cellSize * this.currentGame.getWidth()) >= 1 ? Math.round(cellSize * this.currentGame.getWidth()) : 1;
+		int gridHeight = Math.round(cellSize * this.currentGame.getHeight()) >= 1 ? Math.round(cellSize * this.currentGame.getHeight()) : 1;
 		
 //		System.out.println(cellSize + ", " + gridSize);
 		
@@ -194,7 +184,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	 */
 	public void actionPerformed(ActionEvent evt)
 	{
-		if (evt.getSource().equals(this.timer))
+		if (evt.getActionCommand().equals("TICK"))
 		{
 			if (!this.currentGame.isOver())
 			{
@@ -204,7 +194,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 			
 			//System.out.println(elapsedTime);
 		}
-		else if (evt.getSource().equals(this.newGridButton) && evt.getActionCommand().equals("NEW_GRID"))
+		else if (evt.getActionCommand().equals("NEW_GRID"))
 		{
 			this.replay();
 			this.redraw();
@@ -227,27 +217,31 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		{
 			Boolean show = null;
 			
-			if (evt.getButton() == MouseEvent.BUTTON1)
+			if (evt.getButton() == MouseEvent.BUTTON1) // Bouton gauche
 			{
-				show = new Boolean(true);
+				show = true;
 			}
-			else if (evt.getButton() == MouseEvent.BUTTON3)
+			else if (evt.getButton() == MouseEvent.BUTTON3) // Bouton droit
 			{
-				show = new Boolean(false);
+				show = false;
 			}
 
 			if (show != null)
 			{
 				Point gridOffset = this.getGridOffset();
-				float cellSize = this.getCellSize();
 
-				if (this.currentGame.changeCellState(
-						(int)((evt.getX() - gridOffset.x) / cellSize), 
-						(int)((evt.getY() - gridOffset.y) / cellSize),
-						show))
+				if (evt.getX() - gridOffset.x >= 0 && evt.getY() - gridOffset.y >= 0)
 				{
-					this.redraw();
-					this.flagsLabel.setText("Mines : " + (Board.LEVELS[Board.CURRENT_LEVEL].mineAmount - this.currentGame.getNbFlags()));
+					float cellSize = this.getCellSize();
+
+					if (this.currentGame.changeCellState(
+							(int)((evt.getX() - gridOffset.x) / cellSize), 
+							(int)((evt.getY() - gridOffset.y) / cellSize),
+							show))
+					{
+						this.redraw();
+						this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
+					}
 				}
 			}
 		}
