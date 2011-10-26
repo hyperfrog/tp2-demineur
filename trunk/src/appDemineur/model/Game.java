@@ -9,20 +9,17 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import util.StopWatch;
-
 import appDemineur.model.Cell.CellState;
 
 public class Game extends JPanel
 {
-	
-	private StopWatch sw;
-	
 	// Matrice contenant la grille de jeu
 	private Matrix matrix;
 	
 	// Indique si la partie est terminée
 	private boolean isOver;
+	
+	private int nbFlags;
 	
 	/**
 	 * 
@@ -34,9 +31,7 @@ public class Game extends JPanel
 	public Game(int width, int height, int mineAmount)
 	{
 		this.matrix = new Matrix(width, height, mineAmount);
-		// Initialise le timer
-		this.sw = new StopWatch();
-		this.sw.start();
+		this.nbFlags = 0;
 	}
 
 	/**
@@ -100,7 +95,7 @@ public class Game extends JPanel
 	 * @param newState
 	 * @return
 	 */
-	public boolean changeCellState(int x, int y, CellState newState)
+	public boolean changeCellState(int x, int y, boolean show)
 	{
 		boolean changed = false;
 		
@@ -108,9 +103,8 @@ public class Game extends JPanel
 		
 		if (c != null && !c.getState().equals(CellState.SHOWN))
 		{
-			switch (newState)
+			if (show)
 			{
-			case SHOWN:
 				if (!c.getState().equals(CellState.FLAGGED))
 				{
 					if (c.isMine())
@@ -124,13 +118,27 @@ public class Game extends JPanel
 					this.showCell(x, y, null);
 					changed = true;
 				}
-				break;
+			}
+			else
+			{
+				CellState newState = null;
 				
-			case HIDDEN:
-			case FLAGGED:
-			case DUBIOUS:
-				changed = c.setState(CellState.get((c.getState().getId() + 1) % 3));
-				break;
+				switch(c.getState())
+				{
+					case HIDDEN:
+						newState = CellState.FLAGGED;
+						this.nbFlags++;
+						break;
+					case FLAGGED:
+						newState = CellState.DUBIOUS;
+						this.nbFlags--;
+						break;
+					case DUBIOUS:
+						newState = CellState.HIDDEN;
+						break;
+				}
+				
+				changed = c.setState(newState);
 			}
 		}
 		
@@ -202,5 +210,10 @@ public class Game extends JPanel
 	public boolean isOver()
 	{
 		return this.isOver;
+	}
+	
+	public int getNbFlags()
+	{
+		return this.nbFlags;
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -12,8 +13,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import appDemineur.model.Cell.CellState;
 import appDemineur.model.Game;
@@ -54,7 +57,14 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	private JPanel gamePanel;
 	// 
 	private JButton newGridButton;
-	
+	//   
+	private JLabel timerLabel;
+	//  
+	private JLabel flagsLabel;
+	//
+	private Timer timer;
+	//
+	private int elapsedTime;
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
@@ -68,14 +78,20 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.buttonPanel = new JPanel();
 		this.gamePanel = new JPanel();
 		this.newGridButton = new JButton();
+		this.timerLabel = new JLabel();
+		this.flagsLabel = new JLabel();
 		
 		this.setLayout(new BorderLayout());
 		
 		this.newGridButton.setText("Nouvelle grille");
 		this.newGridButton.setActionCommand("NEW_GRID");
 		
-		this.buttonPanel.add(this.newGridButton);
+		this.buttonPanel.setLayout(new GridLayout(0, 3));
 		this.buttonPanel.setBackground(Color.WHITE);
+		
+		this.buttonPanel.add(this.timerLabel);
+		this.buttonPanel.add(this.newGridButton);
+		this.buttonPanel.add(this.flagsLabel);
 		
 		this.add(buttonPanel, BorderLayout.PAGE_END);
 		this.add(gamePanel, BorderLayout.CENTER);
@@ -83,6 +99,9 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		// Spécifie les écouteurs pour les boutons
 		this.gamePanel.addMouseListener(this);
 		this.newGridButton.addActionListener(this);
+		
+		this.timer = new Timer(1000, this);
+		this.timer.start();
 		
 		// Replay va se charger de créer une nouvelle partie 
 		this.replay();
@@ -104,6 +123,12 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		{
 			// Crée une nouvelle partie
 			this.currentGame = new Game(Board.LEVELS[Board.CURRENT_LEVEL].dim.width, Board.LEVELS[Board.CURRENT_LEVEL].dim.height, Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
+			
+			this.timerLabel.setText("Temps : 0");
+			this.flagsLabel.setText("Mines : " + Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
+			
+			this.elapsedTime = 0;
+			this.timer.restart();
 		}
 	}
 	
@@ -169,7 +194,17 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	 */
 	public void actionPerformed(ActionEvent evt)
 	{
-		if (evt.getActionCommand().equals("NEW_GRID"))
+		if (evt.getSource().equals(this.timer))
+		{
+			if (!this.currentGame.isOver())
+			{
+				this.elapsedTime++;
+				this.timerLabel.setText("Temps : " + this.elapsedTime);
+			}
+			
+			//System.out.println(elapsedTime);
+		}
+		else if (evt.getSource().equals(this.newGridButton) && evt.getActionCommand().equals("NEW_GRID"))
 		{
 			this.replay();
 			this.redraw();
@@ -190,18 +225,18 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		
 		if (!this.currentGame.isOver())
 		{
-			CellState newState = null;
-
+			Boolean show = null;
+			
 			if (evt.getButton() == MouseEvent.BUTTON1)
 			{
-				newState = CellState.SHOWN;
+				show = new Boolean(true);
 			}
 			else if (evt.getButton() == MouseEvent.BUTTON3)
 			{
-				newState = CellState.FLAGGED;
+				show = new Boolean(false);
 			}
 
-			if (newState != null)
+			if (show != null)
 			{
 				Point gridOffset = this.getGridOffset();
 				float cellSize = this.getCellSize();
@@ -209,9 +244,10 @@ public class Board extends JPanel implements ActionListener, MouseListener
 				if (this.currentGame.changeCellState(
 						(int)((evt.getX() - gridOffset.x) / cellSize), 
 						(int)((evt.getY() - gridOffset.y) / cellSize),
-						newState))
+						show))
 				{
 					this.redraw();
+					this.flagsLabel.setText("Mines : " + (Board.LEVELS[Board.CURRENT_LEVEL].mineAmount - this.currentGame.getNbFlags()));
 				}
 			}
 		}
