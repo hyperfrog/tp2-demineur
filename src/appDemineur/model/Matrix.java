@@ -1,5 +1,6 @@
 package appDemineur.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 import util.BaseMatrix;
@@ -50,12 +51,15 @@ public class Matrix extends BaseMatrix
 	private void addMines(int amount)
 	{
 		// «Chapeau» duquel on va tirer des numéros de cellule 
-		ArrayList<Integer> allCells = new ArrayList<Integer>();
-		
+		ArrayList<Point> allCells = new ArrayList<Point>();
+	
 		// Ajoute chaque numéro de cellule dans le chapeau
-		for (int i = 0; i < this.getWidth() * this.getHeight(); i++)
+		for (int i = 0; i < this.getWidth(); i++)
 		{
-			allCells.add(i);
+			for (int j = 0; j < this.getHeight(); j++)
+			{
+				allCells.add(new Point(i, j));
+			}
 		}
 		
 		// Tire un nombre «amount» de cellules du chapeau
@@ -65,22 +69,19 @@ public class Matrix extends BaseMatrix
 
 			int cellIdx = rand.nextInt(allCells.size());
 			
-			int cellNum = allCells.remove(cellIdx);
+			Point p = allCells.remove(cellIdx);
 			
-			int x = cellNum % this.getWidth();
-			int y = cellNum / this.getWidth();
-				
 			// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
-			for (int r = y - 1 ; r <= y + 1; r++)
+			for (int r = p.y - 1 ; r <= p.y + 1; r++)
 			{
-				for (int c = x - 1 ; c <= x + 1; c++)
+				for (int c = p.x - 1 ; c <= p.x + 1; c++)
 				{
 					Cell cell = this.getElement(c, r);
 					// S'il y a vraiment une cellule à ces coordonnées
 					if (cell != null)
 					{
 						// Si ce n'est pas la cellule courante
-						if (!(r == y && c == x))
+						if (!(r == p.y && c == p.x))
 						{
 							// Incrémente le compteur de mines adjacentes
 							cell.setAdjacentMines(cell.getAdjacentMines() + 1);
