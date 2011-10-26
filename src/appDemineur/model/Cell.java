@@ -9,40 +9,7 @@ import java.util.Map;
 
 public class Cell
 {
-	public enum CellState
-	{
-		HIDDEN (0),
-		FLAGGED (1),
-		DUBIOUS (2),
-		SHOWN (3);
-		
-		private static final Map<Integer, CellState> lookupMap = new HashMap<Integer, CellState>();
-		
-		public static CellState get(int id)
-		{ 
-			return lookupMap.get(id); 
-		}
-		
-		static
-		{
-			for(CellState cs : EnumSet.allOf(CellState.class))
-			{
-				lookupMap.put(cs.getId(), cs);
-			}
-		}
-
-		private int id;
-		
-		CellState(int id)
-		{
-			this.id = id;
-		}
-		
-		int getId()
-		{
-			return this.id;
-		}
-	}
+	public enum CellState { HIDDEN,	FLAGGED, DUBIOUS, SHOWN; }
 	
 	private boolean isMine;
 	private int adjacentMines;
