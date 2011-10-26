@@ -1,24 +1,44 @@
 package appDemineur.model;
 
-import java.awt.BasicStroke;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
-
 import appDemineur.model.Cell.CellState;
 
-public class Game extends JPanel
+public class Game //extends JPanel
 {
+	// Classe définissant les propriétés d'un niveau de difficulté
+	private static class Level
+	{
+		public final Dimension dim;
+		public final int mineAmount;
+		
+		public Level(Dimension dim, int mineAmount)
+		{
+			this.dim = dim;
+			this.mineAmount = mineAmount;
+		}
+	}
+	
+	// Les trois niveaux de difficulté du jeu
+	private static final Level[] LEVELS = new Level[] { 
+		new Level(new Dimension(9, 9), 10), 
+		new Level(new Dimension(16, 16), 40), 
+		new Level(new Dimension(30, 16), 99)
+		};
+
+	private int level;
+	
 	// Matrice contenant la grille de jeu
 	private Matrix matrix;
 	
 	// Indique si la partie est terminée
 	private boolean isOver;
 	
+	//
 	private int nbFlags;
 	
 	/**
@@ -28,9 +48,25 @@ public class Game extends JPanel
 	 * @param height
 	 * @param mineAmount
 	 */
-	public Game(int width, int height, int mineAmount)
+//	public Game(int width, int height, int mineAmount)
+//	{
+//		this.matrix = new Matrix(width, height, mineAmount);
+//		
+//		this.nbFlags = 0;
+//	}
+
+	/**
+	 * @param level
+	 */
+	public Game(int level)
 	{
-		this.matrix = new Matrix(width, height, mineAmount);
+		this.level = (level < 0 || level > 2) ? 0 : level;
+		
+		this.matrix = new Matrix(
+				Game.LEVELS[level].dim.width, 
+				Game.LEVELS[level].dim.height, 
+				Game.LEVELS[level].mineAmount);
+		
 		this.nbFlags = 0;
 	}
 
@@ -39,53 +75,11 @@ public class Game extends JPanel
 	 * 
 	 * @param g
 	 * @param size
-	 * @param centerPoint
 	 */
 	public void redraw(Graphics g, float cellSize)
 	{
-		if (g != null)
-		{       
-			for (int i = 0; i < this.matrix.getWidth(); i++)
-			{
-				for (int j = 0; j < this.matrix.getHeight(); j++)
-				{
-					if (this.matrix.getElement(i, j) != null)
-					{
-						Graphics g2 = g.create(
-								Math.round(i * cellSize), 
-								Math.round(j * cellSize), 
-								Math.round(cellSize), 
-								Math.round(cellSize));
-
-						Cell c = this.matrix.getElement(i, j);
-						if (c != null)
-						{
-							c.redraw(g2, cellSize);
-						}
-					}
-				}
-			}
-
-			// Dessine un quadrillage 
-
-			Graphics2D g2d = (Graphics2D) g;
-			g2d.setStroke(new BasicStroke(3));
-
-			for (int i = 0; i <= this.matrix.getWidth(); i++)
-			{
-				int x = Math.round(i * cellSize);
-
-				g2d.drawLine(x, 0, x, Math.round(this.matrix.getHeight() * cellSize));
-			}
-
-			for (int i = 0; i <= this.matrix.getHeight(); i++)
-			{
-				int y = Math.round(i * cellSize);
-
-				g2d.drawLine(0, y, Math.round(this.matrix.getWidth() * cellSize), y);
-			}
-		}
-	}
+		this.matrix.redraw(g, cellSize);
+	}	
 	
 	/**
 	 * 
@@ -119,7 +113,7 @@ public class Game extends JPanel
 					changed = true;
 				}
 			}
-			else
+			else // Alterne entre FLAGGED, DUBIOUS et HIDDEN
 			{
 				CellState newState = null;
 				
@@ -145,15 +139,17 @@ public class Game extends JPanel
 		return changed;
 	}
 	
-	// Fonction récursive qui affiche toutes les cellules ayant un nombre de
-	// voisins égal à 0 jusqu'à ce que la cellule possède un nombre de voisins
-	// différent de 0. Si l'état de la cellules est FLAGGED alors elle n'est 
-	// pas affecté.
+	// Fonction qui affiche une cellule et, si elle n'a pas de mines adjacentes, 
+	// toutes les cellules voisines n'ayant pas non plus de mines adjacentes, 
+	// et ce, jusqu'à ce qu'à ce soient révélées les cellules frontières, 
+	// c'est-à-dire celles qui ont des mines adjacentes.
 	//
-	// La méthode prend la position à afficher ainsi qu'une liste des anciennes
-	// cellules ayant été visité par la méthode auparavant. La méthode ce rappelle
-	// elle-même pour toutes les positions voisines qui ne faisaient pas parties
-	// de la liste d'anciennes positions.
+	// Si l'état de la cellule est SHOWN ou FLAGGED, alors cet état n'est 
+	// pas modifié.
+	//
+	// La méthode prend les coordonnées x et y de la cellule à afficher 
+	// ainsi qu'une liste vide de cellules (ou une valeur null). 
+	// Ce dernier paramètre sert aux appels récursifs.
 	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
 		Cell curCell = this.matrix.getElement(x, y);
@@ -162,35 +158,44 @@ public class Game extends JPanel
 				&& !curCell.getState().equals(CellState.SHOWN)
 				&& !curCell.getState().equals(CellState.FLAGGED))
 		{
+			// Change l'état de la cellule courante
 			curCell.setState(CellState.SHOWN);
 
+			// Si aucune cellule adjacente ne contient de mine 
 			if (curCell.getAdjacentMines() == 0)
 			{
+				// Au besoin, construit une liste de cellules à ne pas revérifier plus tard
 				if (visitedCells == null)
 				{
 					visitedCells = new ArrayList<Cell>();
 				}
-
+				
+				// Construit une liste de cellules à vérifier maintenant
 				List<Point> cellsToVisit = new ArrayList<Point>();
 				
+				// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
 				for (int r = y - 1 ; r <= y + 1; r++)
 				{
 					for (int c = x - 1 ; c <= x + 1; c++)
 					{
 						Cell adjCell = this.matrix.getElement(c, r);
 						
+						// Si la cellule n'a pas encore été vérifiée
 						if (adjCell != null && !visitedCells.contains(adjCell))
 						{
+							// Si ce n'est pas la cellule courante
 							if  (!(r == y && c == x))
 							{
+								// Ajoute la cellule dans la liste des cellules à vérifier maintenant
 								cellsToVisit.add(new Point(c, r));
 							}
-
+							// Ajoute la cellule dans la liste des cellules à ne pas revérifier plus tard
 							visitedCells.add(adjCell);
 						}
 					}
 				}
 				
+				// Pour chacune des cellules à vérifier maintenant
 				for (Point p : cellsToVisit)
 				{
 					this.showCell(p.x, p.y, visitedCells);
@@ -215,5 +220,20 @@ public class Game extends JPanel
 	public int getNbFlags()
 	{
 		return this.nbFlags;
+	}
+	
+	public int getWidth()
+	{
+		return Game.LEVELS[this.level].dim.width;
+	}
+	
+	public int getHeight()
+	{
+		return Game.LEVELS[this.level].dim.height;
+	}
+	
+	public int getMineAmount()
+	{
+		return Game.LEVELS[this.level].mineAmount;
 	}
 }
