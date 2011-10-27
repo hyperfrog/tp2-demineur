@@ -1,6 +1,7 @@
 package appDemineur.model;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -102,6 +103,7 @@ public class Matrix extends BaseMatrix
 	/**
 	 * @param g
 	 * @param cellSize
+	 * @param cheatMode
 	 */
 	public void redraw(Graphics g, float cellSize, boolean cheatMode)
 	{
@@ -132,6 +134,7 @@ public class Matrix extends BaseMatrix
 
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setStroke(new BasicStroke(3));
+			g2d.setColor(Color.BLACK);
 
 			for (int i = 0; i <= this.getWidth(); i++)
 			{

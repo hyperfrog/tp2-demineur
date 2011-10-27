@@ -205,13 +205,14 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 	 * 
 	 * @param g Graphics de la fenêtre
 	 */
-	@Override
-	public void paint(Graphics g)
-	{
-		super.paint(g);
-		this.mBoard.redraw();		
-	}
-
+//	@Override
+//	public void paint(Graphics g)
+//	{
+//		super.paint(g);
+//		this.mBoard.redraw();		
+//		System.out.println("paint() appelé dans AppFrame.");
+//	}
+	
 	/** 
 	 * Méthode appelée quand la fenêtre est cachée.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.

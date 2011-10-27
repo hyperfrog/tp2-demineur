@@ -3,6 +3,7 @@ package appDemineur.form;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,7 +41,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	private boolean cheatMode = false;
 	
 	// 
-	private JPanel gamePanel;
+//	private JPanel gamePanel;
+	private DrawingArea gamePanel;
 	
 	// 
 	private JButton newGameButton;
@@ -59,6 +62,9 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	//
 	private int elapsedTime;
 	
+//	private BufferedImage image;
+//	private Graphics2D g2d;
+
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
@@ -69,7 +75,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		super();
 		
         // Initialise les composantes
-		this.gamePanel = new JPanel();
+		this.gamePanel = new DrawingArea(this);
 		this.buttonPanel = new JPanel();
 		this.newGameButton = new JButton();
 		this.timerLabel = new JLabel();
@@ -100,6 +106,38 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		
 		// Replay va se charger de créer une nouvelle partie 
 		this.replay();
+	}
+	
+	// Cette classe pourrait implémenter le mouse listener
+	private static class DrawingArea extends JPanel
+	{
+		private Board parent = null;
+
+		public DrawingArea(Board parent)
+		{
+			this.parent = parent;
+			this.setBackground(Color.WHITE);
+		}
+
+		/**
+		 * Redessine le plateau de jeu.
+		 * Vous ne devriez pas avoir à appeler cette méthode directement.
+		 */
+		public void paintComponent(Graphics g)
+		{
+			super.paintComponent(g);
+
+			if (g != null && parent != null)
+			{
+				BufferedImage image = new BufferedImage(this.parent.getGridScreenWidth(), this.parent.getGridScreenHeight(), BufferedImage.TYPE_INT_ARGB);
+				Graphics g2 = image.getGraphics();
+
+				Point gridOffset = this.parent.getGridOffset();
+				
+				this.parent.currentGame.redraw(g2, this.parent.getCellSize(), this.parent.getCheatMode());
+				g.drawImage(image, gridOffset.x, gridOffset.y, null);
+			}
+		}
 	}
 	
 	// Réinitialise la partie
@@ -152,39 +190,19 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		int x = Math.round((this.gamePanel.getWidth() - (this.currentGame.getWidth() * cellSize)) / 2);
 		int y = Math.round((this.gamePanel.getHeight() - (this.currentGame.getHeight() * cellSize)) / 2);
 		
-		return new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+		return new Point(Math.max(x, 0), Math.max(y, 0));
 	}
 	
-	/**
-	 * Redessine le plateau de jeu.
-	 * Vous ne devriez pas avoir à appeler cette méthode directement.
-	 * Sa visibilité est à «package» pour que AppFrame puisse l'appeler.   
-	 */
-	void redraw()
+	private int getGridScreenWidth()
 	{
-		Graphics buffer = null;
-		Image bufferImg = null;
-
-		float cellSize = this.getCellSize();
-		int gridWidth = Math.round(cellSize * this.currentGame.getWidth()) >= 1 ? Math.round(cellSize * this.currentGame.getWidth()) : 1;
-		int gridHeight = Math.round(cellSize * this.currentGame.getHeight()) >= 1 ? Math.round(cellSize * this.currentGame.getHeight()) : 1;
-		
-//		System.out.println(cellSize + ", " + gridSize);
-		
-		bufferImg = this.createImage(gridWidth, gridHeight);
-		buffer = bufferImg.getGraphics();
-		
-		Graphics g = this.gamePanel.getGraphics();
-		
-		if (g != null && buffer != null)
-		{
-			Point gridOffset = this.getGridOffset();
-
-			this.currentGame.redraw(buffer, cellSize, this.getCheatMode());
-			g.drawImage(bufferImg, gridOffset.x, gridOffset.y, this);
-		}
+		return Math.max(Math.round(this.getCellSize() * this.currentGame.getWidth()), 1);
 	}
 	
+	private int getGridScreenHeight()
+	{
+		return Math.max(Math.round(this.getCellSize() * this.currentGame.getHeight()), 1);
+	}
+
 	/**
 	 * 
 	 * @param enabled
@@ -192,7 +210,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	public void setCheatMode(boolean enable)
 	{
 		this.cheatMode = enable;
-		this.redraw();		
+//		this.redraw();
+		this.repaint();
 	}
 	
 	/**
@@ -234,7 +253,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		else if (evt.getActionCommand().equals("NEW_GAME"))
 		{
 			this.replay();
-			this.redraw();
+//			this.redraw();
+			this.repaint();
 		}
 		else if (evt.getActionCommand().equals("SCORES"))
 		{
@@ -288,7 +308,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 							(int)((evt.getY() - gridOffset.y) / cellSize),
 							show))
 					{
-						this.redraw();
+//						this.redraw();
+						this.repaint();
 						this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
 					}
 				}
