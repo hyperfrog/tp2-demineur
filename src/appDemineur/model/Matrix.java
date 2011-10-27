@@ -103,7 +103,7 @@ public class Matrix extends BaseMatrix
 	 * @param g
 	 * @param cellSize
 	 */
-	public void redraw(Graphics g, float cellSize)
+	public void redraw(Graphics g, float cellSize, boolean cheatMode)
 	{
 		if (g != null)
 		{       
@@ -122,7 +122,7 @@ public class Matrix extends BaseMatrix
 						Cell c = this.getElement(i, j);
 						if (c != null)
 						{
-							c.redraw(g2, cellSize);
+							c.redraw(g2, cellSize, cheatMode);
 						}
 					}
 				}

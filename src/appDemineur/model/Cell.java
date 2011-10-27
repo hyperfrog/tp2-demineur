@@ -19,7 +19,7 @@ public class Cell
 		this.state = CellState.HIDDEN;
 	}
 	
-	public void redraw(Graphics g, float size)
+	public void redraw(Graphics g, float size, boolean cheatMode)
 	{
 		int chrX = Math.round(size * 0.35f);
 		int chrY = Math.round(size * 0.75f);
@@ -30,7 +30,15 @@ public class Cell
 		
 		if (g != null)
 		{
-			if (!this.getState().equals(CellState.SHOWN))
+			if ((this.getState().equals(CellState.SHOWN) || cheatMode) && this.isMine())
+			{
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, cellSize, cellSize);
+				
+				g.setColor(Color.RED);
+				g.fillOval(minePos, minePos, mineSize, mineSize);
+			}
+			else if (!this.getState().equals(CellState.SHOWN))
 			{
 				g.setColor(Color.GRAY);
 				g.fillRect(0, 0, cellSize, cellSize);
@@ -47,14 +55,6 @@ public class Cell
 					g.setColor(new Color(200, 0, 0));
 					g.drawString("¶", chrX, chrY);
 				}
-			}
-			else if (this.getState().equals(CellState.SHOWN) && this.isMine())
-			{
-				g.setColor(Color.BLACK);
-				g.fillRect(0, 0, cellSize, cellSize);
-				
-				g.setColor(Color.RED);
-				g.fillOval(minePos, minePos, mineSize, mineSize);
 			}
 			else if (this.getState().equals(CellState.SHOWN) && !this.isMine())
 			{

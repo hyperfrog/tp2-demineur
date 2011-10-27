@@ -76,9 +76,9 @@ public class Game //extends JPanel
 	 * @param g Graphics dans lequel dessiner la partie
 	 * @param cellSize taille d'une cellule en pixels 
 	 */
-	public void redraw(Graphics g, float cellSize)
+	public void redraw(Graphics g, float cellSize, boolean cheatMode)
 	{
-		this.matrix.redraw(g, cellSize);
+		this.matrix.redraw(g, cellSize, cheatMode);
 	}	
 	
 	/**

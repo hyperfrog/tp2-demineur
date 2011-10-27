@@ -29,25 +29,36 @@ import appDemineur.model.Game;
  */
 public class Board extends JPanel implements ActionListener, MouseListener
 {
-	// TODO : Remplacer par un menu
+	// 
 	private int currentLevel = 1;
 
 	// Objet de la partie courante
 	private Game currentGame = null;
+	
 	// 
-	private JPanel buttonPanel;
+	private boolean cheatMode = false;
+	
 	// 
 	private JPanel gamePanel;
+	
 	// 
-	private JButton newGridButton;
+	private JButton newGameButton;
+	
+	// 
+	private JPanel buttonPanel;
+	
 	//   
 	private JLabel timerLabel;
+	
 	//  
 	private JLabel flagsLabel;
+	
 	//
 	private Timer timer;
+	
 	//
 	private int elapsedTime;
+	
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
@@ -58,30 +69,30 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		super();
 		
         // Initialise les composantes
-		this.buttonPanel = new JPanel();
 		this.gamePanel = new JPanel();
-		this.newGridButton = new JButton();
+		this.buttonPanel = new JPanel();
+		this.newGameButton = new JButton();
 		this.timerLabel = new JLabel();
 		this.flagsLabel = new JLabel();
 		
 		this.setLayout(new BorderLayout());
 		
-		this.newGridButton.setText("Nouvelle grille");
-		this.newGridButton.setActionCommand("NEW_GRID");
+		this.newGameButton.setText("Nouvelle grille");
+		this.newGameButton.setActionCommand("NEW_GAME");
 		
 		this.buttonPanel.setLayout(new GridLayout(0, 3));
 		this.buttonPanel.setBackground(Color.WHITE);
 		
 		this.buttonPanel.add(this.timerLabel);
-		this.buttonPanel.add(this.newGridButton);
+		this.buttonPanel.add(this.newGameButton);
 		this.buttonPanel.add(this.flagsLabel);
 		
-		this.add(buttonPanel, BorderLayout.PAGE_END);
-		this.add(gamePanel, BorderLayout.CENTER);
+		this.add(this.gamePanel, BorderLayout.CENTER);
+		this.add(this.buttonPanel, BorderLayout.PAGE_START);
 		
 		// Spécifie les écouteurs pour les boutons
 		this.gamePanel.addMouseListener(this);
-		this.newGridButton.addActionListener(this);
+		this.newGameButton.addActionListener(this);
 		
 		this.timer = new Timer(1000, this);
 		this.timer.setActionCommand("TICK");
@@ -169,9 +180,36 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		{
 			Point gridOffset = this.getGridOffset();
 
-			this.currentGame.redraw(buffer, cellSize);
+			this.currentGame.redraw(buffer, cellSize, this.getCheatMode());
 			g.drawImage(bufferImg, gridOffset.x, gridOffset.y, this);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param enabled
+	 */
+	public void setCheatMode(boolean enabled)
+	{
+		this.cheatMode = enabled;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getCheatMode()
+	{
+		return this.cheatMode;
+	}
+	
+	/**
+	 * 
+	 * @param newLevel
+	 */
+	public void setCurrentLevel(int newLevel)
+	{
+		this.currentLevel = (newLevel < 0 || newLevel > 2) ? 0 : newLevel;
 	}
 	
 	/**
@@ -191,13 +229,23 @@ public class Board extends JPanel implements ActionListener, MouseListener
 				this.elapsedTime++;
 				this.timerLabel.setText("Temps : " + this.elapsedTime);
 			}
-			
-			//System.out.println(elapsedTime);
 		}
-		else if (evt.getActionCommand().equals("NEW_GRID"))
+		else if (evt.getActionCommand().equals("NEW_GAME"))
 		{
 			this.replay();
 			this.redraw();
+		}
+		else if (evt.getActionCommand().equals("SCORES"))
+		{
+			//
+		}
+		else if (evt.getActionCommand().equals("ABOUT"))
+		{
+			//
+		}
+		else if (evt.getActionCommand().equals("HELP"))
+		{
+			//
 		}
 	}
 	
