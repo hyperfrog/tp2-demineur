@@ -189,9 +189,10 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	 * 
 	 * @param enabled
 	 */
-	public void setCheatMode(boolean enabled)
+	public void setCheatMode(boolean enable)
 	{
-		this.cheatMode = enabled;
+		this.cheatMode = enable;
+		this.redraw();		
 	}
 	
 	/**
