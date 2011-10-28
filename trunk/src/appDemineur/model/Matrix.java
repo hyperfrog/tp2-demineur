@@ -27,9 +27,9 @@ public class Matrix extends BaseMatrix
 	 * et y ajoute le nombre de mines passé en paramètre dans des cellules
 	 * choisies au hasard.
 	 * 
-	 * @param width
-	 * @param height
-	 * @param mineAmount
+	 * @param width largeur de la matrice (en cases)
+	 * @param height hauteur de la matrice (en cases)
+	 * @param mineAmount nombre de mines à mettre dans la matrice
 	 */
 	public Matrix(int width, int height, int mineAmount)
 	{
@@ -101,31 +101,38 @@ public class Matrix extends BaseMatrix
 	}
 	
 	/**
-	 * @param g
-	 * @param cellSize
-	 * @param cheatMode
+	 * Dessine la matrice dans le Graphics spécifié
+	 * 
+	 * @param g Graphics dans lequel la matrice doit se dessiner
+	 * @param cellSize taille d'une case en pixels
+	 * @param showMines 
+	 * si vrai, les mines sont montrées sans autre condition; 
+	 * si faux, elles ne sont montrées que si la case est révélée 
 	 */
-	public void redraw(Graphics g, float cellSize, boolean cheatMode)
+	public void redraw(Graphics g, float cellSize, boolean showMines)
 	{
 		if (g != null)
-		{       
+		{
+			// Pour chaque colonne i
 			for (int i = 0; i < this.getWidth(); i++)
 			{
+				// Pour chaque rangée j
 				for (int j = 0; j < this.getHeight(); j++)
 				{
-					if (this.getElement(i, j) != null)
+					// Obtient la cellule en (i, j)
+					Cell c = this.getElement(i, j);
+					
+					if (c != null)
 					{
+						// Créé un Graphics pour la cellule
 						Graphics g2 = g.create(
 								Math.round(i * cellSize), 
 								Math.round(j * cellSize), 
 								Math.round(cellSize), 
 								Math.round(cellSize));
 
-						Cell c = this.getElement(i, j);
-						if (c != null)
-						{
-							c.redraw(g2, cellSize, cheatMode);
-						}
+						// Dessine la cellule
+						c.redraw(g2, cellSize, showMines);
 					}
 				}
 			}
@@ -153,11 +160,11 @@ public class Matrix extends BaseMatrix
 	}
 
 	/**
-	 * Retourne l'élément de la matrice présent à la position (x, y) donnée.
+	 * Retourne la cellule de la matrice à la position (x, y) spécifiée.
 	 * 
-	 * @param x		Position en largeur.
-	 * @param y		Position en hauteur
-	 * @return		L'élément à la position donnée
+	 * @param x		Colonne de la cellule
+	 * @param y		Rangée de la cellule
+	 * @return		La cellule à la position spécifiée
 	 */
 	@Override
 	public Cell getElement(int x, int y)

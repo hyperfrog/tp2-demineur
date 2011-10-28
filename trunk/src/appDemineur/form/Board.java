@@ -205,7 +205,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	}
 	
 	// Retourne le point du coin supérieur droit de la grille de manière à la centrer 
-	// dans gamePanel
+	// dans un panneau de jeu de dimension variable
 	private Point getGridOffset()
 	{
 		int x = Math.round((this.gamePanel.getWidth() - this.getGridScreenWidth()) / 2);

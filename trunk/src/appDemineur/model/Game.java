@@ -8,6 +8,11 @@ import java.util.List;
 
 import appDemineur.model.Cell.CellState;
 
+/**
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
+ *
+ */
 public class Game //extends JPanel
 {
 	// Classe définissant les propriétés d'un niveau de difficulté
@@ -38,11 +43,13 @@ public class Game //extends JPanel
 	// Indique si la partie est terminée
 	private boolean isOver;
 	
-	//
+	// Nombre de cases marquées d'un drapeau
 	private int nbFlags;
 	
 	/**
-	 * @param level
+	 * Construit une partie avec le niveau de difficulté spécifié.
+	 * 
+	 * @param level niveau de difficulté de la partie; doit être 0, 1 ou 2, sinon 0 est utilisé
 	 */
 	public Game(int level)
 	{
@@ -59,26 +66,28 @@ public class Game //extends JPanel
 	/**
 	 * Redessine la partie
 	 * 
-	 * @param g Graphics dans lequel dessiner la partie
-	 * @param cellSize taille d'une cellule en pixels 
+	 * @param g Graphics dans lequel la partie doit se dessiner
+	 * @param cellSize taille d'une case en pixels
+	 * @param showMines 
+	 * si vrai, les mines sont montrées sans autre condition; 
+	 * si faux, elles ne sont montrées que si la case est révélée 
 	 */
-	public void redraw(Graphics g, float cellSize, boolean cheatMode)
+	public void redraw(Graphics g, float cellSize, boolean showMines)
 	{
-		this.matrix.redraw(g, cellSize, cheatMode);
+		this.matrix.redraw(g, cellSize, showMines);
 	}	
 	
 	/**
-	 * Change l'état d'une case non révélée. N'as pas d'effet si la case
-	 * est déjà révélée.  
+	 * Change l'état d'une case non révélée. N'as pas d'effet si la case est déjà révélée.  
 	 * 
 	 * @param x coordonnée x de la case dont on souhaite changer l'état
 	 * @param y coordonnée y de la case dont on souhaite changer l'état
 	 * 
 	 * @param show 
 	 * si vrai, révèle la case si elle n'est pas marquée d'un drapeau; 
-	 * si faux, alterne entre le drapeau, le point d'interrogation et l'état caché sans marque.
+	 * si faux, alterne entre le drapeau, le point d'interrogation et l'état non marqué.
 	 * 
-	 * @return vrai si l'état de la cellule a changé, faux sinon
+	 * @return vrai si la cellule a changé d'état, faux sinon
 	 */
 	public boolean changeCellState(int x, int y, boolean show)
 	{
@@ -143,8 +152,8 @@ public class Game //extends JPanel
 	// pas modifié.
 	//
 	// La méthode prend les coordonnées x et y de la cellule à afficher 
-	// ainsi qu'une liste vide de cellules (ou une valeur null). 
-	// Ce dernier paramètre sert aux appels récursifs.
+	// ainsi qu'une liste vide de cellules (ou une valeur null),
+	// laquelle sert aux appels récursifs de la fonction.
 	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
 		Cell curCell = this.matrix.getElement(x, y);
@@ -212,21 +221,37 @@ public class Game //extends JPanel
 		return this.isOver;
 	}
 	
+	/**
+	 * Retourn le nombre de cases marquées d'un drapeau
+	 * @return le nombre de cases marquées d'un drapeau
+	 */
 	public int getNbFlags()
 	{
 		return this.nbFlags;
 	}
 	
+	/**
+	 * Retourne la largeur de la matrice de jeu (en cases)
+	 * @return la largeur de la matrice de jeu (en cases)
+	 */
 	public int getWidth()
 	{
 		return Game.LEVELS[this.level].dim.width;
 	}
 	
+	/**
+	 * Retourne la hauteur de la matrice de jeu (en cases)
+	 * @return la hauteur de la matrice de jeu (en cases)
+	 */
 	public int getHeight()
 	{
 		return Game.LEVELS[this.level].dim.height;
 	}
 	
+	/**
+	 * Retourne le nombre de mines dans la partie
+	 * @return le nombre de mines dans la partie
+	 */
 	public int getMineAmount()
 	{
 		return Game.LEVELS[this.level].mineAmount;
