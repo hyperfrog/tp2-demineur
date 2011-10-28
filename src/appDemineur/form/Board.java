@@ -145,7 +145,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		{
 			super.paintComponent(g);
 
-			if (g != null && this.parent != null && this.parent instanceof Board)
+			if (g != null && this.parent != null)
 			{
 				BufferedImage image = new BufferedImage(
 						this.parent.getGridScreenWidth(), 
@@ -156,7 +156,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 
 				Point gridOffset = this.parent.getGridOffset();
 				
-				this.parent.currentGame.redraw(g2, this.parent.getCellSize(), (this.parent.currentGame.isOver()) ? true : this.parent.parent.getCheatMode());
+				this.parent.currentGame.redraw(
+						g2, 
+						this.parent.getCellSize(), 
+						this.parent.currentGame.isOver() || this.parent.parent.getCheatMode());
+				
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}
 		}
