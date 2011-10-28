@@ -11,7 +11,7 @@ package util;
 public class BaseMatrix
 {
 	// Contient la matrice courante.
-	private Object[][] m;
+	private Object[][] m = null;
 	
 	// Largeur de la matrice courante.
 	private int width;
@@ -20,12 +20,10 @@ public class BaseMatrix
 	private int height;
 	
 	/**
-	 * Construit une matrice de la largeur et la hauteur spécifiées
-	 * en ajoutant le nombre de mines passée en paramètre à l'intérieur de la matrice.
+	 * Construit une matrice de la largeur et la hauteur spécifiées.
 	 * 
-	 * @param width
-	 * @param height
-	 * @param mineAmount
+	 * @param width Largeur de la matrice
+	 * @param height Hauteur de la matrice
 	 */
 	public BaseMatrix(int width, int height)
 	{
