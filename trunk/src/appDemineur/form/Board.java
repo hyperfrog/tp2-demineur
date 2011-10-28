@@ -3,9 +3,7 @@ package appDemineur.form;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.LineBorder;
 
 import appDemineur.model.Game;
 
@@ -83,11 +82,16 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		
 		this.setLayout(new BorderLayout());
 		
-		this.newGameButton.setText("Nouvelle grille");
+		this.newGameButton.setText(":)");
 		this.newGameButton.setActionCommand("NEW_GAME");
 		
+		this.timerLabel.setHorizontalAlignment(JLabel.CENTER);
+		this.flagsLabel.setHorizontalAlignment(JLabel.CENTER);
+		
 		this.buttonPanel.setLayout(new GridLayout(0, 3));
-		this.buttonPanel.setBackground(Color.WHITE);
+		this.buttonPanel.setBackground(new Color(235, 235, 235));
+		this.buttonPanel.setBorder(LineBorder.createBlackLineBorder());
+		//this.buttonPanel.setBorder(new CompoundBorder(BorderFactory.createRaisedBevelBorder(), new EmptyBorder(10, 10, 10, 10)));
 		
 		this.buttonPanel.add(this.timerLabel);
 		this.buttonPanel.add(this.newGameButton);
