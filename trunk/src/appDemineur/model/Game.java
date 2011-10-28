@@ -13,7 +13,7 @@ import appDemineur.model.Cell.CellState;
  * @author Alexandre Tremblay
  *
  */
-public class Game //extends JPanel
+public class Game
 {
 	// Classe définissant les propriétés d'un niveau de difficulté
 	public static class Level
@@ -53,12 +53,12 @@ public class Game //extends JPanel
 	 */
 	public Game(int level)
 	{
-		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;
+		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;		
 		
 		this.matrix = new Matrix(
-				Game.LEVELS[level].dim.width, 
-				Game.LEVELS[level].dim.height, 
-				Game.LEVELS[level].mineAmount);
+				Game.LEVELS[this.level].dim.width, 
+				Game.LEVELS[this.level].dim.height, 
+				Game.LEVELS[this.level].mineAmount);
 		
 		this.nbFlags = 0;
 	}
@@ -107,9 +107,7 @@ public class Game //extends JPanel
 					// Si c'est une mine, la partie est perdue
 					if (c.isMine())
 					{
-						//System.out.println("Perdu!");
 						c.setState(CellState.SHOWN);
-						
 						this.isOver = true;
 					}
 
