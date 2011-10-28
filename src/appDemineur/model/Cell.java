@@ -19,7 +19,7 @@ public class Cell
 		this.state = CellState.HIDDEN;
 	}
 	
-	public void redraw(Graphics g, float size, boolean cheatMode)
+	public void redraw(Graphics g, float size, boolean showMines)
 	{
 		if (g != null)
 		{
@@ -31,7 +31,7 @@ public class Cell
 			int mineSize = Math.round(size * 0.50f);
 			
 			// Visible, mine
-			if ((this.getState().equals(CellState.SHOWN) || cheatMode) && this.isMine())
+			if ((this.getState().equals(CellState.SHOWN) || showMines) && this.isMine())
 			{
 				g.setColor(Color.BLACK);
 				g.fillRect(0, 0, cellSize, cellSize);
