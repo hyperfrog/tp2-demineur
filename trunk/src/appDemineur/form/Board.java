@@ -91,7 +91,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		this.controlPanel.setLayout(new GridLayout(0, 3));
 		this.controlPanel.setBackground(new Color(235, 235, 235));
 		this.controlPanel.setBorder(LineBorder.createBlackLineBorder());
-		//this.buttonPanel.setBorder(new CompoundBorder(BorderFactory.createRaisedBevelBorder(), new EmptyBorder(10, 10, 10, 10)));
 		
 		this.controlPanel.add(this.timerLabel);
 		this.controlPanel.add(this.newGameButton);
@@ -157,7 +156,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 
 				Point gridOffset = this.parent.getGridOffset();
 				
-				this.parent.currentGame.redraw(g2, this.parent.getCellSize(), this.parent.parent.getCheatMode());
+				this.parent.currentGame.redraw(g2, this.parent.getCellSize(), (this.parent.currentGame.isOver()) ? true : this.parent.parent.getCheatMode());
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}
 		}
