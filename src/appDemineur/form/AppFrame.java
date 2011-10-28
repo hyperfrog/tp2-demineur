@@ -1,8 +1,6 @@
 package appDemineur.form;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
@@ -30,7 +28,7 @@ import javax.swing.KeyStroke;
 public class AppFrame extends JFrame implements ComponentListener, ItemListener
 {
 	// Dimension initiale de la fenêtre
-	private static final Dimension INIT_SIZE = new Dimension(624, 683);
+	private static final Dimension INIT_SIZE = new Dimension(617, 690);
 	
 	// Largeur minimale de la fenêtre
 	private static final int MIN_WIDTH = 350;
