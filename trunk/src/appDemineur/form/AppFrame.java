@@ -160,7 +160,7 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.mBoard = new Board();
+		this.mBoard = new Board(this);
 		this.getContentPane().add(this.mBoard);
 		
 		this.newGameMenu.addActionListener(this.mBoard);
@@ -168,12 +168,22 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 		this.aboutMenu.addActionListener(this.mBoard);
 		this.helpMenu.addActionListener(this.mBoard);
 		
-		this.easyDifficultyOptMenu.addItemListener(this);
-		this.normalDifficultyOptMenu.addItemListener(this);
-		this.hardDifficultyOptMenu.addItemListener(this);
+//		this.easyDifficultyOptMenu.addItemListener(this);
+//		this.normalDifficultyOptMenu.addItemListener(this);
+//		this.hardDifficultyOptMenu.addItemListener(this);
 		this.cheatChkMenu.addItemListener(this);
 		
 		this.addComponentListener(this);
+	}
+	
+	public int getNextGameLevel()
+	{
+		return Integer.parseInt(this.difficultyGroup.getSelection().getActionCommand());
+	}
+	
+	public boolean getCheatMode()
+	{
+		return this.cheatChkMenu.isSelected();
 	}
 	
 	/**
@@ -186,23 +196,24 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 		
 		if (e.getActionCommand().equals("CHEATS"))
 		{
-			this.mBoard.setCheatMode(evt.getStateChange() == ItemEvent.SELECTED);
+//			this.mBoard.setCheatMode(evt.getStateChange() == ItemEvent.SELECTED);
+			this.repaint();
 		}
-		else if ((e.getActionCommand().equals("0") || e.getActionCommand().equals("1") || e.getActionCommand().equals("2")) 
-				&& evt.getStateChange() == ItemEvent.SELECTED)
-		{
-			this.mBoard.setCurrentLevel(Integer.parseInt(e.getActionCommand()));
-		}
+//		else if ((e.getActionCommand().equals("0") || e.getActionCommand().equals("1") || e.getActionCommand().equals("2")) 
+//				&& evt.getStateChange() == ItemEvent.SELECTED)
+//		{
+//			this.mBoard.setCurrentLevel(Integer.parseInt(e.getActionCommand()));
+//		}
 	}
 	
-	/**
-	 * Redessine la fenêtre.
-	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
-	 * 
-	 * @see java.awt.Window#paint(java.awt.Graphics)
-	 * 
-	 * @param g Graphics de la fenêtre
-	 */
+//	/**
+//	 * Redessine la fenêtre.
+//	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+//	 * 
+//	 * @see java.awt.Window#paint(java.awt.Graphics)
+//	 * 
+//	 * @param g Graphics de la fenêtre
+//	 */
 //	@Override
 //	public void paint(Graphics g)
 //	{
