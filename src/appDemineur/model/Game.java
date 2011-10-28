@@ -11,7 +11,7 @@ import appDemineur.model.Cell.CellState;
 public class Game //extends JPanel
 {
 	// Classe définissant les propriétés d'un niveau de difficulté
-	private static class Level
+	public static class Level
 	{
 		public final Dimension dim;
 		public final int mineAmount;
@@ -24,7 +24,7 @@ public class Game //extends JPanel
 	}
 	
 	// Les trois niveaux de difficulté du jeu
-	private static final Level[] LEVELS = new Level[] { 
+	public static final Level[] LEVELS = new Level[] { 
 		new Level(new Dimension(9, 9), 10), 
 		new Level(new Dimension(16, 16), 40), 
 		new Level(new Dimension(30, 16), 99)
@@ -42,25 +42,11 @@ public class Game //extends JPanel
 	private int nbFlags;
 	
 	/**
-	 * 
-	 * 
-	 * @param width
-	 * @param height
-	 * @param mineAmount
-	 */
-//	public Game(int width, int height, int mineAmount)
-//	{
-//		this.matrix = new Matrix(width, height, mineAmount);
-//		
-//		this.nbFlags = 0;
-//	}
-
-	/**
 	 * @param level
 	 */
 	public Game(int level)
 	{
-		this.level = (level < 0 || level > 2) ? 0 : level;
+		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;
 		
 		this.matrix = new Matrix(
 				Game.LEVELS[level].dim.width, 
@@ -82,12 +68,17 @@ public class Game //extends JPanel
 	}	
 	
 	/**
+	 * Change l'état d'une case non révélée. N'as pas d'effet si la case
+	 * est déjà révélée.  
 	 * 
+	 * @param x coordonnée x de la case dont on souhaite changer l'état
+	 * @param y coordonnée y de la case dont on souhaite changer l'état
 	 * 
-	 * @param x
-	 * @param y
-	 * @param show
-	 * @return
+	 * @param show 
+	 * si vrai, révèle la case si elle n'est pas marquée d'un drapeau; 
+	 * si faux, alterne entre le drapeau, le point d'interrogation et l'état caché sans marque.
+	 * 
+	 * @return vrai si l'état de la cellule a changé, faux sinon
 	 */
 	public boolean changeCellState(int x, int y, boolean show)
 	{
@@ -95,12 +86,16 @@ public class Game //extends JPanel
 		
 		Cell c = this.matrix.getElement(x, y);
 		
+		// Si la case n'est pas révélée
 		if (c != null && !c.getState().equals(CellState.SHOWN))
 		{
+			// Si on souhaite la révéler
 			if (show)
 			{
+				// Si elle n'est pas marquée d'un drapeau
 				if (!c.getState().equals(CellState.FLAGGED))
 				{
+					// Si c'est une mine, la partie est perdue
 					if (c.isMine())
 					{
 						System.out.println("Perdu!");

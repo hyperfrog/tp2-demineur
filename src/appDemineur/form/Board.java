@@ -30,14 +30,14 @@ import appDemineur.model.Game;
  */
 public class Board extends JPanel implements ActionListener, MouseListener
 {
-	// 
-	private int currentLevel = 1;
-
+//	// 
+//	private int currentLevel = 1;
+//
+//	// 
+//	private boolean cheatMode = false;
+	
 	// Objet de la partie courante
 	private Game currentGame = null;
-	
-	// 
-	private boolean cheatMode = false;
 	
 	// 
 //	private JPanel gamePanel;
@@ -61,17 +61,18 @@ public class Board extends JPanel implements ActionListener, MouseListener
 	//
 	private int elapsedTime;
 	
-//	private BufferedImage image;
-//	private Graphics2D g2d;
-
+	private AppFrame parent = null;
+	
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
 	 * et contient 40 mines.
 	 */
-	public Board()
+	public Board(AppFrame parent)
 	{
 		super();
+		
+		this.parent = parent;
 		
         // Initialise les composantes
 		this.gamePanel = new DrawingArea(this);
@@ -133,12 +134,16 @@ public class Board extends JPanel implements ActionListener, MouseListener
 
 			if (g != null && parent != null)
 			{
-				BufferedImage image = new BufferedImage(this.parent.getGridScreenWidth(), this.parent.getGridScreenHeight(), BufferedImage.TYPE_INT_ARGB);
+				BufferedImage image = new BufferedImage(
+						this.parent.getGridScreenWidth(), 
+						this.parent.getGridScreenHeight(), 
+						BufferedImage.TYPE_INT_ARGB);
+				
 				Graphics g2 = image.getGraphics();
 
 				Point gridOffset = this.parent.getGridOffset();
 				
-				this.parent.currentGame.redraw(g2, this.parent.getCellSize(), this.parent.getCheatMode());
+				this.parent.currentGame.redraw(g2, this.parent.getCellSize(), this.parent.parent.getCheatMode());
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}
 		}
@@ -160,7 +165,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		{
 			// Crée une nouvelle partie
 //			this.currentGame = new Game(Board.LEVELS[Board.CURRENT_LEVEL].dim.width, Board.LEVELS[Board.CURRENT_LEVEL].dim.height, Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
-			this.currentGame = new Game(this.currentLevel);
+			this.currentGame = new Game(this.parent.getNextGameLevel()); //new Game(this.currentLevel);
 			
 			this.timerLabel.setText("Temps : 0");
 			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
@@ -177,65 +182,66 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		
 		if (this.currentGame.getWidth() > 0 && this.currentGame.getHeight() > 0)
 		{
-			float width = (float) this.gamePanel.getWidth() / this.currentGame.getWidth();
-			float height = (float) this.gamePanel.getHeight() / this.currentGame.getHeight();
+			float width = (float) Math.max(this.gamePanel.getWidth(), 0) / this.currentGame.getWidth();
+			float height = (float) Math.max(this.gamePanel.getHeight(), 0) / this.currentGame.getHeight();
 
-			size = height < width ? height : width;
+			size = Math.min(height, width);
 		}
 		
-		return size >= 0 ? size : 0;
+		return size;
 	}
 	
-	// Retourne le point du coin supérieur droit de la grille de jeu 
-	// de manière à centrer celle-ci.
+	// Retourne le point du coin supérieur droit de la grille de manière à la centrer 
+	// dans gamePanel
 	private Point getGridOffset()
 	{
-		float cellSize = this.getCellSize();
-		int x = Math.round((this.gamePanel.getWidth() - (this.currentGame.getWidth() * cellSize)) / 2);
-		int y = Math.round((this.gamePanel.getHeight() - (this.currentGame.getHeight() * cellSize)) / 2);
+		int x = Math.round((this.gamePanel.getWidth() - this.getGridScreenWidth()) / 2);
+		int y = Math.round((this.gamePanel.getHeight() - this.getGridScreenHeight()) / 2);
 		
 		return new Point(Math.max(x, 0), Math.max(y, 0));
 	}
 	
+	// Retourne la largeur de la grille à l'écran (en pixels)
 	private int getGridScreenWidth()
 	{
 		return Math.max(Math.round(this.getCellSize() * this.currentGame.getWidth()), 1);
 	}
 	
+	// Retourne la hauteur de la grille à l'écran (en pixels)
 	private int getGridScreenHeight()
 	{
 		return Math.max(Math.round(this.getCellSize() * this.currentGame.getHeight()), 1);
 	}
 
-	/**
-	 * 
-	 * @param enabled
-	 */
-	public void setCheatMode(boolean enable)
-	{
-		this.cheatMode = enable;
-//		this.redraw();
-		this.repaint();
-	}
+//	/**
+//	 * 
+//	 * @param enabled
+//	 */
+//	public void setCheatMode(boolean enable)
+//	{
+//		this.cheatMode = enable;
+////		this.redraw();
+//		this.repaint();
+//	}
+//	
+//	/**
+//	 * 
+//	 * @return
+//	 */
+//	public boolean getCheatMode()
+//	{
+//		return this.cheatMode;
+//	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean getCheatMode()
-	{
-		return this.cheatMode;
-	}
-	
-	/**
-	 * 
-	 * @param newLevel
-	 */
-	public void setCurrentLevel(int newLevel)
-	{
-		this.currentLevel = (newLevel < 0 || newLevel > 2) ? 0 : newLevel;
-	}
-	
+//	/**
+//	 * 
+//	 * @param newLevel
+//	 */
+//	public void setCurrentLevel(int newLevel)
+//	{
+//		this.currentLevel = (newLevel < 0 || newLevel > Game.LEVELS.length - 1) ? 0 : newLevel;
+//	}
+//	
 	/**
 	 * Reçoit et traite les événements relatifs aux boutons
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.

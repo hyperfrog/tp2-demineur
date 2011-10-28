@@ -21,15 +21,16 @@ public class Cell
 	
 	public void redraw(Graphics g, float size, boolean cheatMode)
 	{
-		int chrX = Math.round(size * 0.35f);
-		int chrY = Math.round(size * 0.75f);
-		int fontSize = Math.round(size * 0.60f);
-		int cellSize = Math.round(size);
-		int minePos = Math.round(size * 0.25f);
-		int mineSize = Math.round(size * 0.50f);
-		
 		if (g != null)
 		{
+			int chrX = Math.round(size * 0.35f);
+			int chrY = Math.round(size * 0.75f);
+			int fontSize = Math.round(size * 0.60f);
+			int cellSize = Math.round(size);
+			int minePos = Math.round(size * 0.25f);
+			int mineSize = Math.round(size * 0.50f);
+			
+			// Visible, mine
 			if ((this.getState().equals(CellState.SHOWN) || cheatMode) && this.isMine())
 			{
 				g.setColor(Color.BLACK);
@@ -38,24 +39,7 @@ public class Cell
 				g.setColor(Color.RED);
 				g.fillOval(minePos, minePos, mineSize, mineSize);
 			}
-			else if (!this.getState().equals(CellState.SHOWN))
-			{
-				g.setColor(Color.GRAY);
-				g.fillRect(0, 0, cellSize, cellSize);
-				
-				g.setColor(Color.WHITE);
-				g.setFont(new Font(null, Font.BOLD, fontSize));
-				
-				if (this.getState().equals(CellState.DUBIOUS))
-				{
-					g.drawString("?", chrX, chrY);
-				}
-				else if (this.getState().equals(CellState.FLAGGED))
-				{
-					g.setColor(new Color(200, 0, 0));
-					g.drawString("¶", chrX, chrY);
-				}
-			}
+			// Pas visible, mine
 			else if (this.getState().equals(CellState.SHOWN) && !this.isMine())
 			{
 				g.setColor(Color.WHITE);
@@ -75,6 +59,25 @@ public class Cell
 
 				g.setFont(new Font(null, Font.BOLD, fontSize));
 				g.drawString("" + this.getAdjacentMines(), chrX, chrY);
+			}
+			// HIDDEN, FLAGGED ou DUBIOUS
+			else if (!this.getState().equals(CellState.SHOWN)) 
+			{
+				g.setColor(Color.GRAY);
+				g.fillRect(0, 0, cellSize, cellSize);
+				
+				g.setColor(Color.WHITE);
+				g.setFont(new Font(null, Font.BOLD, fontSize));
+				
+				if (this.getState().equals(CellState.DUBIOUS))
+				{
+					g.drawString("?", chrX, chrY);
+				}
+				else if (this.getState().equals(CellState.FLAGGED))
+				{
+					g.setColor(new Color(200, 0, 0));
+					g.drawString("¶", chrX, chrY);
+				}
 			}
 		}
 	}
