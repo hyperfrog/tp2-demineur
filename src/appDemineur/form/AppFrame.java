@@ -3,8 +3,8 @@ package appDemineur.form;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+//import java.awt.event.ItemEvent;
+//import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ButtonGroup;
@@ -25,7 +25,7 @@ import javax.swing.KeyStroke;
  * 
  */
 
-public class AppFrame extends JFrame implements ComponentListener, ItemListener
+public class AppFrame extends JFrame implements ComponentListener //, ItemListener
 {
 	// Dimension initiale de la fenêtre
 	private static final Dimension INIT_SIZE = new Dimension(617, 690);
@@ -171,55 +171,54 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 //		this.easyDifficultyOptMenu.addItemListener(this);
 //		this.normalDifficultyOptMenu.addItemListener(this);
 //		this.hardDifficultyOptMenu.addItemListener(this);
-		this.cheatChkMenu.addItemListener(this);
+		this.cheatChkMenu.addItemListener(this.mBoard);
 		
 		this.addComponentListener(this);
 	}
 	
+	/**
+	 * Retourne le niveau sélectionné dans le menu pour la prochaine partie.
+	 * 
+	 * @return le niveau sélectionné dans le menu pour la prochaine partie
+	 */
 	public int getNextGameLevel()
 	{
 		return Integer.parseInt(this.difficultyGroup.getSelection().getActionCommand());
 	}
 	
+	/**
+	 * Retourne l'état de l'élément de menu «Tricher».
+	 * 
+	 * @return l'état de l'élément de menu «Tricher»
+	 */
 	public boolean getCheatMode()
 	{
 		return this.cheatChkMenu.isSelected();
 	}
 	
-	/**
-	 * 
-	 */
-	@Override
-	public void itemStateChanged(ItemEvent evt)
-	{
-		JMenuItem e = (JMenuItem) evt.getItem();
-		
-		if (e.getActionCommand().equals("CHEATS"))
-		{
-//			this.mBoard.setCheatMode(evt.getStateChange() == ItemEvent.SELECTED);
-			this.repaint();
-		}
-//		else if ((e.getActionCommand().equals("0") || e.getActionCommand().equals("1") || e.getActionCommand().equals("2")) 
-//				&& evt.getStateChange() == ItemEvent.SELECTED)
-//		{
-//			this.mBoard.setCurrentLevel(Integer.parseInt(e.getActionCommand()));
-//		}
-	}
-	
 //	/**
-//	 * Redessine la fenêtre.
+//	 * Méthode appelée quand l'état d'un élément de menu change.
 //	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
 //	 * 
-//	 * @see java.awt.Window#paint(java.awt.Graphics)
+//	 * @param evt évènement déclencheur
 //	 * 
-//	 * @param g Graphics de la fenêtre
+//	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
 //	 */
 //	@Override
-//	public void paint(Graphics g)
+//	public void itemStateChanged(ItemEvent evt)
 //	{
-//		super.paint(g);
-//		this.mBoard.redraw();		
-//		System.out.println("paint() appelé dans AppFrame.");
+//		JMenuItem e = (JMenuItem) evt.getItem();
+//		
+//		if (e.getActionCommand().equals("CHEATS"))
+//		{
+////			this.mBoard.setCheatMode(evt.getStateChange() == ItemEvent.SELECTED);
+//			this.repaint();
+//		}
+////		else if ((e.getActionCommand().equals("0") || e.getActionCommand().equals("1") || e.getActionCommand().equals("2")) 
+////				&& evt.getStateChange() == ItemEvent.SELECTED)
+////		{
+////			this.mBoard.setCurrentLevel(Integer.parseInt(e.getActionCommand()));
+////		}
 //	}
 	
 	/** 
@@ -231,7 +230,7 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 	 * @param e événement déclencheur
 	 */
 	@Override
-	public void componentHidden(ComponentEvent arg0)
+	public void componentHidden(ComponentEvent e)
 	{
 	}
 	
@@ -244,7 +243,7 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 	 * @param e événement déclencheur
 	 */
 	@Override
-	public void componentMoved(ComponentEvent arg0)
+	public void componentMoved(ComponentEvent e)
 	{
 	}
 
@@ -258,7 +257,7 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 	 * @param e événement déclencheur
 	 */
 	@Override
-	public void componentResized(ComponentEvent arg0)
+	public void componentResized(ComponentEvent e)
 	{
 		int width = getWidth();
 		int height = getHeight();
@@ -290,7 +289,7 @@ public class AppFrame extends JFrame implements ComponentListener, ItemListener
 	 * @param e événement déclencheur
 	 */
 	@Override
-	public void componentShown(ComponentEvent arg0)
+	public void componentShown(ComponentEvent e)
 	{
 	}
 }

@@ -7,12 +7,15 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -21,52 +24,48 @@ import javax.swing.border.LineBorder;
 import appDemineur.model.Game;
 
 /**
- * La classe Board gère l'interface du jeu du Démineur.
- * C'est elle qui gère les évènements de l'interface utilisateur.
+ * La classe Board implément l'interface du jeu du Démineur.
+ * Elle gère la plupart des évènements de l'interface utilisateur.
  * 
  * @author Christian Lesage
  * @author Alexandre Tremblay
  *
  */
-public class Board extends JPanel implements ActionListener, MouseListener
+public class Board extends JPanel implements ActionListener, MouseListener, ItemListener
 {
-//	// 
-//	private int currentLevel = 1;
-//
-//	// 
-//	private boolean cheatMode = false;
-	
 	// Objet de la partie courante
 	private Game currentGame = null;
 	
-	// 
-//	private JPanel gamePanel;
-	private DrawingArea gamePanel;
+	// Panneau dans lequel la partie est dessinée
+	private DrawingPanel gamePanel;
 	
-	// 
+	// Bouton pour créer une nouvelle partie
 	private JButton newGameButton;
 	
-	// 
-	private JPanel buttonPanel;
+	// Panneau contenant les contrôles
+	private JPanel controlPanel;
 	
-	//   
+	// Libellé pour la minuterie
 	private JLabel timerLabel;
 	
-	//  
+	// Libellé pour le nombre de cases marquées d'un drapeau
 	private JLabel flagsLabel;
 	
-	//
+	// Minuterie déclenchée une fois par seconde
 	private Timer timer;
 	
-	//
+	// Temps écoulé pour la partie en cours en secondes
 	private int elapsedTime;
 	
+	// Objet parent
 	private AppFrame parent = null;
 	
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
 	 * et contient 40 mines.
+	 * 
+	 * @param parent Objet parent du panneau, doit être du type AppFrame
 	 */
 	public Board(AppFrame parent)
 	{
@@ -75,8 +74,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.parent = parent;
 		
         // Initialise les composantes
-		this.gamePanel = new DrawingArea(this);
-		this.buttonPanel = new JPanel();
+		this.gamePanel = new DrawingPanel(this);
+		this.controlPanel = new JPanel();
 		this.newGameButton = new JButton();
 		this.timerLabel = new JLabel();
 		this.flagsLabel = new JLabel();
@@ -89,36 +88,49 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		this.timerLabel.setHorizontalAlignment(JLabel.CENTER);
 		this.flagsLabel.setHorizontalAlignment(JLabel.CENTER);
 		
-		this.buttonPanel.setLayout(new GridLayout(0, 3));
-		this.buttonPanel.setBackground(new Color(235, 235, 235));
-		this.buttonPanel.setBorder(LineBorder.createBlackLineBorder());
+		this.controlPanel.setLayout(new GridLayout(0, 3));
+		this.controlPanel.setBackground(new Color(235, 235, 235));
+		this.controlPanel.setBorder(LineBorder.createBlackLineBorder());
 		//this.buttonPanel.setBorder(new CompoundBorder(BorderFactory.createRaisedBevelBorder(), new EmptyBorder(10, 10, 10, 10)));
 		
-		this.buttonPanel.add(this.timerLabel);
-		this.buttonPanel.add(this.newGameButton);
-		this.buttonPanel.add(this.flagsLabel);
+		this.controlPanel.add(this.timerLabel);
+		this.controlPanel.add(this.newGameButton);
+		this.controlPanel.add(this.flagsLabel);
 		
 		this.add(this.gamePanel, BorderLayout.CENTER);
-		this.add(this.buttonPanel, BorderLayout.PAGE_START);
+		this.add(this.controlPanel, BorderLayout.PAGE_START);
 		
-		// Spécifie les écouteurs pour les boutons
+		// Spécifie les écouteurs pour le panneau de jeu et le bouton
 		this.gamePanel.addMouseListener(this);
 		this.newGameButton.addActionListener(this);
 		
+		// Fixe le délai de la minuterie à 1 seconde et spécifie son écouteur
 		this.timer = new Timer(1000, this);
 		this.timer.setActionCommand("TICK");
-		this.timer.start();
 		
-		// Replay va se charger de créer une nouvelle partie 
+		// Replay se charge de créer une nouvelle partie 
 		this.replay();
 	}
 	
 	// Cette classe pourrait implémenter le mouse listener
-	private static class DrawingArea extends JPanel
+	/**
+	 * Cette classe ne sert qu'à fournir un accès au paintComponent() 
+	 * du panneau de jeu, qui est un enfant du panneau de type Board.
+	 * 
+	 * @author Christian Lesage
+	 * @author Alexandre Tremblay
+	 *
+	 */
+	private static class DrawingPanel extends JPanel
 	{
 		private Board parent = null;
-
-		public DrawingArea(Board parent)
+		
+		/**
+		 * Construit un panneau dans lequel il est possible de dessiner.
+		 * 
+		 * @param parent Objet parent du panneau, doit être du type Board
+		 */
+		public DrawingPanel(Board parent)
 		{
 			this.parent = parent;
 			this.setBackground(Color.WHITE);
@@ -127,12 +139,14 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		/**
 		 * Redessine le plateau de jeu.
 		 * Vous ne devriez pas avoir à appeler cette méthode directement.
+		 * @param g Graphics dans lequel le panneau doit se dessiner
+		 * 
 		 */
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
 
-			if (g != null && parent != null)
+			if (g != null && this.parent != null && this.parent instanceof Board)
 			{
 				BufferedImage image = new BufferedImage(
 						this.parent.getGridScreenWidth(), 
@@ -164,8 +178,7 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		if (response == 0)
 		{
 			// Crée une nouvelle partie
-//			this.currentGame = new Game(Board.LEVELS[Board.CURRENT_LEVEL].dim.width, Board.LEVELS[Board.CURRENT_LEVEL].dim.height, Board.LEVELS[Board.CURRENT_LEVEL].mineAmount);
-			this.currentGame = new Game(this.parent.getNextGameLevel()); //new Game(this.currentLevel);
+			this.currentGame = new Game(this.parent.getNextGameLevel());
 			
 			this.timerLabel.setText("Temps : 0");
 			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
@@ -213,37 +226,8 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		return Math.max(Math.round(this.getCellSize() * this.currentGame.getHeight()), 1);
 	}
 
-//	/**
-//	 * 
-//	 * @param enabled
-//	 */
-//	public void setCheatMode(boolean enable)
-//	{
-//		this.cheatMode = enable;
-////		this.redraw();
-//		this.repaint();
-//	}
-//	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	public boolean getCheatMode()
-//	{
-//		return this.cheatMode;
-//	}
-	
-//	/**
-//	 * 
-//	 * @param newLevel
-//	 */
-//	public void setCurrentLevel(int newLevel)
-//	{
-//		this.currentLevel = (newLevel < 0 || newLevel > Game.LEVELS.length - 1) ? 0 : newLevel;
-//	}
-//	
 	/**
-	 * Reçoit et traite les événements relatifs aux boutons
+	 * Reçoit et traite les événements relatifs aux boutons, à la minuterie et aux menus.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -263,7 +247,6 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		else if (evt.getActionCommand().equals("NEW_GAME"))
 		{
 			this.replay();
-//			this.redraw();
 			this.repaint();
 		}
 		else if (evt.getActionCommand().equals("SCORES"))
@@ -280,6 +263,25 @@ public class Board extends JPanel implements ActionListener, MouseListener
 		}
 	}
 	
+	/**
+	 * Méthode appelée quand l'état d'un élément de menu change.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @param evt évènement déclencheur
+	 * 
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
+	@Override
+	public void itemStateChanged(ItemEvent evt)
+	{
+		JMenuItem e = (JMenuItem) evt.getItem();
+		
+		if (e.getActionCommand().equals("CHEATS"))
+		{
+			this.repaint();
+		}
+	}
+
 	/**
 	 * Reçoit et traite les événements relatifs aux clics de la souris.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
@@ -318,7 +320,6 @@ public class Board extends JPanel implements ActionListener, MouseListener
 							(int)((evt.getY() - gridOffset.y) / cellSize),
 							show))
 					{
-//						this.redraw();
 						this.repaint();
 						this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
 					}
