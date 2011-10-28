@@ -98,9 +98,9 @@ public class Game //extends JPanel
 					// Si c'est une mine, la partie est perdue
 					if (c.isMine())
 					{
-						System.out.println("Perdu!");
+						//System.out.println("Perdu!");
 						c.setState(CellState.SHOWN);
-
+						
 						this.isOver = true;
 					}
 
