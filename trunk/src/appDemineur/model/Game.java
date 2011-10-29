@@ -46,6 +46,9 @@ public class Game
 	// Nombre de cases marquées d'un drapeau
 	private int nbFlags;
 	
+	// Nombre de cases découverte durant la partie courante
+	private int discoveredCells;
+	
 	/**
 	 * Construit une partie avec le niveau de difficulté spécifié.
 	 * 
@@ -61,6 +64,7 @@ public class Game
 				Game.LEVELS[this.level].mineAmount);
 		
 		this.nbFlags = 0;
+		this.discoveredCells = 0;
 	}
 
 	/**
@@ -109,9 +113,23 @@ public class Game
 					{
 						c.setState(CellState.SHOWN);
 						this.isOver = true;
+						
+						System.out.println("Partie perdue...");
 					}
-
+					
+					// Dévoile les cellules affectées
 					this.showCell(x, y, null);
+					
+					//System.out.println(((this.getWidth() * this.getHeight()) - this.discoveredCells));
+					
+					// Si le nombre de cases non découvertes est égal au nombre de mines placées sur la grille, la partie est gagnée
+					if (((this.getWidth() * this.getHeight()) - this.discoveredCells) == this.getMineAmount())
+					{
+						this.isOver = true;
+						
+						System.out.println("Partie gagnée!");
+					}
+					
 					changed = true;
 				}
 			}
@@ -162,6 +180,9 @@ public class Game
 		{
 			// Change l'état de la cellule courante
 			curCell.setState(CellState.SHOWN);
+			
+			// Incrémente le nombre de cases découvertes
+			this.discoveredCells++;
 
 			// Si aucune cellule adjacente ne contient de mine 
 			if (curCell.getAdjacentMines() == 0)
