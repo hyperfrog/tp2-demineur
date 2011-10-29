@@ -21,17 +21,78 @@ public class BaseMatrixTest
 	@Test
 	public void testBaseMatrix()
 	{
-		BaseMatrix bm = new BaseMatrix(3, 4);
+		// Cas valide 1 : Une matrice non initialisée est créée
+		BaseMatrix bm = new BaseMatrix();
+		Assert.assertNotNull(bm);
+		Assert.assertEquals(0, bm.getWidth());
+		Assert.assertEquals(0, bm.getHeight());
+	}
+	
+	/**
+	 * 	Méthode de test pour {@link util.BaseMatrix#BaseMatrix(int, int)}
+	 */
+	@Test
+	public void testBaseMatrixIntInt()
+	{
+		this.testBaseMatrixIntIntOrRedimIntInt(false);
+	}
+	
+	/**
+	 * 	Méthode de test pour {@link util.BaseMatrix#redim(int, int)}
+	 */
+	@Test
+	public void testRedimIntInt()
+	{
+		this.testBaseMatrixIntIntOrRedimIntInt(true);
+	}
+	
+	// Méthode pour tester BaseMatrixIntInt ou redimIntInt
+	private void testBaseMatrixIntIntOrRedimIntInt(boolean testRedim)
+	{
+		BaseMatrix bm = new BaseMatrix();
+		
+		// Cas valide 1 : Matrice de 3 x 4
+
+		bm = testRedim ? bm.redim(3, 4) : new BaseMatrix(3, 4);
 		Assert.assertNotNull(bm);
 		Assert.assertEquals(3, bm.getWidth());
 		Assert.assertEquals(4, bm.getHeight());
+
+		// Cas valide 2 : cas limite : Matrice de 1 x 4
+		
+		bm = testRedim ? bm.redim(1, 4) : new BaseMatrix(1, 4);
+		Assert.assertNotNull(bm);
+		Assert.assertEquals(1, bm.getWidth());
+		Assert.assertEquals(4, bm.getHeight());
+
+		// Cas valide 3 : cas limite : Matrice de 3 x 1
+		
+		bm = testRedim ? bm.redim(3, 1) : new BaseMatrix(3, 1);
+		Assert.assertNotNull(bm);
+		Assert.assertEquals(3, bm.getWidth());
+		Assert.assertEquals(1, bm.getHeight());
+
+		// Cas invalide 1 : Matrice de 0 x 4
+		
+		bm = testRedim ? bm.redim(0, 4) : new BaseMatrix(0, 4);
+		Assert.assertNotNull(bm);
+		Assert.assertEquals(1, bm.getWidth());
+		Assert.assertEquals(4, bm.getHeight());
+
+		// Cas invalide 2 : Matrice de 3 x 0
+		
+		bm = testRedim ? bm.redim(3, 0) : new BaseMatrix(3, 0);
+		Assert.assertNotNull(bm);
+		Assert.assertEquals(3, bm.getWidth());
+		Assert.assertEquals(1, bm.getHeight());
 	}
+	
 	
 	/**
 	 * Méthode de test pour {@link util.BaseMatrix#getElement(int, int)}.
 	 */
 	@Test
-	public void testGetElement()
+	public void testGetElementIntInt()
 	{
 		BaseMatrix bm = new BaseMatrix(3, 4);
 		Object obj1 = new Object();
@@ -84,7 +145,7 @@ public class BaseMatrixTest
 	 * Méthode de test pour {@link util.BaseMatrix#setElement(int, int, java.lang.Object)}.
 	 */
 	@Test
-	public void testSetElement()
+	public void testSetElementIntIntObject()
 	{
 		BaseMatrix bm = new BaseMatrix(3, 4);
 
