@@ -172,7 +172,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		int response = 0;
 		
 		// Demande une confirmation si une partie est en cours
-		if (this.currentGame != null && !(this.currentGame.isLost() || this.currentGame.isWon())) //!this.currentGame.isOver())
+		if (this.currentGame != null && !this.currentGame.isOver())
 		{
 			response = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir commencer une nouvelle partie ? \nLa partie en cours n'est pas terminée.",
 				"Confirmation", JOptionPane.YES_NO_OPTION);
@@ -241,7 +241,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	{
 		if (evt.getActionCommand().equals("TICK"))
 		{
-			if (!(this.currentGame.isLost() || this.currentGame.isWon())) //(!this.currentGame.isOver())
+			if (!this.currentGame.isOver())
 			{
 				this.elapsedTime++;
 				this.timerLabel.setText("Temps : " + this.elapsedTime);
@@ -297,7 +297,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	{
 //		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
 		
-		if (!(this.currentGame.isLost() || this.currentGame.isWon())) //(!this.currentGame.isOver())
+		if (!this.currentGame.isOver())
 		{
 			Boolean show = null;
 			
