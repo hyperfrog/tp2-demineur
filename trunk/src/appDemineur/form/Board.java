@@ -326,6 +326,16 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 						this.repaint();
 						this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
 					}
+					
+					if (this.currentGame.isWon())
+					{
+						JOptionPane.showMessageDialog(
+								this, 
+								"Vous avez gagné !", 
+								"Bravo !", 
+								JOptionPane.PLAIN_MESSAGE);			
+					}
+					
 				}
 			}
 		}
