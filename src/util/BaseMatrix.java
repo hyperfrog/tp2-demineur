@@ -14,28 +14,57 @@ public class BaseMatrix
 	private Object[][] m = null;
 	
 	// Largeur de la matrice courante.
-	private int width;
+	private int width = 0;
 	
 	// Hauteur de la matrice courante.
-	private int height;
+	private int height = 0;
 	
 	/**
 	 * Construit une matrice de la largeur et la hauteur spécifiées.
+	 * 
+	 * Si une des dimensions spécifiée est plus petite que 1, 
+	 * la valeur 1 est utilisée pour cette dimension. 
 	 * 
 	 * @param width Largeur de la matrice
 	 * @param height Hauteur de la matrice
 	 */
 	public BaseMatrix(int width, int height)
 	{
-		this.m = new Object[width][height];
+		this.redim(width, height);
+	}
+	
+	/**
+	 * Construit une matrice nulle (largeur et hauteur nulles).
+	 * La méthode redim() doit être utilisée ensuite pour initialiser la matrice.
+	 * @see #redim(int, int)
+	 */
+	public BaseMatrix()
+	{
+	}
+
+	/**
+	 * Redimensionne la matrice à la largeur et la hauteur spécifiées.
+	 * 
+	 * Si une des dimensions spécifiée est plus petite que 1, 
+	 * la valeur 1 est utilisée pour cette dimension. 
+	 * 
+	 * @param width Largeur de la matrice
+	 * @param height Hauteur de la matrice
+	 */
+	public void redim(int width, int height)
+	{
+		width = Math.max(width, 1);
+		height = Math.max(height, 1);
 		
+		this.m = new Object[width][height];
+
 		if (this.m != null)
 		{
 			this.width = width;
 			this.height = height;
 		}
 	}
-
+	
 	/**
 	 * Retourne l'élément de la matrice présent à la position (x, y) donnée.
 	 * 
