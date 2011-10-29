@@ -27,6 +27,7 @@ public class GameTest
 		Assert.assertEquals(16, g.getWidth());
 		Assert.assertEquals(16, g.getHeight());
 		Assert.assertEquals(40, g.getMineAmount());
+		Assert.assertEquals(40, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbFlags());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
@@ -38,6 +39,7 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
+		Assert.assertEquals(10, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbFlags());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
@@ -49,6 +51,7 @@ public class GameTest
 		Assert.assertEquals(30, g.getWidth());
 		Assert.assertEquals(16, g.getHeight());
 		Assert.assertEquals(99, g.getMineAmount());
+		Assert.assertEquals(99, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbFlags());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
@@ -60,6 +63,7 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
+		Assert.assertEquals(10, this.mineOnGrid(g));
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -70,11 +74,32 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
+		Assert.assertEquals(10, this.mineOnGrid(g));
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
 	}
 	
+	// Retourne le nombre de mines présentes sur la grille
+	private int mineOnGrid(Game g)
+	{
+		int mineCount = 0;
+		
+		for (int i = 0; i < g.getWidth(); i++)
+		{
+			for (int j = 0; j < g.getHeight(); j++)
+			{
+				// Si c'est une mine, on incrémente le compteur de mines
+				if (g.getElement(i, j).isMine())
+				{
+					mineCount++;
+				}
+			}
+		}
+		
+		return mineCount;
+	}
+		
 	/**
 	 *  Méthode de test pour {@link appDemineur.model.Game#changeCellState(int, int, boolean)}
 	 */
@@ -349,5 +374,33 @@ public class GameTest
 		// Cas 3 : On crée une partie de niveau expert, donc le nombre de mines devrait être de 99.
 		g = new Game(2);
 		Assert.assertEquals(99, g.getMineAmount());
+	}
+	
+	/**
+	 * Méthode de test pour {@link appDemineur.model.Game#getElement(int, int)}.
+	 * 
+	 * @see {@link util.BaseMatrix#getElement(int, int)}
+	 */
+	@Test
+	public void testGetElementIntInt() 
+	{
+		Game g = new Game(0);
+		
+		//Cas valide 1 : La position demandée en (x, y) est valide et l'objet inséré à cette position n'est pas null 
+		// 				 et est une instance de Cell.
+		Assert.assertNotNull(g.getElement(0, 0));
+		Assert.assertTrue(g.getElement(0, 0) instanceof Cell);
+		
+		//Cas valide 2 : La position demandée en (x, y) est valide et l'objet inséré à cette position n'est pas null 
+		//				 mais n'est pas une instance de Cell.
+		g.setElement(1, 1, "PasUneCellule");
+		Assert.assertNull(g.getElement(1, 1));
+		Assert.assertFalse(g.getElement(1, 1) instanceof Cell);
+		
+		//Cas invalide 1 : La position demandée en (x, y) est valide et l'objet inséré à cette position est null 
+		//				   et n'est pas une instance de Cell.
+//		g.setElement(1, 2, null);
+//		Assert.assertNull(g.getElement(1, 2));
+//		Assert.assertFalse(g.getElement(1, 2) instanceof Cell);
 	}
 }
