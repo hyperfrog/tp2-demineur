@@ -50,19 +50,18 @@ public class BaseMatrix
 	 * 
 	 * @param width Largeur de la matrice
 	 * @param height Hauteur de la matrice
+	 * @return l'object courant (this) 
 	 */
-	public void redim(int width, int height)
+	public BaseMatrix redim(int width, int height)
 	{
 		width = Math.max(width, 1);
 		height = Math.max(height, 1);
 		
 		this.m = new Object[width][height];
-
-		if (this.m != null)
-		{
-			this.width = width;
-			this.height = height;
-		}
+		this.width = width;
+		this.height = height;
+		
+		return this;
 	}
 	
 	/**
