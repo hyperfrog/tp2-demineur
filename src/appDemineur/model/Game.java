@@ -256,7 +256,7 @@ public class Game
 	}
 	
 	/**
-	 * Retourn le nombre de cases marquées d'un drapeau
+	 * Retourne le nombre de cases marquées d'un drapeau
 	 * @return le nombre de cases marquées d'un drapeau
 	 */
 	public int getNbFlags()
@@ -289,5 +289,11 @@ public class Game
 	public int getMineAmount()
 	{
 		return Game.LEVELS[this.level].mineAmount;
+	}
+	
+	// TODO : Temporaire, en attendant la fusion de Game et Matrix. Utile pour les tests.
+	public Cell getElement(int x, int y)
+	{
+		return this.matrix.getElement(x, y);
 	}
 }
