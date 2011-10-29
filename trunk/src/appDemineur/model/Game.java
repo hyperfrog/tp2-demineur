@@ -9,6 +9,8 @@ import java.util.List;
 import appDemineur.model.Cell.CellState;
 
 /**
+ * La classe Game implémente le jeu du démineur.
+ * 
  * @author Christian Lesage
  * @author Alexandre Tremblay
  *
@@ -40,14 +42,17 @@ public class Game
 	// Matrice contenant la grille de jeu
 	private Matrix matrix;
 	
-	// Indique si la partie est terminée
-	private boolean isOver;
+	// Indique si la partie est perdue
+	private boolean isLost;
+	
+	// Indique si la partie est gagnée
+	private boolean isWon;
 	
 	// Nombre de cases marquées d'un drapeau
 	private int nbFlags;
 	
-	// Nombre de cases découverte durant la partie courante
-	private int discoveredCells;
+	// Nombre de cases non minées dévoilées
+	private int nbNonMineCellsShown;
 	
 	/**
 	 * Construit une partie avec le niveau de difficulté spécifié.
@@ -63,8 +68,10 @@ public class Game
 				Game.LEVELS[this.level].dim.height, 
 				Game.LEVELS[this.level].mineAmount);
 		
+		this.isLost = false;
+		this.isWon = false;
 		this.nbFlags = 0;
-		this.discoveredCells = 0;
+		this.nbNonMineCellsShown = 0;
 	}
 
 	/**
@@ -82,13 +89,13 @@ public class Game
 	}	
 	
 	/**
-	 * Change l'état d'une case non révélée. N'as pas d'effet si la case est déjà révélée.  
+	 * Change l'état d'une case non dévoilée. N'as pas d'effet si la case est déjà dévoilée.  
 	 * 
 	 * @param x coordonnée x de la case dont on souhaite changer l'état
 	 * @param y coordonnée y de la case dont on souhaite changer l'état
 	 * 
 	 * @param show 
-	 * si vrai, révèle la case si elle n'est pas marquée d'un drapeau; 
+	 * si vrai, dévoile la case si elle n'est pas marquée d'un drapeau; 
 	 * si faux, alterne entre le drapeau, le point d'interrogation et l'état non marqué.
 	 * 
 	 * @return vrai si la cellule a changé d'état, faux sinon
@@ -99,39 +106,18 @@ public class Game
 		
 		Cell c = this.matrix.getElement(x, y);
 		
-		// Si la case n'est pas révélée
+		// Si la case n'est pas dévoilée
 		if (c != null && !c.getState().equals(CellState.SHOWN))
 		{
-			// Si on souhaite la révéler
+			// Si on souhaite la dévoiler
 			if (show)
 			{
-				// Si elle n'est pas marquée d'un drapeau
-				if (!c.getState().equals(CellState.FLAGGED))
-				{
-					// Si c'est une mine, la partie est perdue
-					if (c.isMine())
-					{
-						c.setState(CellState.SHOWN);
-						this.isOver = true;
-						
-						System.out.println("Partie perdue...");
-					}
-					
-					// Dévoile les cellules affectées
-					this.showCell(x, y, null);
-					
-					//System.out.println(((this.getWidth() * this.getHeight()) - this.discoveredCells));
-					
-					// Si le nombre de cases non découvertes est égal au nombre de mines placées sur la grille, la partie est gagnée
-					if (((this.getWidth() * this.getHeight()) - this.discoveredCells) == this.getMineAmount())
-					{
-						this.isOver = true;
-						
-						System.out.println("Partie gagnée!");
-					}
-					
-					changed = true;
-				}
+                // Si elle n'est pas marquée d'un drapeau
+                if (!c.getState().equals(CellState.FLAGGED))
+                {
+                	this.showCell(x, y, null);
+                	changed = true;
+                }
 			}
 			else // Alterne entre FLAGGED, DUBIOUS et HIDDEN
 			{
@@ -159,15 +145,15 @@ public class Game
 		return changed;
 	}
 	
-	// Fonction qui affiche une cellule et, si elle n'a pas de mines adjacentes, 
-	// toutes les cellules voisines n'ayant pas non plus de mines adjacentes, 
-	// et ce, jusqu'à ce qu'à ce soient révélées les cellules frontières, 
-	// c'est-à-dire celles qui ont des mines adjacentes.
+	// Fonction qui dévoile une cellule et, si elle n'a pas de mines adjacentes, 
+	// toutes les cellules voisines avec ou sans mines adjacentes, et ce, 
+	// récursivement jusqu'à ce qu'à ce que les cellules frontières soit dévoilées, 
+	// c'est-à-dire les cellules ayant des mines adjacentes.
 	//
-	// Si l'état de la cellule est SHOWN ou FLAGGED, alors cet état n'est 
-	// pas modifié.
+	// Si l'état d'une cellule est SHOWN ou FLAGGED, cet état n'est 
+	// pas modifié, donc les cellules FLAGGED ne sont pas dévoilées.
 	//
-	// La méthode prend les coordonnées x et y de la cellule à afficher 
+	// La méthode prend les coordonnées x et y de la cellule à dévoiler 
 	// ainsi qu'une liste vide de cellules (ou une valeur null),
 	// laquelle sert aux appels récursifs de la fonction.
 	private void showCell(int x, int y, List<Cell> visitedCells)
@@ -181,63 +167,92 @@ public class Game
 			// Change l'état de la cellule courante
 			curCell.setState(CellState.SHOWN);
 			
-			// Incrémente le nombre de cases découvertes
-			this.discoveredCells++;
-
-			// Si aucune cellule adjacente ne contient de mine 
-			if (curCell.getAdjacentMines() == 0)
+			if (curCell.isMine())
 			{
-				// Au besoin, construit une liste de cellules à ne pas revérifier plus tard
-				if (visitedCells == null)
+				this.isLost = true;
+			}
+			else
+			{
+				this.isWon = ++this.nbNonMineCellsShown == this.getWidth() * this.getHeight() - this.getMineAmount();
+
+				// Si aucune cellule adjacente ne contient de mine 
+				if (curCell.getAdjacentMines() == 0)
 				{
-					visitedCells = new ArrayList<Cell>();
-				}
-				
-				// Construit une liste de cellules à vérifier maintenant
-				List<Point> cellsToVisit = new ArrayList<Point>();
-				
-				// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
-				for (int r = y - 1 ; r <= y + 1; r++)
-				{
-					for (int c = x - 1 ; c <= x + 1; c++)
+					// Au besoin, construit une liste de cellules à ne pas revérifier plus tard
+					if (visitedCells == null)
 					{
-						Cell adjCell = this.matrix.getElement(c, r);
-						
-						// Si la cellule n'a pas encore été vérifiée
-						if (adjCell != null && !visitedCells.contains(adjCell))
+						visitedCells = new ArrayList<Cell>();
+					}
+
+					// Construit une liste de cellules à vérifier maintenant
+					List<Point> cellsToVisit = new ArrayList<Point>();
+
+					// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
+					for (int r = y - 1 ; r <= y + 1; r++)
+					{
+						for (int c = x - 1 ; c <= x + 1; c++)
 						{
-							// Si ce n'est pas la cellule courante
-							if  (!(r == y && c == x))
+							Cell adjCell = this.matrix.getElement(c, r);
+
+							// Si la cellule n'a pas encore été vérifiée
+							if (adjCell != null && !visitedCells.contains(adjCell))
 							{
-								// Ajoute la cellule dans la liste des cellules à vérifier maintenant
-								cellsToVisit.add(new Point(c, r));
+								// Si ce n'est pas la cellule courante
+								if  (!(r == y && c == x))
+								{
+									// Ajoute la cellule dans la liste des cellules à vérifier maintenant
+									cellsToVisit.add(new Point(c, r));
+								}
+								// Ajoute la cellule dans la liste des cellules à ne pas revérifier plus tard
+								visitedCells.add(adjCell);
 							}
-							// Ajoute la cellule dans la liste des cellules à ne pas revérifier plus tard
-							visitedCells.add(adjCell);
 						}
 					}
-				}
-				
-				// Pour chacune des cellules à vérifier maintenant
-				for (Point p : cellsToVisit)
-				{
-					this.showCell(p.x, p.y, visitedCells);
+
+					// Pour chacune des cellules à vérifier maintenant
+					for (Point p : cellsToVisit)
+					{
+						this.showCell(p.x, p.y, visitedCells);
+					}
 				}
 			}
 		}
 	}
 	
 	/**
+	 * Vérifie si la partie est gagnée.
+	 * 
+	 * Une partie est gagnée quand toutes les cases non minées sont découvertes.
+	 * 
+	 * @return vrai si la partie est gagnée, sinon faux.
+	 */
+	public boolean isWon()
+	{
+		return this.isWon;
+	}
+	
+	/**
+	 * Vérifie si la partie est perdue.
+	 * 
+	 * Une partie est perdue quand une des mines a été découverte. 
+	 * 
+	 * @return vrai si la partie est perdue, sinon faux.
+	 */
+	public boolean isLost()
+	{
+		return this.isLost;
+	}
+	
+	/**
 	 * Vérifie si la partie est terminée.
 	 * 
-	 * Une partie est terminée quand une des mines a été découverte 
-	 * ou que toutes cases ayant des mines sont dans l'état FLAGGED.
+	 * Une partie est terminée quand elle est gagnée ou perdue. 
 	 * 
 	 * @return vrai si la partie est terminée, sinon faux.
 	 */
 	public boolean isOver()
 	{
-		return this.isOver;
+		return this.isWon || this.isLost;
 	}
 	
 	/**

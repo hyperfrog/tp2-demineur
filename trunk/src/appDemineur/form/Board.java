@@ -24,7 +24,7 @@ import javax.swing.border.LineBorder;
 import appDemineur.model.Game;
 
 /**
- * La classe Board implément l'interface du jeu du Démineur.
+ * La classe Board implémente l'interface du jeu du Démineur.
  * Elle gère la plupart des évènements de l'interface utilisateur.
  * 
  * @author Christian Lesage
@@ -113,7 +113,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	
 	// Cette classe pourrait implémenter le mouse listener
 	/**
-	 * Cette classe ne sert qu'à fournir un accès au paintComponent() 
+	 * La classe DrawingPanel ne sert qu'à fournir un accès au paintComponent() 
 	 * du panneau de jeu, qui est un enfant du panneau de type Board.
 	 * 
 	 * @author Christian Lesage
@@ -159,7 +159,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				this.parent.currentGame.redraw(
 						g2, 
 						this.parent.getCellSize(), 
-						this.parent.currentGame.isOver() || this.parent.parent.getCheatMode());
+						this.parent.currentGame.isLost() || this.parent.parent.getCheatMode());
 				
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}
@@ -208,7 +208,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	}
 	
 	// Retourne le point du coin supérieur droit de la grille de manière à la centrer 
-	// dans un panneau de jeu de dimension variable
+	// dans un panneau de jeu de dimensions variables
 	private Point getGridOffset()
 	{
 		int x = Math.round((this.gamePanel.getWidth() - this.getGridScreenWidth()) / 2);
