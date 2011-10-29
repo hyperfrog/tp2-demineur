@@ -164,7 +164,7 @@ public class Matrix extends BaseMatrix
 	 * 
 	 * @param x		Colonne de la cellule
 	 * @param y		Rangée de la cellule
-	 * @return		La cellule à la position spécifiée
+	 * @return		La cellule à la position spécifiée ou null si l'objet à cette position n'est pas une cellule
 	 */
 	@Override
 	public Cell getElement(int x, int y)

@@ -32,7 +32,8 @@ public class MainApp
 		String errMsg = "";
 		
 		ArrayList<Class<?>> classesToTest = new ArrayList<Class<?>>();
-		//classesToTest.add(appDemineur.model.test.TowerTest.class);
+		classesToTest.add(appDemineur.model.test.MatrixTest.class);
+		classesToTest.add(appDemineur.model.test.GameTest.class);
 		
 		for(Class<?> someClass : classesToTest)
 		{

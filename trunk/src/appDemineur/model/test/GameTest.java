@@ -3,7 +3,7 @@ package appDemineur.model.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import appDemineur.model.Game;
+import appDemineur.model.*;
 
 /**
  * La classe de test JUnit 4 pour la classe Game.java
@@ -29,6 +29,8 @@ public class GameTest
 		Assert.assertEquals(40, g.getMineAmount());
 		Assert.assertEquals(0, g.getNbFlags());
 		Assert.assertFalse(g.isOver());
+		Assert.assertFalse(g.isWon());
+		Assert.assertFalse(g.isLost());
 		
 		// Cas limite 1 : Le niveau est 0
 		g = new Game(0);
@@ -38,6 +40,8 @@ public class GameTest
 		Assert.assertEquals(10, g.getMineAmount());
 		Assert.assertEquals(0, g.getNbFlags());
 		Assert.assertFalse(g.isOver());
+		Assert.assertFalse(g.isWon());
+		Assert.assertFalse(g.isLost());
 		
 		// Cas limite 2 : Le niveau est 2
 		g = new Game(2);
@@ -47,6 +51,8 @@ public class GameTest
 		Assert.assertEquals(99, g.getMineAmount());
 		Assert.assertEquals(0, g.getNbFlags());
 		Assert.assertFalse(g.isOver());
+		Assert.assertFalse(g.isWon());
+		Assert.assertFalse(g.isLost());
 		
 		// Cas invalide 1 : Le niveau est inférieur à 0
 		g = new Game(-1);
@@ -54,6 +60,9 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
+		Assert.assertFalse(g.isOver());
+		Assert.assertFalse(g.isWon());
+		Assert.assertFalse(g.isLost());
 		
 		// Cas invalide 2 : Le niveau est supérieur à 2
 		g = new Game(3);
@@ -61,6 +70,9 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
+		Assert.assertFalse(g.isOver());
+		Assert.assertFalse(g.isWon());
+		Assert.assertFalse(g.isLost());
 	}
 	
 	/**
@@ -135,30 +147,62 @@ public class GameTest
 		g.changeCellState(3, 3, true);
 		Assert.assertFalse(g.changeCellState(3, 3, true));
 		
-		// Cas invalide 3 : La position est inférieur à 0 en x et y.
+		// Cas invalide 3 : La position est inférieure à 0 en x et en y.
 		g = new Game(0);
 		Assert.assertFalse(g.changeCellState(-1, -1, false));
 		
-		// Cas invalide 4 : La position en x est valide et inférieur à 0 en y.
+		// Cas invalide 4 : La position en x est valide et inférieure à 0 en y.
 		g = new Game(0);
 		Assert.assertFalse(g.changeCellState(1, -1, false));
 		
-		// Cas invalide 5 : La position en y est valide et inférieur à 0 en x.
+		// Cas invalide 5 : La position en y est valide et inférieure à 0 en x.
 		g = new Game(0);
 		Assert.assertFalse(g.changeCellState(-1, 1, false));
 		
-		// Cas invalide 6 : La position en x est supérieur à la largeur - 1 de la grille et la position en y est supérieur
-		// 					à la hauteur - 1 de la grille.
+		// Cas invalide 6 : La position en x est supérieure ou égale à la largeur de la grille et  
+		// 					la position en y est supérieure ou égale à la hauteur de la grille.
 		g = new Game(0);
 		Assert.assertFalse(g.changeCellState(9, 9, false));
 
-		// Cas invalide 7 : La position en x est supérieur à la largeur - 1 de la grille et la position en y est valide.
+		// Cas invalide 7 : La position en x est supérieure ou égale à la largeur de la grille et la position en y est valide.
 		g = new Game(0);
 		Assert.assertFalse(g.changeCellState(9, 1, false));
 		
-		// Cas invalide 8 : La position en y est supérieur à la hauteur - 1 de la grille et la position en x est valide
+		// Cas invalide 8 : La position en y est supérieure ou égale à la hauteur de la grille et la position en x est valide
 		g = new Game(0);
 		Assert.assertFalse(g.changeCellState(1, 9, false));
+	}
+	
+	/**
+	 * 	Méthode de test pour {@link appDemineur.model.Game#isLost()}
+	 */
+	@Test
+	public void testIsLost()
+	{
+		Game g = new Game(0);
+		
+		// Cas 1 : La partie vient de demarrer et n'est donc pas perdue.
+		Assert.assertFalse(g.isOver());
+		
+		// Cas 2 : Le joueur a perdu la partie.
+		this.loseGame(g);
+		Assert.assertTrue(g.isLost());
+	}
+	
+	/**
+	 * 	Méthode de test pour {@link appDemineur.model.Game#isWon()}
+	 */
+	@Test
+	public void testIsWon()
+	{
+		Game g = new Game(0);
+		
+		// Cas 1 : La partie vient de demarrer et n'est donc pas gagnée.
+		Assert.assertFalse(g.isOver());
+		
+		// Cas 2 : Le joueur a gagné la partie.
+		this.winGame(g);
+		Assert.assertTrue(g.isWon());
 	}
 	
 	/**
@@ -169,21 +213,53 @@ public class GameTest
 	{
 		Game g = new Game(0);
 		
-		// Cas 1 : La partie vient de demarrer donc la partie n'est pas terminé.
+		// Cas 1 : La partie vient de demarrer et n'est donc pas terminée.
 		Assert.assertFalse(g.isOver());
 		
-		// Cas 2 : Le joueur à cliqué sur une mine alors la partie est terminé.
+		// Cas 2 : Le joueur a perdu la partie.
+		this.loseGame(g);
+		Assert.assertTrue(g.isOver());
+
+		// Cas 3 : Le joueur a gagné la partie.
+		this.winGame(g);
+		Assert.assertTrue(g.isOver());
+	}
+	
+	// Gagne une partie
+	private void winGame(Game g)
+	{
 		// On parcours la matrice au complet
 		for (int i = 0; i < g.getWidth(); i++)
 		{
 			for (int j = 0; j < g.getHeight(); j++)
 			{
-				// On découvre toute les cellules pout dévoiler une mine et donc mettre fin à la partie.
-				g.changeCellState(i, j, true);
+				// On découvre toutes les cellules qui ne sont pas des mines
+				if (!g.getElement(i, j).isMine())
+				{
+					g.changeCellState(i, j, true);
+				}
 			}
 		}
-		
-		Assert.assertTrue(g.isOver());
+	}
+	
+	// Perd une partie
+	private void loseGame(Game g)
+	{
+		boolean lost = false;
+
+		// On parcours la matrice au complet
+		for (int i = 0; !lost && i < g.getWidth(); i++)
+		{
+			for (int j = 0; !lost && j < g.getHeight(); j++)
+			{
+				// On découvre la première mine trouvée
+				if (g.getElement(i, j).isMine())
+				{
+					g.changeCellState(i, j, true);
+					lost = true;
+				}
+			}
+		}
 	}
 	
 	/**
@@ -194,18 +270,18 @@ public class GameTest
 	{
 		Game g = new Game(0);
 		
-		// Cas 1 : La partie vient d'être créé donc aucun drapeau n'a été utilisé.
+		// Cas 1 : La partie vient d'être créée, donc aucun drapeau n'a été placé.
 		Assert.assertEquals(0, g.getNbFlags());
 		
-		// Cas 2 : La partie est en cours et le joueur n'a pas utilisé tous les drapeaux.
+		// Cas 2 : La partie est en cours et le joueur n'a pas placé tous les drapeaux.
 		g = new Game(0);
 		g.changeCellState(0, 0, false);
 		g.changeCellState(0, 1, false);
 		g.changeCellState(1, 0, false);
 		Assert.assertEquals(3, g.getNbFlags());
 		
-		// Cas 3 : La partie est en cours et le joueur a utilisé un nombre de drapeau supérieur au nombre
-		// 		   de mines cachées sur la grille.
+		// Cas 3 : La partie est en cours et le joueur a placé un nombre de drapeau supérieur au nombre
+		// 		   de mines cachées dans la grille.
 		g = new Game(0);
 		for (int i = 0; i < g.getWidth(); i++)
 		{
@@ -224,15 +300,15 @@ public class GameTest
 	@Test
 	public void testGetWidth()
 	{
-		// Cas 1 : On créer une partie en utilisant le niveau débutant donc la largeur devrait être de 9.
+		// Cas 1 : On crée une partie de niveau débutant, donc la largeur devrait être de 9.
 		Game g = new Game(0);
 		Assert.assertEquals(9, g.getWidth());
 
-		// Cas 2 : On créer une partie en utilisant le niveau intermédiaire donc la largeur devrait être de 16.		
+		// Cas 2 : On crée une partie de niveau intermédiaire, donc la largeur devrait être de 16.		
 		g = new Game(1);
 		Assert.assertEquals(16, g.getWidth());
 		
-		// Cas 3 : On créer une partie en utilisant le niveau expert donc la largeur devrait être de 30.
+		// Cas 3 : On crée une partie de niveau expert, donc la largeur devrait être de 30.
 		g = new Game(2);
 		Assert.assertEquals(30, g.getWidth());
 	}
@@ -243,15 +319,15 @@ public class GameTest
 	@Test
 	public void testGetHeight()
 	{
-		// Cas 1 : On créer une partie en utilisant le niveau débutant donc la hauteur devrait être de 9.
+		// Cas 1 : On crée une partie de niveau débutant, donc la hauteur devrait être de 9.
 		Game g = new Game(0);
 		Assert.assertEquals(9, g.getHeight());
 
-		// Cas 2 : On créer une partie en utilisant le niveau intermédiaire donc la hauteur devrait être de 16.		
+		// Cas 2 : On crée une partie de niveau intermédiaire, donc la hauteur devrait être de 16.		
 		g = new Game(1);
 		Assert.assertEquals(16, g.getHeight());
 		
-		// Cas 3 : On créer une partie en utilisant le niveau expert donc la hauteur devrait être de 16.
+		// Cas 3 : On crée une partie de niveau expert, donc la hauteur devrait être de 16.
 		g = new Game(2);
 		Assert.assertEquals(16, g.getHeight());
 	}
@@ -262,15 +338,15 @@ public class GameTest
 	@Test
 	public void testGetMineAmount()
 	{
-		// Cas 1 : On créer une partie en utilisant le niveau débutant donc le nombre de mine devrait être de 10.
+		// Cas 1 : On crée une partie de niveau débutant, donc le nombre de mined devrait être de 10.
 		Game g = new Game(0);
 		Assert.assertEquals(10, g.getMineAmount());
 
-		// Cas 2 : On créer une partie en utilisant le niveau intermédiaire donc le nombre de mine devrait être de 40.		
+		// Cas 2 : On crée une partie de niveau intermédiaire, donc le nombre de mines devrait être de 40.
 		g = new Game(1);
 		Assert.assertEquals(40, g.getMineAmount());
 		
-		// Cas 3 : On créer une partie en utilisant le niveau expert donc le nombre de mine devrait être de 99.
+		// Cas 3 : On crée une partie de niveau expert, donc le nombre de mines devrait être de 99.
 		g = new Game(2);
 		Assert.assertEquals(99, g.getMineAmount());
 	}
