@@ -54,8 +54,9 @@ public class Cell
 	 * @param showMines 
 	 * si vrai, une mine sont montrée sans autre condition; 
 	 * si faux, une mine n'est montrée que si la cellule est révélée 
+	 * @param isExplodedMine indique si c'est la case de la mine qui a explosé
 	 */
-	public void redraw(Graphics g, float size, boolean showMines)
+	public void redraw(Graphics g, float size, boolean showMines, boolean isExplodedMine, boolean gameIsLost)
 	{
 		if (g != null)
 		{
@@ -66,8 +67,16 @@ public class Cell
 			int minePos = Math.round(size * 0.25f);
 			int mineSize = Math.round(size * 0.50f);
 			
+			if (isExplodedMine)
+			{
+				g.setColor(Color.RED);
+				g.fillRect(0, 0, cellSize, cellSize);
+				
+				g.setColor(Color.BLACK);
+				g.fillOval(minePos, minePos, mineSize, mineSize);				
+			}
 			// Visible, mine
-			if ((this.getState().equals(CellState.SHOWN) || showMines) && this.isMine())
+			else if (this.isMine && (this.getState().equals(CellState.SHOWN) || (showMines && !this.getState().equals(CellState.FLAGGED))))
 			{
 				g.setColor(Color.BLACK);
 				g.fillRect(0, 0, cellSize, cellSize);
@@ -75,8 +84,8 @@ public class Cell
 				g.setColor(Color.RED);
 				g.fillOval(minePos, minePos, mineSize, mineSize);
 			}
-			// Pas visible, mine
-			else if (this.getState().equals(CellState.SHOWN) && !this.isMine())
+			// Visible, mais pas mine
+			else if (!this.isMine && this.getState().equals(CellState.SHOWN))
 			{
 				g.setColor(Color.WHITE);
 				g.fillRect(0, 0, cellSize, cellSize);
@@ -111,8 +120,26 @@ public class Cell
 				}
 				else if (this.getState().equals(CellState.FLAGGED))
 				{
-					g.setColor(new Color(200, 0, 0));
-					g.drawString("¶", chrX, chrY);
+					if (!gameIsLost)
+					{
+						// TODO : Améliorer !
+						if (showMines && this.isMine)
+						{
+							g.setColor(Color.BLACK);
+							g.fillRect(0, 0, cellSize, cellSize);
+							
+							g.setColor(Color.RED);
+							g.fillOval(minePos, minePos, mineSize, mineSize);							
+						}
+						g.setColor(new Color(200, 0, 0));
+						g.drawString("¶", chrX, chrY);
+					}
+					else
+					{
+						g.setColor(new Color(200, 0, 0));
+						g.drawString("X", chrX, chrY);
+
+					}
 				}
 			}
 		}
