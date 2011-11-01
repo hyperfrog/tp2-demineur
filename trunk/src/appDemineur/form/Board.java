@@ -159,7 +159,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				this.parent.currentGame.redraw(
 						g2, 
 						this.parent.getCellSize(), 
-						this.parent.currentGame.isLost() || this.parent.parent.getCheatMode());
+						this.parent.currentGame.isOver() || this.parent.parent.getCheatMode());
 				
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}

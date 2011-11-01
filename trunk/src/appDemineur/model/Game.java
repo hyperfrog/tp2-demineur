@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -55,6 +56,9 @@ public class Game extends BaseMatrix
 	
 	// Nombre de cases non minées dévoilées
 	private int nbNonMineCellsShown;
+	
+	// Coordonnées de la mine qui a explosé
+	private Point explodedMine;
 	
 	/**
 	 * Construit une partie avec le niveau de difficulté spécifié.
@@ -157,6 +161,7 @@ public class Game extends BaseMatrix
 			
 			if (curCell.isMine())
 			{
+				this.explodedMine = new Point(x, y);
 				this.isLost = true;
 			}
 			else
@@ -347,6 +352,8 @@ public class Game extends BaseMatrix
 					
 					if (c != null)
 					{
+						boolean isExplodedMine = explodedMine != null && explodedMine.x == i && explodedMine.y == j;
+						
 						// Créé un Graphics pour la cellule
 						Graphics g2 = g.create(
 								Math.round(i * cellSize), 
@@ -355,7 +362,7 @@ public class Game extends BaseMatrix
 								Math.round(cellSize));
 
 						// Dessine la cellule
-						c.redraw(g2, cellSize, showMines);
+						c.redraw(g2, cellSize, showMines, isExplodedMine, this.isLost);
 					}
 				}
 			}
