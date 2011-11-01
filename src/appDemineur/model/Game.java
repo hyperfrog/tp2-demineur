@@ -44,9 +44,6 @@ public class Game extends BaseMatrix
 
 	private int level;
 	
-	// Matrice contenant la grille de jeu
-//	private Matrix matrix;
-	
 	// Indique si la partie est perdue
 	private boolean isLost;
 	
@@ -70,11 +67,6 @@ public class Game extends BaseMatrix
 
 		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;		
 		
-//		this.matrix = new Matrix(
-//				Game.LEVELS[this.level].dim.width, 
-//				Game.LEVELS[this.level].dim.height, 
-//				Game.LEVELS[this.level].mineAmount);
-
 		this.redim(Game.LEVELS[this.level].dim.width, Game.LEVELS[this.level].dim.height);
 		this.populate();
 		this.addMines(Game.LEVELS[this.level].mineAmount);
@@ -85,20 +77,6 @@ public class Game extends BaseMatrix
 		this.nbNonMineCellsShown = 0;
 	}
 
-//	/**
-//	 * Redessine la partie
-//	 * 
-//	 * @param g Graphics dans lequel la partie doit se dessiner
-//	 * @param cellSize taille d'une case en pixels
-//	 * @param showMines 
-//	 * si vrai, les mines sont montrées sans autre condition; 
-//	 * si faux, elles ne sont montrées que si la case est révélée 
-//	 */
-//	public void redraw(Graphics g, float cellSize, boolean showMines)
-//	{
-//		this.matrix.redraw(g, cellSize, showMines);
-//	}	
-	
 	/**
 	 * Change l'état d'une case non dévoilée. N'as pas d'effet si la case est déjà dévoilée.  
 	 * 
@@ -115,10 +93,8 @@ public class Game extends BaseMatrix
 	{
 		boolean changed = false;
 		
-//		Cell c = this.matrix.getElement(x, y);
 		Cell c = this.getElement(x, y);
 		
-		// Si la case n'est pas dévoilée
 		if (c != null && !c.getState().equals(CellState.SHOWN))
 		{
 			// Si on souhaite la dévoiler
@@ -170,7 +146,6 @@ public class Game extends BaseMatrix
 	// laquelle sert aux appels récursifs de la fonction.
 	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
-//		Cell curCell = this.matrix.getElement(x, y);
 		Cell curCell = this.getElement(x, y);
 		
 		if (curCell != null 
@@ -205,7 +180,6 @@ public class Game extends BaseMatrix
 					{
 						for (int c = x - 1 ; c <= x + 1; c++)
 						{
-//							Cell adjCell = this.matrix.getElement(c, r);
 							Cell adjCell = this.getElement(c, r);
 
 							// Si la cellule n'a pas encore été vérifiée
@@ -278,24 +252,6 @@ public class Game extends BaseMatrix
 		return this.nbFlags;
 	}
 	
-//	/**
-//	 * Retourne la largeur de la matrice de jeu (en cases)
-//	 * @return la largeur de la matrice de jeu (en cases)
-//	 */
-//	public int getWidth()
-//	{
-//		return Game.LEVELS[this.level].dim.width;
-//	}
-//	
-//	/**
-//	 * Retourne la hauteur de la matrice de jeu (en cases)
-//	 * @return la hauteur de la matrice de jeu (en cases)
-//	 */
-//	public int getHeight()
-//	{
-//		return Game.LEVELS[this.level].dim.height;
-//	}
-	
 	/**
 	 * Retourne le nombre de mines dans la partie
 	 * @return le nombre de mines dans la partie
@@ -304,12 +260,6 @@ public class Game extends BaseMatrix
 	{
 		return Game.LEVELS[this.level].mineAmount;
 	}
-	
-//	// TODO : Temporaire, en attendant la fusion de Game et Matrix. Utile pour les tests.
-//	public Cell getElement(int x, int y)
-//	{
-//		return this.matrix.getElement(x, y);
-//	}
 	
 	// Remplit la matrice de cellules
 	private void populate()
