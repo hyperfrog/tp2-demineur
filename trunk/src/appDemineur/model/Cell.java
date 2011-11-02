@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 
 /**
@@ -128,10 +129,22 @@ public class Cell
 							this.drawMine(g, size, false);
 						}
 
-						// Dessine un ¶
-						g.setFont(new Font(null, Font.BOLD, fontSize));
-						g.setColor(new Color(200, 0, 0));
-						g.drawString("¶", hintX, hintY);
+						// Dessine un drapeau
+						Graphics2D g2d = (Graphics2D) g;
+						g2d.setStroke(new BasicStroke(3));
+						g2d.setColor(Color.WHITE);
+						
+						g2d.drawLine(Math.round(size * 0.3f), Math.round(size * 0.8f), Math.round(size * 0.7f), Math.round(size * 0.8f));
+						g2d.drawLine(Math.round(size * 0.5f), Math.round(size * 0.2f), Math.round(size * 0.5f), Math.round(size * 0.8f));
+
+						Polygon pol = new Polygon();
+						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.2f));
+						pol.addPoint(Math.round(size * 0.2f), Math.round(size * 0.4f));
+						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.6f));
+
+						g2d.setColor(new Color(200, 0, 0));
+						g2d.fillPolygon(pol);
+
 					}
 				}	
 			}
