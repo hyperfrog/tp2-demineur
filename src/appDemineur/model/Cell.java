@@ -33,9 +33,6 @@ public class Cell
 	// Indique si la cellule contient une mine
 	private boolean isMine;
 	
-	// Indique si la mine a explosé
-	private boolean hasExploded;
-	
 	// Le nombre de mines adjacentes à la cellule
 	private int adjacentMines;
 	
@@ -49,7 +46,6 @@ public class Cell
 	public Cell()
 	{
 		this.isMine = false;
-		this.hasExploded = false;
 		this.adjacentMines = 0;
 		this.state = CellState.HIDDEN;
 	}
@@ -120,17 +116,14 @@ public class Cell
 				}
 				else if (this.getState().equals(CellState.FLAGGED))
 				{
-					if (showMines && !this.isMine)
+					if (showMines)
 					{
-						// Dessine quand même une mine (avec un X)
+						// Dessine une mine (avec ou sans X)
 						this.drawMine(g, size);
 					}
-					else
+					
+					if (!showMines || (this.isMine && (gameIsLost || showMines)))
 					{
-						if (showMines && this.isMine && gameIsLost)
-						{
-							this.drawMine(g, size);
-						}
 
 						// Dessine un drapeau
 						Graphics2D g2d = (Graphics2D) g;
@@ -163,7 +156,7 @@ public class Cell
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, cellSize, cellSize);
 		
-		g.setColor(this.hasExploded ? new Color(200, 0, 0) : Color.BLACK);
+		g.setColor(this.isMine && this.state == CellState.SHOWN ? new Color(200, 0, 0) : Color.BLACK);
 		g.fillOval(minePos, minePos, mineSize, mineSize);
 		
 		if (!this.isMine)
@@ -215,9 +208,6 @@ public class Cell
 		if (newState != null)
 		{
 			this.state = newState;
-			
-			this.hasExploded = this.isMine && this.state == CellState.SHOWN;
-			
 			succeed = true;
 		}
 			
