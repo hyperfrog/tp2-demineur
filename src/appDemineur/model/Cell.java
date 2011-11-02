@@ -33,6 +33,9 @@ public class Cell
 	// Indique si la cellule contient une mine
 	private boolean isMine;
 	
+	// Indique si la mine a explosé
+	private boolean hasExploded;
+	
 	// Le nombre de mines adjacentes à la cellule
 	private int adjacentMines;
 	
@@ -46,6 +49,7 @@ public class Cell
 	public Cell()
 	{
 		this.isMine = false;
+		this.hasExploded = false;
 		this.adjacentMines = 0;
 		this.state = CellState.HIDDEN;
 	}
@@ -62,10 +66,9 @@ public class Cell
 	 * si faux, une mine n'est est montrée que si la cellule est dévoilée 
 	 * ou si la partie est terminée et que la cellule n'est pas marquée d'un drapeau  
 	 * 
-	 * @param isExplodedMine indique si c'est la case de la mine qui a explosé
 	 * @param gameIsLost indique si la partie est perdue
 	 */
-	public void redraw(Graphics g, float size, boolean showMines, boolean isExplodedMine, boolean gameIsLost)
+	public void redraw(Graphics g, float size, boolean showMines, boolean gameIsLost)
 	{
 		if (g != null)
 		{
@@ -79,7 +82,7 @@ public class Cell
 					(this.getState().equals(CellState.SHOWN) || 
 							(showMines && !this.getState().equals(CellState.FLAGGED))))
 			{
-				this.drawMine(g, size, isExplodedMine);
+				this.drawMine(g, size);
 			}
 			// Visible, mais pas mine
 			else if (!this.isMine && this.getState().equals(CellState.SHOWN))
@@ -120,13 +123,13 @@ public class Cell
 					if (showMines && !this.isMine)
 					{
 						// Dessine quand même une mine (avec un X)
-						this.drawMine(g, size, false);
+						this.drawMine(g, size);
 					}
 					else
 					{
 						if (showMines && this.isMine && gameIsLost)
 						{
-							this.drawMine(g, size, false);
+							this.drawMine(g, size);
 						}
 
 						// Dessine un drapeau
@@ -151,7 +154,7 @@ public class Cell
 		}
 	}
 	
-	private void drawMine(Graphics g, float size, boolean isExplodedMine)
+	private void drawMine(Graphics g, float size)
 	{
 		int minePos = Math.round(size * 0.25f);
 		int mineSize = Math.round(size * 0.50f);
@@ -160,7 +163,7 @@ public class Cell
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, cellSize, cellSize);
 		
-		g.setColor(isExplodedMine ? new Color(200, 0, 0) : Color.BLACK);
+		g.setColor(this.hasExploded ? new Color(200, 0, 0) : Color.BLACK);
 		g.fillOval(minePos, minePos, mineSize, mineSize);
 		
 		if (!this.isMine)
@@ -212,6 +215,9 @@ public class Cell
 		if (newState != null)
 		{
 			this.state = newState;
+			
+			this.hasExploded = this.isMine && this.state == CellState.SHOWN;
+			
 			succeed = true;
 		}
 			
