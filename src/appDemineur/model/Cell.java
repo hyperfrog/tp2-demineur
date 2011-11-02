@@ -1,8 +1,11 @@
 package appDemineur.model;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 /**
  * La classe Cell modélise les cellules (cases) du jeu du démineur.
@@ -52,37 +55,30 @@ public class Cell
 	 * @param g Graphics dans lequel la cellule doit se dessiner
 	 * @param cellSize taille d'une cellule en pixels
 	 * @param showMines 
-	 * si vrai, une mine sont montrée sans autre condition; 
-	 * si faux, une mine n'est montrée que si la cellule est révélée 
+	 * si vrai, les cases minées sont montrées à moins d'être correctement marquées d'un drapeau,
+	 * et une mine avec un X s'affiche dans les cases incorrectement marquées d'un drapeau; 
+	 * 
+	 * si faux, une mine n'est est montrée que si la cellule est dévoilée 
+	 * ou si la partie est terminée et que la cellule n'est pas marquée d'un drapeau  
+	 * 
 	 * @param isExplodedMine indique si c'est la case de la mine qui a explosé
+	 * @param gameIsLost indique si la partie est perdue
 	 */
 	public void redraw(Graphics g, float size, boolean showMines, boolean isExplodedMine, boolean gameIsLost)
 	{
 		if (g != null)
 		{
-			int chrX = Math.round(size * 0.35f);
-			int chrY = Math.round(size * 0.75f);
+			int hintX = Math.round(size * 0.35f);
+			int hintY = Math.round(size * 0.75f);
 			int fontSize = Math.round(size * 0.60f);
 			int cellSize = Math.round(size);
-			int minePos = Math.round(size * 0.25f);
-			int mineSize = Math.round(size * 0.50f);
 			
-			if (isExplodedMine)
-			{
-				g.setColor(Color.RED);
-				g.fillRect(0, 0, cellSize, cellSize);
-				
-				g.setColor(Color.BLACK);
-				g.fillOval(minePos, minePos, mineSize, mineSize);				
-			}
 			// Visible, mine
-			else if (this.isMine && (this.getState().equals(CellState.SHOWN) || (showMines && !this.getState().equals(CellState.FLAGGED))))
+			if (this.isMine && 
+					(this.getState().equals(CellState.SHOWN) || 
+							(showMines && !this.getState().equals(CellState.FLAGGED))))
 			{
-				g.setColor(Color.BLACK);
-				g.fillRect(0, 0, cellSize, cellSize);
-				
-				g.setColor(Color.RED);
-				g.fillOval(minePos, minePos, mineSize, mineSize);
+				this.drawMine(g, size, isExplodedMine);
 			}
 			// Visible, mais pas mine
 			else if (!this.isMine && this.getState().equals(CellState.SHOWN))
@@ -103,7 +99,7 @@ public class Cell
 				}
 
 				g.setFont(new Font(null, Font.BOLD, fontSize));
-				g.drawString("" + this.getAdjacentMines(), chrX, chrY);
+				g.drawString("" + this.getAdjacentMines(), hintX, hintY);
 			}
 			// HIDDEN, FLAGGED ou DUBIOUS
 			else if (!this.getState().equals(CellState.SHOWN)) 
@@ -111,37 +107,58 @@ public class Cell
 				g.setColor(Color.GRAY);
 				g.fillRect(0, 0, cellSize, cellSize);
 				
-				g.setColor(Color.WHITE);
-				g.setFont(new Font(null, Font.BOLD, fontSize));
-				
 				if (this.getState().equals(CellState.DUBIOUS))
 				{
-					g.drawString("?", chrX, chrY);
+					// Dessine un ?
+					g.setColor(Color.WHITE);
+					g.setFont(new Font(null, Font.BOLD, fontSize));
+					g.drawString("?", hintX, hintY);
 				}
 				else if (this.getState().equals(CellState.FLAGGED))
 				{
-					if (!gameIsLost)
+					if (showMines && !this.isMine)
 					{
-						// TODO : Améliorer !
-						if (showMines && this.isMine)
-						{
-							g.setColor(Color.BLACK);
-							g.fillRect(0, 0, cellSize, cellSize);
-							
-							g.setColor(Color.RED);
-							g.fillOval(minePos, minePos, mineSize, mineSize);							
-						}
-						g.setColor(new Color(200, 0, 0));
-						g.drawString("¶", chrX, chrY);
+						// Dessine quand même une mine (avec un X)
+						this.drawMine(g, size, false);
 					}
 					else
 					{
-						g.setColor(new Color(200, 0, 0));
-						g.drawString("X", chrX, chrY);
+						if (showMines && this.isMine && gameIsLost)
+						{
+							this.drawMine(g, size, false);
+						}
 
+						// Dessine un ¶
+						g.setFont(new Font(null, Font.BOLD, fontSize));
+						g.setColor(new Color(200, 0, 0));
+						g.drawString("¶", hintX, hintY);
 					}
-				}
+				}	
 			}
+		}
+	}
+	
+	private void drawMine(Graphics g, float size, boolean isExplodedMine)
+	{
+		int minePos = Math.round(size * 0.25f);
+		int mineSize = Math.round(size * 0.50f);
+		int cellSize = Math.round(size);
+
+		g.setColor(Color.GRAY);
+		g.fillRect(0, 0, cellSize, cellSize);
+		
+		g.setColor(isExplodedMine ? new Color(200, 0, 0) : Color.BLACK);
+		g.fillOval(minePos, minePos, mineSize, mineSize);
+		
+		if (!this.isMine)
+		{
+			Rectangle r = g.getClipBounds();
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setStroke(new BasicStroke(3));
+			g2d.setColor(new Color(200, 0, 0));
+			
+			g2d.drawLine(0, 0, r.width - 1, r.height - 1);
+			g2d.drawLine(r.width - 1, 0 , 0, r.height - 1);
 		}
 	}
 	
@@ -217,7 +234,7 @@ public class Cell
 	{
 		return this.isMine;
 	}
-	
+
 	/** 
 	 * Retourne une représentation textuelle de la cellule.
 	 * Une mine est représentée par «*» et tout autre cellule par le nombre de mines adjacentes. 
