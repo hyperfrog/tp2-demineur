@@ -82,7 +82,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		
 		this.setLayout(new BorderLayout());
 		
-		this.newGameButton.setText(":)");
+		this.newGameButton.setText(":¬)");
 		this.newGameButton.setActionCommand("NEW_GAME");
 		
 		this.timerLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -249,6 +249,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 		else if (evt.getActionCommand().equals("NEW_GAME"))
 		{
+			this.newGameButton.setText(":¬)");
 			this.replay();
 			this.repaint();
 		}
@@ -329,11 +330,17 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 					
 					if (this.currentGame.isWon())
 					{
+						this.newGameButton.setText("8¬)");
+
 						JOptionPane.showMessageDialog(
 								this, 
 								"Vous avez gagné !", 
 								"Bravo !", 
-								JOptionPane.PLAIN_MESSAGE);			
+								JOptionPane.PLAIN_MESSAGE);		
+					}
+					else if (this.currentGame.isLost())
+					{
+						this.newGameButton.setText(":¬(");
 					}
 					
 				}
