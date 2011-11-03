@@ -5,10 +5,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  * La classe Cell modélise les cellules (cases) du jeu du démineur.
@@ -40,6 +40,26 @@ public class Cell
 	
 	// État de la cellule
 	private CellState state;
+	
+	// Images utilisées par la classe pour dessiner les cellules
+	private static BufferedImage flagImage = null;
+	private static BufferedImage mineImage = null;
+	private static BufferedImage explodedMineImage = null;
+	
+	// Initialisation des images
+	static
+	{
+		try
+		{
+			Cell.flagImage = ImageIO.read(Cell.class.getResource("../../drapeau.png"));
+			Cell.mineImage = ImageIO.read(Cell.class.getResource("../../mine.png"));
+			Cell.explodedMineImage = ImageIO.read(Cell.class.getResource("../../mine_explose.png"));
+		}
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
+		}	
+	}
 	
 	/**
 	 * Construit une cellule. La cellule créée ne contient pas de mine, 
@@ -77,18 +97,18 @@ public class Cell
 			int fontSize = Math.round(cellSize * 0.60f);
 			
 			// Dessine le fond
-			g2d.setColor(this.getState().equals(CellState.SHOWN) ? Color.GRAY: Color.LIGHT_GRAY);
+			g2d.setColor(this.state == CellState.SHOWN ? Color.GRAY: Color.LIGHT_GRAY);
 			g2d.fillRect(0, 0, cellSize, cellSize);
 			
 			// Visible, mine
 			if (this.isMine && 
-					(this.getState().equals(CellState.SHOWN) || 
-							(showMines && !this.getState().equals(CellState.FLAGGED))))
+					(this.state == CellState.SHOWN || 
+							(showMines && !(this.state == CellState.FLAGGED))))
 			{
 				this.drawMine(g2d, cellSize);
 			}
 			// Visible, mais pas mine
-			else if (!this.isMine && this.getState().equals(CellState.SHOWN))
+			else if (!this.isMine && this.state == CellState.SHOWN)
 			{
 				if (this.getAdjacentMines() > 0)
 				{
@@ -100,7 +120,7 @@ public class Cell
 					
 					switch (this.getAdjacentMines())
 					{
-						case 1: g2d.setColor(new Color(100, 100, 240)); break;
+						case 1: g2d.setColor(new Color(150, 150, 240)); break;
 						case 2: g2d.setColor(new Color(0,   200, 0  )); break;
 						case 3: g2d.setColor(new Color(255, 0,   0  )); break;
 						case 4: g2d.setColor(new Color(0,   0,   160)); break;
@@ -115,14 +135,14 @@ public class Cell
 				}
 			}
 			// HIDDEN, FLAGGED ou DUBIOUS
-			else if (this.getState().equals(CellState.DUBIOUS))
+			else if (this.state == CellState.DUBIOUS)
 			{
 				// Dessine un ?
 				g2d.setColor(Color.WHITE);
 				g2d.setFont(new Font(null, Font.BOLD, fontSize));
 				g2d.drawString("?", hintX, hintY);
 			}
-			else if (this.getState().equals(CellState.FLAGGED))
+			else if (this.state == CellState.FLAGGED)
 			{
 				// Pour imiter le comportement du démineur de Windows 7, les mines marquées 
 				// d'un drapeau ne sont pas affichées à la fin d'une partie gagnée
@@ -152,21 +172,25 @@ public class Cell
 					//						g2d.setColor(new Color(200, 0, 0));
 					//						g2d.fillPolygon(pol);
 
-					Image img = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("../../drapeau.png"));
-					g2d.drawImage(img, 0, 0, cellSize, cellSize, null);
+					g2d.drawImage(Cell.flagImage, 0, 0, cellSize, cellSize, null);
 				}
 			}
-			this.draw3dEffect(g2d, cellSize, this.getState().equals(CellState.SHOWN));
+			
+			this.draw3dEffect(g2d, cellSize, this.state == CellState.SHOWN);
 		}
 	}
 	
 	private void drawMine(Graphics g, int cellSize)
 	{
-		int minePos = Math.round(cellSize * 0.25f);
-		int mineSize = Math.round(cellSize * 0.50f);
+//		int minePos = Math.round(cellSize * 0.25f);
+//		int mineSize = Math.round(cellSize * 0.50f);
 
-		g.setColor(this.isMine && this.state == CellState.SHOWN ? new Color(200, 0, 0) : Color.BLACK);
-		g.fillOval(minePos, minePos, mineSize, mineSize);
+//		g.setColor(this.state == CellState.SHOWN ? new Color(200, 0, 0) : Color.BLACK);
+//		g.fillOval(minePos, minePos, mineSize, mineSize);
+		
+		BufferedImage img = this.state == CellState.SHOWN ? Cell.explodedMineImage : Cell.mineImage;
+		
+		g.drawImage(img, 0, 0, cellSize, cellSize, null);
 		
 		if (!this.isMine)
 		{
