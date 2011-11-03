@@ -328,7 +328,7 @@ public class Game extends BaseMatrix
 	 * Dessine la matrice dans le Graphics spécifié
 	 * 
 	 * @param g Graphics dans lequel la matrice doit se dessiner
-	 * @param cellSize taille d'une case en pixels
+	 * @param cellSize taille d'une case en pixels (nombre rationnel pour faciliter le «scaling»)
 	 * @param showMines 
 	 * si vrai, les mines sont montrées sans autre condition; 
 	 * si faux, elles ne sont montrées que si la case est révélée 
@@ -337,6 +337,8 @@ public class Game extends BaseMatrix
 	{
 		if (g != null)
 		{
+			int intCellSize = Math.round(cellSize);
+			
 			// Pour chaque colonne i
 			for (int i = 0; i < this.getWidth(); i++)
 			{
@@ -352,11 +354,11 @@ public class Game extends BaseMatrix
 						Graphics g2 = g.create(
 								Math.round(i * cellSize), 
 								Math.round(j * cellSize), 
-								Math.round(cellSize), 
-								Math.round(cellSize));
+								intCellSize, 
+								intCellSize);
 
 						// Dessine la cellule
-						c.redraw(g2, cellSize, showMines, this.isLost);
+						c.redraw(g2, intCellSize, showMines, this.isWon);
 					}
 				}
 			}
@@ -364,7 +366,7 @@ public class Game extends BaseMatrix
 			// Dessine un quadrillage 
 
 			Graphics2D g2d = (Graphics2D) g;
-			g2d.setStroke(new BasicStroke(3));
+			g2d.setStroke(new BasicStroke(2));
 			g2d.setColor(Color.BLACK);
 
 			for (int i = 0; i <= this.getWidth(); i++)
