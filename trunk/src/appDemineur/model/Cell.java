@@ -30,6 +30,8 @@ public class Cell
 	 * @author Alexandre Tremblay
 	 *
 	 */
+	
+	// Les 4 états possibles d'une cellule
 	public enum CellState { HIDDEN,	FLAGGED, DUBIOUS, SHOWN; }
 	
 	// Indique si la cellule contient une mine
@@ -101,14 +103,13 @@ public class Cell
 			g2d.fillRect(0, 0, cellSize, cellSize);
 			
 			// Visible, mine
-			if (this.isMine && 
-					(this.state == CellState.SHOWN || 
-							(showMines && !(this.state == CellState.FLAGGED))))
+			if (this.isMine && (this.state == CellState.SHOWN || (showMines && this.state != CellState.FLAGGED)))
 			{
 				this.drawMine(g2d, cellSize);
 			}
+			
 			// Visible, mais pas mine
-			else if (!this.isMine && this.state == CellState.SHOWN)
+			if (!this.isMine && this.state == CellState.SHOWN)
 			{
 				if (this.getAdjacentMines() > 0)
 				{
@@ -134,19 +135,19 @@ public class Cell
 					g2d.drawString("" + this.getAdjacentMines(), hintX, hintY);
 				}
 			}
-			// HIDDEN, FLAGGED ou DUBIOUS
 			else if (this.state == CellState.DUBIOUS)
 			{
 				// Dessine un ?
-				g2d.setColor(Color.WHITE);
 				g2d.setFont(new Font(null, Font.BOLD, fontSize));
+				g2d.setColor(Color.BLACK);
+				g2d.drawString("?", hintX + 2, hintY + 2);
+				g2d.setColor(Color.WHITE);
 				g2d.drawString("?", hintX, hintY);
 			}
 			else if (this.state == CellState.FLAGGED)
 			{
 				// Pour imiter le comportement du démineur de Windows 7, les mines marquées 
 				// d'un drapeau ne sont pas affichées à la fin d'une partie gagnée
-				
 				if (showMines && !gameIsWon)  
 				{
 					// Dessine une mine (avec ou sans X)
@@ -208,13 +209,14 @@ public class Cell
 	{
 		g2d.setStroke(new BasicStroke(6));
 		
+		g2d.setColor(isPushed ? Color.LIGHT_GRAY : Color.GRAY);
+		g2d.drawLine(0, cellSize, cellSize, cellSize);
+		g2d.drawLine(cellSize, 0, cellSize, cellSize);		
+
 		g2d.setColor(isPushed ? Color.DARK_GRAY : Color.WHITE);
 		g2d.drawLine(0, 0, cellSize - 1, 0);
 		g2d.drawLine(0, 0, 0, cellSize - 1);
 
-		g2d.setColor(isPushed ? Color.LIGHT_GRAY : Color.GRAY);
-		g2d.drawLine(0, cellSize, cellSize, cellSize);
-		g2d.drawLine(cellSize, 0, cellSize, cellSize);		
 	}
 	
 	/**

@@ -367,7 +367,7 @@ public class Game extends BaseMatrix
 
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setStroke(new BasicStroke(2));
-			g2d.setColor(Color.BLACK);
+			g2d.setColor(Color.DARK_GRAY);
 
 			for (int i = 0; i <= this.getWidth(); i++)
 			{
