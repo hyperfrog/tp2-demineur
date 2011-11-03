@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 /**
  * La classe Cell modélise les cellules (cases) du jeu du démineur.
@@ -62,100 +64,107 @@ public class Cell
 	 * si faux, une mine n'est est montrée que si la cellule est dévoilée 
 	 * ou si la partie est terminée et que la cellule n'est pas marquée d'un drapeau  
 	 * 
-	 * @param gameIsLost indique si la partie est perdue
+	 * @param gameIsWon indique si la partie est gagnée
 	 */
-	public void redraw(Graphics g, float size, boolean showMines, boolean gameIsLost)
+	public void redraw(Graphics g, int cellSize, boolean showMines, boolean gameIsWon)
 	{
 		if (g != null)
 		{
-			int hintX = Math.round(size * 0.35f);
-			int hintY = Math.round(size * 0.75f);
-			int fontSize = Math.round(size * 0.60f);
-			int cellSize = Math.round(size);
+			Graphics2D g2d = (Graphics2D) g;
+
+			int hintX = Math.round(cellSize * 0.35f);
+			int hintY = Math.round(cellSize * 0.75f);
+			int fontSize = Math.round(cellSize * 0.60f);
+			
+			// Dessine le fond
+			g2d.setColor(this.getState().equals(CellState.SHOWN) ? Color.GRAY: Color.LIGHT_GRAY);
+			g2d.fillRect(0, 0, cellSize, cellSize);
 			
 			// Visible, mine
 			if (this.isMine && 
 					(this.getState().equals(CellState.SHOWN) || 
 							(showMines && !this.getState().equals(CellState.FLAGGED))))
 			{
-				this.drawMine(g, size);
+				this.drawMine(g2d, cellSize);
 			}
 			// Visible, mais pas mine
 			else if (!this.isMine && this.getState().equals(CellState.SHOWN))
 			{
-				g.setColor(Color.WHITE);
-				g.fillRect(0, 0, cellSize, cellSize);
-
-				switch (this.getAdjacentMines())
+				if (this.getAdjacentMines() > 0)
 				{
-					case 1: g.setColor(new Color(106, 133, 165)); break;
-					case 2: g.setColor(new Color(0,   200, 0  )); break;
-					case 3: g.setColor(new Color(255, 0,   0  )); break;
-					case 4: g.setColor(new Color(0,   0,   160)); break;
-					case 5: g.setColor(new Color(136, 0,   61 )); break;
-					case 6: g.setColor(new Color(112, 178, 146)); break;
-					case 7: g.setColor(new Color(171, 31,  26 )); break;
-					case 8: g.setColor(new Color(128, 0,   0  )); break;
-				}
-
-				g.setFont(new Font(null, Font.BOLD, fontSize));
-				g.drawString("" + this.getAdjacentMines(), hintX, hintY);
-			}
-			// HIDDEN, FLAGGED ou DUBIOUS
-			else if (!this.getState().equals(CellState.SHOWN)) 
-			{
-				g.setColor(Color.GRAY);
-				g.fillRect(0, 0, cellSize, cellSize);
-				
-				if (this.getState().equals(CellState.DUBIOUS))
-				{
-					// Dessine un ?
-					g.setColor(Color.WHITE);
-					g.setFont(new Font(null, Font.BOLD, fontSize));
-					g.drawString("?", hintX, hintY);
-				}
-				else if (this.getState().equals(CellState.FLAGGED))
-				{
-					if (showMines)
+					g2d.setFont(new Font(null, Font.BOLD, fontSize));
+					
+					// Dessine l'«ombre» de l'indice
+					g2d.setColor(new Color(40, 40, 40));
+					g2d.drawString("" + this.getAdjacentMines(), hintX + 2, hintY + 2);
+					
+					switch (this.getAdjacentMines())
 					{
-						// Dessine une mine (avec ou sans X)
-						this.drawMine(g, size);
+						case 1: g2d.setColor(new Color(100, 100, 240)); break;
+						case 2: g2d.setColor(new Color(0,   200, 0  )); break;
+						case 3: g2d.setColor(new Color(255, 0,   0  )); break;
+						case 4: g2d.setColor(new Color(0,   0,   160)); break;
+						case 5: g2d.setColor(new Color(136, 0,   61 )); break;
+						case 6: g2d.setColor(new Color(112, 178, 146)); break;
+						case 7: g2d.setColor(new Color(171, 31,  26 )); break;
+						case 8: g2d.setColor(new Color(128, 0,   0  )); break;
 					}
 					
-					if (!showMines || (this.isMine && (gameIsLost || showMines)))
-					{
-
-						// Dessine un drapeau
-						Graphics2D g2d = (Graphics2D) g;
-						g2d.setStroke(new BasicStroke(3));
-						g2d.setColor(Color.WHITE);
-						
-						g2d.drawLine(Math.round(size * 0.3f), Math.round(size * 0.8f), Math.round(size * 0.7f), Math.round(size * 0.8f));
-						g2d.drawLine(Math.round(size * 0.5f), Math.round(size * 0.2f), Math.round(size * 0.5f), Math.round(size * 0.8f));
-
-						Polygon pol = new Polygon();
-						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.2f));
-						pol.addPoint(Math.round(size * 0.2f), Math.round(size * 0.4f));
-						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.6f));
-
-						g2d.setColor(new Color(200, 0, 0));
-						g2d.fillPolygon(pol);
-
-					}
-				}	
+					// Dessine l'indice
+					g2d.drawString("" + this.getAdjacentMines(), hintX, hintY);
+				}
 			}
+			// HIDDEN, FLAGGED ou DUBIOUS
+			else if (this.getState().equals(CellState.DUBIOUS))
+			{
+				// Dessine un ?
+				g2d.setColor(Color.WHITE);
+				g2d.setFont(new Font(null, Font.BOLD, fontSize));
+				g2d.drawString("?", hintX, hintY);
+			}
+			else if (this.getState().equals(CellState.FLAGGED))
+			{
+				// Pour imiter le comportement du démineur de Windows 7, les mines marquées 
+				// d'un drapeau ne sont pas affichées à la fin d'une partie gagnée
+				
+				if (showMines && !gameIsWon)  
+				{
+					// Dessine une mine (avec ou sans X)
+					this.drawMine(g2d, cellSize);
+				}
+
+				if (!showMines || this.isMine)
+				{
+					// Dessine un drapeau
+					
+					//						Graphics2D g2d = (Graphics2D) g;
+					//						g2d.setStroke(new BasicStroke(3));
+					//						g2d.setColor(Color.WHITE);
+					//						
+					//						g2d.drawLine(Math.round(size * 0.3f), Math.round(size * 0.8f), Math.round(size * 0.7f), Math.round(size * 0.8f));
+					//						g2d.drawLine(Math.round(size * 0.5f), Math.round(size * 0.2f), Math.round(size * 0.5f), Math.round(size * 0.8f));
+					//
+					//						Polygon pol = new Polygon();
+					//						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.2f));
+					//						pol.addPoint(Math.round(size * 0.2f), Math.round(size * 0.4f));
+					//						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.6f));
+					//
+					//						g2d.setColor(new Color(200, 0, 0));
+					//						g2d.fillPolygon(pol);
+
+					Image img = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("../../drapeau.png"));
+					g2d.drawImage(img, 0, 0, cellSize, cellSize, null);
+				}
+			}
+			this.draw3dEffect(g2d, cellSize, this.getState().equals(CellState.SHOWN));
 		}
 	}
 	
-	private void drawMine(Graphics g, float size)
+	private void drawMine(Graphics g, int cellSize)
 	{
-		int minePos = Math.round(size * 0.25f);
-		int mineSize = Math.round(size * 0.50f);
-		int cellSize = Math.round(size);
+		int minePos = Math.round(cellSize * 0.25f);
+		int mineSize = Math.round(cellSize * 0.50f);
 
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, cellSize, cellSize);
-		
 		g.setColor(this.isMine && this.state == CellState.SHOWN ? new Color(200, 0, 0) : Color.BLACK);
 		g.fillOval(minePos, minePos, mineSize, mineSize);
 		
@@ -169,6 +178,19 @@ public class Cell
 			g2d.drawLine(0, 0, r.width - 1, r.height - 1);
 			g2d.drawLine(r.width - 1, 0 , 0, r.height - 1);
 		}
+	}
+	
+	private void draw3dEffect(Graphics2D g2d, int cellSize, boolean isPushed)
+	{
+		g2d.setStroke(new BasicStroke(6));
+		
+		g2d.setColor(isPushed ? Color.DARK_GRAY : Color.WHITE);
+		g2d.drawLine(0, 0, cellSize - 1, 0);
+		g2d.drawLine(0, 0, 0, cellSize - 1);
+
+		g2d.setColor(isPushed ? Color.LIGHT_GRAY : Color.GRAY);
+		g2d.drawLine(0, cellSize, cellSize, cellSize);
+		g2d.drawLine(cellSize, 0, cellSize, cellSize);		
 	}
 	
 	/**
