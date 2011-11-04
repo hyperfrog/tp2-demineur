@@ -33,7 +33,7 @@ public class MainApp
 		
 		ArrayList<Class<?>> classesToTest = new ArrayList<Class<?>>();
 //		classesToTest.add(appDemineur.model.test.MatrixTest.class);
-		classesToTest.add(appDemineur.model.test.GameTest.class);
+//		classesToTest.add(appDemineur.model.test.GameTest.class);
 		
 		for(Class<?> someClass : classesToTest)
 		{
