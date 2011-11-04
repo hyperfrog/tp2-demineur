@@ -51,10 +51,10 @@ public class Game extends BaseMatrix
 	private boolean isWon;
 	
 	// Nombre de cases marquées d'un drapeau
-	private int nbFlags;
+	private int nbCellsFlagged;
 	
 	// Nombre de cases non minées dévoilées
-	private int nbNonMineCellsShown;
+	private int nbCellsShown;
 	
 	/**
 	 * Construit une partie avec le niveau de difficulté spécifié.
@@ -69,16 +69,22 @@ public class Game extends BaseMatrix
 		
 		this.redim(Game.LEVELS[this.level].dim.width, Game.LEVELS[this.level].dim.height);
 		this.populate();
-		this.addMines(Game.LEVELS[this.level].mineAmount);
+//		this.addMines(Game.LEVELS[this.level].mineAmount, null);
 		
 		this.isLost = false;
 		this.isWon = false;
-		this.nbFlags = 0;
-		this.nbNonMineCellsShown = 0;
+		this.nbCellsFlagged = 0;
+		this.nbCellsShown = 0;
 	}
-
+	
+	public void start(Point firstLeftClick)
+	{
+		this.addMines(Game.LEVELS[this.level].mineAmount, firstLeftClick);
+	}
+	
+	// TODO : À flusher... Méthode laissée en place seulement pour les tests.
 	/**
-	 * Change l'état d'une case non dévoilée. N'as pas d'effet si la case est déjà dévoilée.  
+	 * Change l'état d'une case non dévoilée. N'a pas d'effet si la case est déjà dévoilée.  
 	 * 
 	 * @param x coordonnée x de la case dont on souhaite changer l'état
 	 * @param y coordonnée y de la case dont on souhaite changer l'état
@@ -115,11 +121,11 @@ public class Game extends BaseMatrix
 				{
 					case HIDDEN:
 						newState = CellState.FLAGGED;
-						this.nbFlags++;
+						this.nbCellsFlagged++;
 						break;
 					case FLAGGED:
 						newState = CellState.DUBIOUS;
-						this.nbFlags--;
+						this.nbCellsFlagged--;
 						break;
 					case DUBIOUS:
 						newState = CellState.HIDDEN;
@@ -133,17 +139,85 @@ public class Game extends BaseMatrix
 		return changed;
 	}
 	
-	// Fonction qui dévoile une cellule et, si elle n'a pas de mines adjacentes, 
+	// TODO : Adapter les tests.
+	/**
+	 * Change l'état d'une case non dévoilée. Alterne entre FLAGGED, DUBIOUS et HIDDEN.
+	 * N'a pas d'effet si la case est dévoilée.  
+	 * 
+	 * @param x coordonnée x de la case dont on souhaite changer l'état
+	 * @param y coordonnée y de la case dont on souhaite changer l'état
+	 * 
+	 * @return vrai si la cellule a changé d'état, faux sinon
+	 */
+	public boolean changeCellState(int x, int y)
+	{
+		boolean changed = false;
+		
+		Cell c = this.getElement(x, y);
+		
+		if (c != null && c.getState() != CellState.SHOWN)
+		{
+			// Alterne entre FLAGGED, DUBIOUS et HIDDEN
+			CellState newState = null;
+
+			switch(c.getState())
+			{
+				case HIDDEN:
+					newState = CellState.FLAGGED;
+					this.nbCellsFlagged++;
+					break;
+				case FLAGGED:
+					newState = CellState.DUBIOUS;
+					this.nbCellsFlagged--;
+					break;
+				case DUBIOUS:
+					newState = CellState.HIDDEN;
+					break;
+			}
+
+			changed = c.setState(newState);
+		}
+		
+		return changed;
+	}
+	
+	// TODO : Adapter les tests.
+	/**
+	 * Dévoile une cellule et, si elle n'a pas de mines adjacentes, 
+	 * toutes les cellules voisines avec ou sans mines adjacentes, et ce, 
+	 * récursivement jusqu'à ce qu'à ce que soient dévoilées les cellules frontières, 
+	 * c'est-à-dire les cellules ayant des mines adjacentes.
+	 * 
+	 * Si l'état d'une cellule est SHOWN ou FLAGGED, cet état n'est 
+	 * pas modifié, donc les cellules FLAGGED ne sont pas dévoilées.
+	 * 
+	 * La méthode prend comme paramètres les coordonnées x et y de la cellule à dévoiler 
+	 * 
+	 * @param x coordonnée x de la case dont on souhaite changer l'état
+	 * @param y coordonnée y de la case dont on souhaite changer l'état
+	 * 
+	 * @return vrai si la cellule a changé d'état, faux sinon
+	 */
+	public boolean showCell(int x, int y)
+	{
+		boolean changed = false;
+		
+		Cell c = this.getElement(x, y);
+		
+		if (c != null)
+		{
+			CellState oldState = c.getState();
+			this.showCell(x, y, null);
+			changed = c.getState() != oldState;
+		}
+
+		return changed;
+	}
+	
+	// Dévoile une cellule et, si elle n'a pas de mines adjacentes, 
 	// toutes les cellules voisines avec ou sans mines adjacentes, et ce, 
 	// récursivement jusqu'à ce qu'à ce que les cellules frontières soit dévoilées, 
 	// c'est-à-dire les cellules ayant des mines adjacentes.
-	//
-	// Si l'état d'une cellule est SHOWN ou FLAGGED, cet état n'est 
-	// pas modifié, donc les cellules FLAGGED ne sont pas dévoilées.
-	//
-	// La méthode prend les coordonnées x et y de la cellule à dévoiler 
-	// ainsi qu'une liste vide de cellules (ou une valeur null),
-	// laquelle sert aux appels récursifs de la fonction.
 	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
 		Cell curCell = this.getElement(x, y);
@@ -161,7 +235,7 @@ public class Game extends BaseMatrix
 			}
 			else
 			{
-				this.isWon = ++this.nbNonMineCellsShown == this.getWidth() * this.getHeight() - this.getMineAmount();
+				this.isWon = ++this.nbCellsShown == this.getWidth() * this.getHeight() - this.getMineAmount();
 
 				// Si aucune cellule adjacente ne contient de mine 
 				if (curCell.getAdjacentMines() == 0)
@@ -249,7 +323,7 @@ public class Game extends BaseMatrix
 	 */
 	public int getNbFlags()
 	{
-		return this.nbFlags;
+		return this.nbCellsFlagged;
 	}
 	
 	/**
@@ -261,6 +335,31 @@ public class Game extends BaseMatrix
 		return Game.LEVELS[this.level].mineAmount;
 	}
 	
+	/**
+	 * Retourne le nombre de cases non minées dévoilées.
+	 * 
+	 * @return nombre de cases non minées dévoilées
+	 */
+	public int getNbCellsShown()
+	{
+		return nbCellsShown;
+	}
+
+	/**
+	 * Retourne la cellule de la matrice à la position (x, y) spécifiée.
+	 * 
+	 * @param x		Colonne de la cellule
+	 * @param y		Rangée de la cellule
+	 * @return		La cellule à la position spécifiée ou null si l'objet à cette position n'est pas une cellule
+	 */
+	@Override
+	public Cell getElement(int x, int y)
+	{
+		Object o = super.getElement(x, y);
+		
+		return o instanceof Cell ? (Cell)o : null;
+	}
+
 	// Remplit la matrice de cellules
 	private void populate()
 	{
@@ -275,7 +374,7 @@ public class Game extends BaseMatrix
 	
 	// Remplit la matrice avec un nombre «amount» de mines
 	// et détermine, pour chaque cellule, le nombre de mines adjacentes
-	private void addMines(int amount)
+	private void addMines(int amount, Point firstLeftClick)
 	{
 		// «Chapeau» duquel on va tirer des cellules 
 		ArrayList<Point> allCells = new ArrayList<Point>();
@@ -285,7 +384,10 @@ public class Game extends BaseMatrix
 		{
 			for (int j = 0; j < this.getHeight(); j++)
 			{
-				allCells.add(new Point(i, j));
+				if (firstLeftClick == null || !firstLeftClick.equals(new Point(i, j))) 
+				{
+					allCells.add(new Point(i, j));
+				}
 			}
 		}
 		
@@ -386,20 +488,4 @@ public class Game extends BaseMatrix
 			}
 		}
 	}
-
-	/**
-	 * Retourne la cellule de la matrice à la position (x, y) spécifiée.
-	 * 
-	 * @param x		Colonne de la cellule
-	 * @param y		Rangée de la cellule
-	 * @return		La cellule à la position spécifiée ou null si l'objet à cette position n'est pas une cellule
-	 */
-	@Override
-	public Cell getElement(int x, int y)
-	{
-		Object o = super.getElement(x, y);
-		
-		return o instanceof Cell ? (Cell)o : null;
-	}
-
 }

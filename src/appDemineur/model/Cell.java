@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -53,9 +53,9 @@ public class Cell
 	{
 		try
 		{
-			Cell.flagImage = ImageIO.read(Cell.class.getResource("../../drapeau.png"));
+			Cell.flagImage = ImageIO.read(Cell.class.getResource("../../flag.png"));
 			Cell.mineImage = ImageIO.read(Cell.class.getResource("../../mine.png"));
-			Cell.explodedMineImage = ImageIO.read(Cell.class.getResource("../../mine_explose.png"));
+			Cell.explodedMineImage = ImageIO.read(Cell.class.getResource("../../mine_exploded.png"));
 		}
 		catch (IOException e)
 		{
@@ -97,6 +97,7 @@ public class Cell
 			int hintX = Math.round(cellSize * 0.35f);
 			int hintY = Math.round(cellSize * 0.75f);
 			int fontSize = Math.round(cellSize * 0.60f);
+			int shadowDistance = Math.round(cellSize * 0.03f);
 			
 			// Dessine le fond
 			g2d.setColor(this.state == CellState.SHOWN ? Color.GRAY: Color.LIGHT_GRAY);
@@ -115,10 +116,6 @@ public class Cell
 				{
 					g2d.setFont(new Font(null, Font.BOLD, fontSize));
 					
-					// Dessine l'«ombre» de l'indice
-					g2d.setColor(new Color(40, 40, 40));
-					g2d.drawString("" + this.getAdjacentMines(), hintX + 2, hintY + 2);
-					
 					switch (this.getAdjacentMines())
 					{
 						case 1: g2d.setColor(new Color(150, 150, 240)); break;
@@ -132,17 +129,14 @@ public class Cell
 					}
 					
 					// Dessine l'indice
-					g2d.drawString("" + this.getAdjacentMines(), hintX, hintY);
+					this.drawStringWithShadow(g2d, "" + this.getAdjacentMines(), hintX, hintY, shadowDistance, null, null);
 				}
 			}
 			else if (this.state == CellState.DUBIOUS)
 			{
 				// Dessine un ?
 				g2d.setFont(new Font(null, Font.BOLD, fontSize));
-				g2d.setColor(Color.BLACK);
-				g2d.drawString("?", hintX + 2, hintY + 2);
-				g2d.setColor(Color.WHITE);
-				g2d.drawString("?", hintX, hintY);
+				this.drawStringWithShadow(g2d, "?", hintX, hintY, shadowDistance, Color.WHITE, null);
 			}
 			else if (this.state == CellState.FLAGGED)
 			{
@@ -157,23 +151,7 @@ public class Cell
 				if (!showMines || this.isMine)
 				{
 					// Dessine un drapeau
-					
-					//						Graphics2D g2d = (Graphics2D) g;
-					//						g2d.setStroke(new BasicStroke(3));
-					//						g2d.setColor(Color.WHITE);
-					//						
-					//						g2d.drawLine(Math.round(size * 0.3f), Math.round(size * 0.8f), Math.round(size * 0.7f), Math.round(size * 0.8f));
-					//						g2d.drawLine(Math.round(size * 0.5f), Math.round(size * 0.2f), Math.round(size * 0.5f), Math.round(size * 0.8f));
-					//
-					//						Polygon pol = new Polygon();
-					//						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.2f));
-					//						pol.addPoint(Math.round(size * 0.2f), Math.round(size * 0.4f));
-					//						pol.addPoint(Math.round(size * 0.5f), Math.round(size * 0.6f));
-					//
-					//						g2d.setColor(new Color(200, 0, 0));
-					//						g2d.fillPolygon(pol);
-
-					g2d.drawImage(Cell.flagImage, 0, 0, cellSize, cellSize, null);
+					drawFlag(g2d, cellSize);
 				}
 			}
 			
@@ -181,28 +159,55 @@ public class Cell
 		}
 	}
 	
-	private void drawMine(Graphics g, int cellSize)
+	private void drawMine(Graphics2D g2d, int cellSize)
 	{
-//		int minePos = Math.round(cellSize * 0.25f);
-//		int mineSize = Math.round(cellSize * 0.50f);
-
-//		g.setColor(this.state == CellState.SHOWN ? new Color(200, 0, 0) : Color.BLACK);
-//		g.fillOval(minePos, minePos, mineSize, mineSize);
-		
 		BufferedImage img = this.state == CellState.SHOWN ? Cell.explodedMineImage : Cell.mineImage;
 		
-		g.drawImage(img, 0, 0, cellSize, cellSize, null);
+		if (img != null)
+		{
+			g2d.drawImage(img, 0, 0, cellSize, cellSize, null);
+		}
+		else
+		{
+			int minePos = Math.round(cellSize * 0.25f);
+			int mineSize = Math.round(cellSize * 0.50f);
+
+			g2d.setColor(this.state == CellState.SHOWN ? new Color(200, 0, 0) : Color.BLACK);
+			g2d.fillOval(minePos, minePos, mineSize, mineSize);
+		}
 		
 		if (!this.isMine)
 		{
-			Rectangle r = g.getClipBounds();
-			Graphics2D g2d = (Graphics2D) g;
-			g2d.setStroke(new BasicStroke(3));
+			g2d.setStroke(new BasicStroke(4));
 			g2d.setColor(new Color(200, 0, 0));
 			
-			g2d.drawLine(0, 0, r.width - 1, r.height - 1);
-			g2d.drawLine(r.width - 1, 0 , 0, r.height - 1);
+			g2d.drawLine(0, 0, cellSize - 1, cellSize - 1);
+			g2d.drawLine(cellSize - 1, 0 , 0, cellSize - 1);
 		}
+	}
+	
+	private void drawFlag(Graphics2D g2d, int cellSize)
+	{
+		if (Cell.flagImage != null)
+		{
+			g2d.drawImage(Cell.flagImage, 0, 0, cellSize, cellSize, null);
+		}
+		else
+		{
+			g2d.setStroke(new BasicStroke(3));
+			g2d.setColor(Color.WHITE);
+
+			g2d.drawLine(Math.round(cellSize * 0.3f), Math.round(cellSize * 0.8f), Math.round(cellSize * 0.7f), Math.round(cellSize * 0.8f));
+			g2d.drawLine(Math.round(cellSize * 0.5f), Math.round(cellSize * 0.2f), Math.round(cellSize * 0.5f), Math.round(cellSize * 0.8f));
+
+			Polygon pol = new Polygon();
+			pol.addPoint(Math.round(cellSize * 0.5f), Math.round(cellSize * 0.2f));
+			pol.addPoint(Math.round(cellSize * 0.2f), Math.round(cellSize * 0.4f));
+			pol.addPoint(Math.round(cellSize * 0.5f), Math.round(cellSize * 0.6f));
+
+			g2d.setColor(new Color(200, 0, 0));
+			g2d.fillPolygon(pol);
+		}		
 	}
 	
 	private void draw3dEffect(Graphics2D g2d, int cellSize, boolean isPushed)
@@ -220,6 +225,24 @@ public class Cell
 		g2d.setStroke(new BasicStroke(1));
 		g2d.setColor(Color.BLACK);
 		g2d.drawRect(0, 0, cellSize - 1, cellSize - 1);
+	}
+	
+	private void drawStringWithShadow(Graphics2D g2d, String str, int x, int y, int shadowDistance, Color textColor, Color shadowColor)
+	{
+		if (textColor == null)
+		{
+			textColor = g2d.getColor();
+		}
+		
+		if (shadowColor == null)
+		{
+			shadowColor = new Color(40, 40, 40);
+		}
+		
+		g2d.setColor(shadowColor);
+		g2d.drawString(str, x + shadowDistance, y + shadowDistance);
+		g2d.setColor(textColor);
+		g2d.drawString(str, x, y);		
 	}
 	
 	/**

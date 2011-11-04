@@ -2,6 +2,9 @@ package appDemineur.form;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -12,7 +15,10 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -21,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
+import appDemineur.model.Cell;
 import appDemineur.model.Game;
 
 /**
@@ -64,6 +71,26 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Objet parent
 	private AppFrame parent = null;
 	
+	// Images utilisées par la classe pour dessiner les cellules
+	private static BufferedImage smiley_won = null;
+	private static BufferedImage smiley_normal = null;
+	private static BufferedImage smiley_lost = null;
+	
+	// Initialisation des images
+	static
+	{
+		try
+		{
+			Board.smiley_won = ImageIO.read(Cell.class.getResource("../../smiley_won.png"));
+			Board.smiley_normal = ImageIO.read(Cell.class.getResource("../../smiley_normal.png"));
+			Board.smiley_lost = ImageIO.read(Cell.class.getResource("../../smiley_lost.png"));
+		}
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
+		}	
+	}
+	
 	/**
 	 * Construit un plateau de jeu.
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
@@ -86,18 +113,33 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		
 		this.setLayout(new BorderLayout());
 		
-		this.newGameButton.setText(":¬)");
 		this.newGameButton.setActionCommand("NEW_GAME");
+//		this.newGameButton.setMinimumSize(new Dimension(54, 54));
+//		this.newGameButton.setMaximumSize(new Dimension(54, 54));
+		this.newGameButton.setPreferredSize(new Dimension(60, 60));
+		this.newGameButton.setToolTipText("Cliquez ici pour commencer une nouvelle partie.");
+		this.newGameButton.setContentAreaFilled(false);
+		this.newGameButton.setFocusable(false);
+//		this.newGameButton.setFocusPainted(false);
+//		this.newGameButton.setBorder(null);
+//		this.newGameButton.setBorderPainted(false);
+		
+		
 		
 		this.timerLabel.setHorizontalAlignment(JLabel.CENTER);
+		this.timerLabel.setFont(new Font(null, Font.BOLD, 20));
 		this.flagsLabel.setHorizontalAlignment(JLabel.CENTER);
+		this.flagsLabel.setFont(new Font(null, Font.BOLD, 20));
 		
 		this.controlPanel.setLayout(new GridLayout(0, 3));
-		this.controlPanel.setBackground(new Color(235, 235, 235));
 		this.controlPanel.setBorder(LineBorder.createBlackLineBorder());
 		
+		JPanel newGameButtonPanel = new JPanel();
+		newGameButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		newGameButtonPanel.add(newGameButton);
+		
 		this.controlPanel.add(this.timerLabel);
-		this.controlPanel.add(this.newGameButton);
+		this.controlPanel.add(newGameButtonPanel);
 		this.controlPanel.add(this.flagsLabel);
 		
 		this.add(this.gamePanel, BorderLayout.CENTER);
@@ -113,6 +155,44 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		
 		// Replay se charge de créer une nouvelle partie 
 		this.replay();
+	}
+	
+	// Réinitialise la partie
+	private void replay()
+	{
+		int response = 0;
+		
+		// Demande une confirmation si une partie est en cours
+		if (this.currentGame != null && !this.currentGame.isOver() && this.currentGame.getNbCellsShown() > 0)
+		{
+			response = JOptionPane.showConfirmDialog(this, 
+					"Êtes-vous sûr de vouloir commencer une nouvelle partie ? \nLa partie en cours n'est pas terminée.",
+					"Confirmation", JOptionPane.YES_NO_OPTION);
+		}
+		// Si le joueur est certain de vouloir recommencer 
+		if (response == 0)
+		{
+			// Crée une nouvelle partie
+			this.currentGame = new Game(this.parent.getNextGameLevel());
+			
+			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
+			
+			if (Board.smiley_normal != null)
+			{
+				this.newGameButton.setIcon(new ImageIcon(Board.smiley_normal));
+				this.newGameButton.setText("");
+			}
+			else
+			{
+				this.newGameButton.setIcon(null);
+				this.newGameButton.setText(":¬)");
+			}
+			
+			this.elapsedTime = 0;
+//			this.timer.restart();
+			this.timer.stop();
+			this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
+		}
 	}
 	
 	// Cette classe pourrait implémenter le mouse listener
@@ -170,31 +250,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 	}
 	
-	// Réinitialise la partie
-	private void replay()
-	{
-		int response = 0;
-		
-		// Demande une confirmation si une partie est en cours
-		if (this.currentGame != null && !this.currentGame.isOver())
-		{
-			response = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir commencer une nouvelle partie ? \nLa partie en cours n'est pas terminée.",
-				"Confirmation", JOptionPane.YES_NO_OPTION);
-		}
-		// Si le joueur est certain de vouloir recommencer 
-		if (response == 0)
-		{
-			// Crée une nouvelle partie
-			this.currentGame = new Game(this.parent.getNextGameLevel());
-			
-			this.timerLabel.setText("Temps : 0");
-			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
-			
-			this.elapsedTime = 0;
-			this.timer.restart();
-		}
-	}
-	
 	// Retourne la plus grande taille de cellule possible en fonction des dimensions du « gamePanel ».
 	private float getCellSize()
 	{
@@ -248,12 +303,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 			if (!this.currentGame.isOver())
 			{
 				this.elapsedTime++;
-				this.timerLabel.setText("Temps : " + this.elapsedTime);
+				this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
 			}
 		}
 		else if (evt.getActionCommand().equals("NEW_GAME"))
 		{
-			this.newGameButton.setText(":¬)");
 			this.replay();
 			this.repaint();
 		}
@@ -300,53 +354,79 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	 */
 	public void mouseReleased(MouseEvent evt)
 	{
-//		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
-		
+		//		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
+
 		if (!this.currentGame.isOver())
 		{
-			Boolean show = null;
-			
-			if (evt.getButton() == MouseEvent.BUTTON1) // Bouton gauche
-			{
-				show = true;
-			}
-			else if (evt.getButton() == MouseEvent.BUTTON3) // Bouton droit
-			{
-				show = false;
-			}
+			Point gridOffset = this.getGridOffset();
 
-			if (show != null)
+			if (evt.getX() - gridOffset.x >= 0 && evt.getY() - gridOffset.y >= 0)
 			{
-				Point gridOffset = this.getGridOffset();
+				float cellSize = this.getCellSize();
 
-				if (evt.getX() - gridOffset.x >= 0 && evt.getY() - gridOffset.y >= 0)
+				Point clickedCell = new Point(
+						(int)((evt.getX() - gridOffset.x) / cellSize),
+						(int)((evt.getY() - gridOffset.y) / cellSize));
+
+				boolean repaint = false;
+
+				switch (evt.getButton())
 				{
-					float cellSize = this.getCellSize();
-
-					if (this.currentGame.changeCellState(
-							(int)((evt.getX() - gridOffset.x) / cellSize), 
-							(int)((evt.getY() - gridOffset.y) / cellSize),
-							show))
+					case MouseEvent.BUTTON1: // Bouton de gauche
 					{
-						this.repaint();
-						this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
+						if (this.currentGame.getNbCellsShown() == 0)
+						{
+							this.currentGame.start(clickedCell);
+							this.timer.restart();
+						}
+						
+						repaint = this.currentGame.showCell(clickedCell.x, clickedCell.y);
+						break;
 					}
-					
-					if (this.currentGame.isWon())
+					case MouseEvent.BUTTON3: // Bouton de droite
 					{
+						repaint = this.currentGame.changeCellState(clickedCell.x, clickedCell.y);
+						break;
+					}
+				}
+
+				if (repaint)
+				{
+					this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
+					this.repaint();
+				}
+
+				if (this.currentGame.isWon())
+				{
+					if (Board.smiley_won != null)
+					{
+						this.newGameButton.setIcon(new ImageIcon(Board.smiley_won));
+						this.newGameButton.setText("");
+					}
+					else
+					{
+						this.newGameButton.setIcon(null);
 						this.newGameButton.setText("8¬)");
-
-						JOptionPane.showMessageDialog(
-								this, 
-								"Vous avez gagné !", 
-								"Bravo !", 
-								JOptionPane.PLAIN_MESSAGE);		
 					}
-					else if (this.currentGame.isLost())
+
+					JOptionPane.showMessageDialog(
+							this, 
+							"Vous avez gagné !", 
+							"Bravo !", 
+							JOptionPane.PLAIN_MESSAGE);		
+				}
+				else if (this.currentGame.isLost())
+				{
+					if (Board.smiley_lost != null)
 					{
+						this.newGameButton.setIcon(new ImageIcon(Board.smiley_lost));
+						this.newGameButton.setText("");
+					}
+					else
+					{
+						this.newGameButton.setIcon(null);
 						this.newGameButton.setText(":¬(");
 					}
-					
 				}
 			}
 		}

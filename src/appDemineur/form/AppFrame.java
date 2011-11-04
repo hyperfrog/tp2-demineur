@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 
 /**
  * La classe AppFrame permet de créer une fenêtre qui sert de contenant
@@ -85,6 +86,8 @@ public class AppFrame extends JFrame implements ComponentListener //, ItemListen
 	{
 		super();
 		
+		this.setNativeLookAndFeel();
+		
 		this.menuBar = new JMenuBar();
 		this.gameMenu = new JMenu();
 		this.infoMenu = new JMenu();
@@ -122,7 +125,7 @@ public class AppFrame extends JFrame implements ComponentListener //, ItemListen
 		this.scoresMenu.setText("Meilleurs temps...");
 		this.scoresMenu.setActionCommand("SCORES");
 		
-		this.aboutMenu.setText("À Propos...");
+		this.aboutMenu.setText("À propos...");
 		this.aboutMenu.setActionCommand("ABOUT");
 		
 		this.helpMenu.setText("Aide");
@@ -292,4 +295,17 @@ public class AppFrame extends JFrame implements ComponentListener //, ItemListen
 	public void componentShown(ComponentEvent e)
 	{
 	}
+	
+	private void setNativeLookAndFeel()
+	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error setting native LAF: " + e);
+		}
+	}
+	
 }
