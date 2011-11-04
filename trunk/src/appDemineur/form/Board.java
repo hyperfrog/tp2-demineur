@@ -33,6 +33,10 @@ import appDemineur.model.Game;
  */
 public class Board extends JPanel implements ActionListener, MouseListener, ItemListener
 {
+	// Si vrai, la taille des cellules est fixée au plus grand entier inférieur à la taille possible
+	// Si faux, la taille des cellules comporte une partie fractionnaire
+	private static final boolean USE_CELL_SIZE_FLOOR = true;
+	
 	// Objet de la partie courante
 	private Game currentGame = null;
 	
@@ -204,7 +208,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 			size = Math.min(height, width);
 		}
 		
-		return size;
+		return Board.USE_CELL_SIZE_FLOOR ? (float) Math.floor(size) : size;
 	}
 	
 	// Retourne le point du coin supérieur droit de la grille de manière à la centrer 
