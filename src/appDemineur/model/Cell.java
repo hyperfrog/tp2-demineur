@@ -209,7 +209,7 @@ public class Cell
 	{
 		g2d.setStroke(new BasicStroke(6));
 		
-		g2d.setColor(isPushed ? Color.LIGHT_GRAY : Color.GRAY);
+		g2d.setColor(isPushed ? Color.GRAY : Color.GRAY);
 		g2d.drawLine(0, cellSize, cellSize, cellSize);
 		g2d.drawLine(cellSize, 0, cellSize, cellSize);		
 
@@ -217,6 +217,9 @@ public class Cell
 		g2d.drawLine(0, 0, cellSize - 1, 0);
 		g2d.drawLine(0, 0, 0, cellSize - 1);
 
+		g2d.setStroke(new BasicStroke(1));
+		g2d.setColor(Color.BLACK);
+		g2d.drawRect(0, 0, cellSize - 1, cellSize - 1);
 	}
 	
 	/**

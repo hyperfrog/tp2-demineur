@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -328,7 +327,7 @@ public class Game extends BaseMatrix
 	 * Dessine la matrice dans le Graphics spécifié
 	 * 
 	 * @param g Graphics dans lequel la matrice doit se dessiner
-	 * @param cellSize taille d'une case en pixels (nombre rationnel pour faciliter le «scaling»)
+	 * @param cellSize taille d'une case en pixels
 	 * @param showMines 
 	 * si vrai, les mines sont montrées sans autre condition; 
 	 * si faux, elles ne sont montrées que si la case est révélée 
@@ -337,7 +336,7 @@ public class Game extends BaseMatrix
 	{
 		if (g != null)
 		{
-			int intCellSize = Math.round(cellSize);
+			int roundedCellSize = Math.round(cellSize);
 			
 			// Pour chaque colonne i
 			for (int i = 0; i < this.getWidth(); i++)
@@ -354,33 +353,36 @@ public class Game extends BaseMatrix
 						Graphics g2 = g.create(
 								Math.round(i * cellSize), 
 								Math.round(j * cellSize), 
-								intCellSize, 
-								intCellSize);
+								roundedCellSize, 
+								roundedCellSize);
 
 						// Dessine la cellule
-						c.redraw(g2, intCellSize, showMines, this.isWon);
+						c.redraw(g2, roundedCellSize, showMines, this.isWon);
 					}
 				}
 			}
 
-			// Dessine un quadrillage 
-
-			Graphics2D g2d = (Graphics2D) g;
-			g2d.setStroke(new BasicStroke(2));
-			g2d.setColor(Color.DARK_GRAY);
-
-			for (int i = 0; i <= this.getWidth(); i++)
+			// Si nécessaire, dessine un quadrillage pour remplir les espaces entre les cellules
+			// Se produit quand cellSize a une partie fractionnaire < 0,5 
+			if (roundedCellSize - cellSize < 0)
 			{
-				int x = Math.round(i * cellSize);
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setStroke(new BasicStroke(2));
+				g2d.setColor(Color.DARK_GRAY);
 
-				g2d.drawLine(x, 0, x, Math.round(this.getHeight() * cellSize));
-			}
+				for (int i = 0; i <= this.getWidth(); i++)
+				{
+					int x = Math.round(i * cellSize);
 
-			for (int i = 0; i <= this.getHeight(); i++)
-			{
-				int y = Math.round(i * cellSize);
+					g2d.drawLine(x, 0, x, Math.round(this.getHeight() * cellSize));
+				}
 
-				g2d.drawLine(0, y, Math.round(this.getWidth() * cellSize), y);
+				for (int i = 0; i <= this.getHeight(); i++)
+				{
+					int y = Math.round(i * cellSize);
+
+					g2d.drawLine(0, y, Math.round(this.getWidth() * cellSize), y);
+				}
 			}
 		}
 	}
