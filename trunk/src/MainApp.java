@@ -32,8 +32,9 @@ public class MainApp
 		String errMsg = "";
 		
 		ArrayList<Class<?>> classesToTest = new ArrayList<Class<?>>();
-//		classesToTest.add(appDemineur.model.test.MatrixTest.class);
-//		classesToTest.add(appDemineur.model.test.GameTest.class);
+		// TODO : Ajouter ici les classes à tester
+		classesToTest.add(util.test.BaseMatrixTest.class);
+		classesToTest.add(appDemineur.model.test.GameTest.class);
 		
 		for(Class<?> someClass : classesToTest)
 		{
@@ -48,7 +49,8 @@ public class MainApp
 
 		if (!error)
 		{
-			AppFrame appFrame = new AppFrame();
+//			AppFrame appFrame = new AppFrame();
+			AppFrame appFrame = AppFrame.getInstance();
 			appFrame.setVisible(true);
 		}
 		else

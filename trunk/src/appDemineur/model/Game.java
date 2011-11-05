@@ -14,7 +14,7 @@ import appDemineur.model.Cell.CellState;
 import util.BaseMatrix;
 
 /**
- * La classe Game implémente le jeu du démineur.
+ * La classe Game implémente la logique du jeu du démineur.
  * 
  * @author Christian Lesage
  * @author Alexandre Tremblay
@@ -65,21 +65,37 @@ public class Game extends BaseMatrix
 	{
 		super();
 
+		// Fixe le niveau
 		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;		
 		
+		// Redimensionne la matrice sous-jacente
 		this.redim(Game.LEVELS[this.level].dim.width, Game.LEVELS[this.level].dim.height);
+		
+		// Remplit la matrice de cellules
 		this.populate();
+		
 //		this.addMines(Game.LEVELS[this.level].mineAmount, null);
 		
+		// Définit l'état de départ 
 		this.isLost = false;
 		this.isWon = false;
 		this.nbCellsFlagged = 0;
 		this.nbCellsShown = 0;
 	}
 	
-	public void start(Point firstLeftClick)
+	/**
+	 * Remplit la matrice avec un nombre de mines déterminé par le niveau de difficulté, 
+	 * celles-ci étant distribuées au hasard, et détermine, pour chaque cellule, 
+	 * le nombre de mines adjacentes.
+	 * 
+	 * La méthode garantit que la cellule aux coordonnées définies par cellToExclude
+	 * ne contiendra pas de mine.
+	 * 
+	 * @param cellToExclude coordonnées de la cellule ne devant pas contenir de mine 
+	 */
+	public void start(Point cellToExclude)
 	{
-		this.addMines(Game.LEVELS[this.level].mineAmount, firstLeftClick);
+		this.addMines(Game.LEVELS[this.level].mineAmount, cellToExclude);
 	}
 	
 	// TODO : À flusher... Méthode laissée en place seulement pour les tests.
@@ -141,7 +157,7 @@ public class Game extends BaseMatrix
 	
 	// TODO : Adapter les tests.
 	/**
-	 * Change l'état d'une case non dévoilée. Alterne entre FLAGGED, DUBIOUS et HIDDEN.
+	 * Change l'état d'une case non dévoilée en alternant entre FLAGGED, DUBIOUS et HIDDEN.
 	 * N'a pas d'effet si la case est dévoilée.  
 	 * 
 	 * @param x coordonnée x de la case dont on souhaite changer l'état
@@ -216,7 +232,7 @@ public class Game extends BaseMatrix
 	
 	// Dévoile une cellule et, si elle n'a pas de mines adjacentes, 
 	// toutes les cellules voisines avec ou sans mines adjacentes, et ce, 
-	// récursivement jusqu'à ce qu'à ce que les cellules frontières soit dévoilées, 
+	// récursivement jusqu'à ce qu'à ce que soient dévoilées les cellules frontières, 
 	// c'est-à-dire les cellules ayant des mines adjacentes.
 	private void showCell(int x, int y, List<Cell> visitedCells)
 	{
@@ -321,7 +337,7 @@ public class Game extends BaseMatrix
 	 * Retourne le nombre de cases marquées d'un drapeau
 	 * @return le nombre de cases marquées d'un drapeau
 	 */
-	public int getNbFlags()
+	public int getNbCellsFlagged()
 	{
 		return this.nbCellsFlagged;
 	}
@@ -335,6 +351,8 @@ public class Game extends BaseMatrix
 		return Game.LEVELS[this.level].mineAmount;
 	}
 	
+	
+	// TODO : Méthode de test
 	/**
 	 * Retourne le nombre de cases non minées dévoilées.
 	 * 
@@ -346,7 +364,7 @@ public class Game extends BaseMatrix
 	}
 
 	/**
-	 * Retourne la cellule de la matrice à la position (x, y) spécifiée.
+	 * Retourne la cellule à la position (x, y) spécifiée.
 	 * 
 	 * @param x		Colonne de la cellule
 	 * @param y		Rangée de la cellule
@@ -372,9 +390,13 @@ public class Game extends BaseMatrix
 		}
 	}
 	
-	// Remplit la matrice avec un nombre «amount» de mines
-	// et détermine, pour chaque cellule, le nombre de mines adjacentes
-	private void addMines(int amount, Point firstLeftClick)
+	// Remplit la matrice avec un nombre de mines déterminé par «amount», 
+	// celles-ci étant distribuées au hasard, et détermine, pour chaque cellule, 
+	// le nombre de mines adjacentes.
+	//
+	// La méthode garantit que la cellule aux coordonnées définies par cellToExclude
+	// ne contiendra pas de mine.
+	private void addMines(int amount, Point cellToExclude)
 	{
 		// «Chapeau» duquel on va tirer des cellules 
 		ArrayList<Point> allCells = new ArrayList<Point>();
@@ -384,7 +406,7 @@ public class Game extends BaseMatrix
 		{
 			for (int j = 0; j < this.getHeight(); j++)
 			{
-				if (firstLeftClick == null || !firstLeftClick.equals(new Point(i, j))) 
+				if (cellToExclude == null || !cellToExclude.equals(new Point(i, j))) 
 				{
 					allCells.add(new Point(i, j));
 				}
@@ -392,7 +414,7 @@ public class Game extends BaseMatrix
 		}
 		
 		// Tire un nombre «amount» de cellules du chapeau
-		for (int i = 0; i < amount; i++)
+		for (int i = 0; i < amount && i < this.getWidth() * this.getHeight() - 1; i++)
 		{
 			Random rand = new Random();
 

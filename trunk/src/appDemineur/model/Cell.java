@@ -253,7 +253,7 @@ public class Cell
 	 */
 	public void setAdjacentMines(int n)
 	{
-		if (n >=0 && n <= 8)
+		if (n >= 0 && n <= 8)
 		{
 			this.adjacentMines = n;
 		}

@@ -1,5 +1,7 @@
 package appDemineur.model.test;
 
+import java.awt.Point;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +21,7 @@ public class GameTest
 	 * 	Méthode de test pour {@link appDemineur.model.Game#Game(int)}
 	 */
 	@Test
-	public void testGame()
+	public void testGameInt()
 	{
 		// Cas valide 1 : Le niveau est situé entre 0 et 2.
 		Game g = new Game(1);
@@ -27,8 +29,9 @@ public class GameTest
 		Assert.assertEquals(16, g.getWidth());
 		Assert.assertEquals(16, g.getHeight());
 		Assert.assertEquals(40, g.getMineAmount());
-		Assert.assertEquals(40, this.mineOnGrid(g));
-		Assert.assertEquals(0, g.getNbFlags());
+		Assert.assertEquals(0, this.mineOnGrid(g));
+		Assert.assertEquals(0, g.getNbCellsFlagged());
+		Assert.assertEquals(0, g.getNbCellsShown());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -39,8 +42,9 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
-		Assert.assertEquals(10, this.mineOnGrid(g));
-		Assert.assertEquals(0, g.getNbFlags());
+		Assert.assertEquals(0, this.mineOnGrid(g));
+		Assert.assertEquals(0, g.getNbCellsFlagged());
+		Assert.assertEquals(0, g.getNbCellsShown());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -51,8 +55,9 @@ public class GameTest
 		Assert.assertEquals(30, g.getWidth());
 		Assert.assertEquals(16, g.getHeight());
 		Assert.assertEquals(99, g.getMineAmount());
-		Assert.assertEquals(99, this.mineOnGrid(g));
-		Assert.assertEquals(0, g.getNbFlags());
+		Assert.assertEquals(0, this.mineOnGrid(g));
+		Assert.assertEquals(0, g.getNbCellsFlagged());
+		Assert.assertEquals(0, g.getNbCellsShown());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -63,7 +68,9 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
-		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertEquals(0, this.mineOnGrid(g));
+		Assert.assertEquals(0, g.getNbCellsFlagged());
+		Assert.assertEquals(0, g.getNbCellsShown());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -74,10 +81,96 @@ public class GameTest
 		Assert.assertEquals(9, g.getWidth());
 		Assert.assertEquals(9, g.getHeight());
 		Assert.assertEquals(10, g.getMineAmount());
-		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertEquals(0, this.mineOnGrid(g));
+		Assert.assertEquals(0, g.getNbCellsFlagged());
+		Assert.assertEquals(0, g.getNbCellsShown());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
+	}
+	
+	/**
+	 * 	Méthode de test pour {@link appDemineur.model.Game#start(Point)}
+	 */
+	@Test
+	public void testStartPoint()
+	{
+		// Cas valide 1 : Le niveau est situé entre 0 et 2.
+		Game g = new Game(1);
+		Assert.assertNotNull(g);
+		g.start(new Point(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(40, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas limite 1 : Le niveau est 0
+		g = new Game(0);
+		Assert.assertNotNull(g);
+		g.start(new Point(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas limite 2 : Le niveau est 2
+		g = new Game(2);
+		Assert.assertNotNull(g);
+		g.start(new Point(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(99, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas invalide 1 : Le niveau est inférieur à 0
+		g = new Game(-1);
+		Assert.assertNotNull(g);
+		g.start(new Point(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas invalide 2 : Le niveau est supérieur à 2
+		g = new Game(3);
+		Assert.assertNotNull(g);
+		g.start(new Point(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+	}
+	
+	// Vérifie la validité du nombre de mines adjacentes de chaque cellule
+	private boolean checkAdjacentMines(Game g)
+	{
+		boolean countIsOk = true;
+		
+		for (int x = 0; x < g.getWidth() && countIsOk; x++)
+		{
+			for (int y = 0; y < g.getHeight() && countIsOk; y++)
+			{
+				int nbAdjacentMines = 0;
+				
+				// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
+				for (int c = x - 1 ; c <= x + 1; c++)
+				{
+					for (int r = y - 1 ; r <= y + 1; r++)
+					{
+						Cell adjCell = g.getElement(c, r);
+						
+						if (!(c == x && r == y) && adjCell != null && adjCell.isMine())
+						{
+							nbAdjacentMines++;
+						}
+					}
+				}
+				
+				countIsOk = nbAdjacentMines == g.getElement(x, y).getAdjacentMines();
+				
+				if (!countIsOk)
+				{
+					System.out.println(String.format("Nombre de mines adjacentes erroné en (%d, %d).", x, y));
+				}
+			}
+		}
+		
+		return countIsOk;
 	}
 	
 	// Retourne le nombre de mines présentes sur la grille
@@ -121,18 +214,18 @@ public class GameTest
 		
 		// Cas valide 3 : La position est valide, l'état de la cellule est HIDDEN et on veut la changer pour FLAGGED.
 		g = new Game(0);
-		nbFlagsBefore = g.getNbFlags();
+		nbFlagsBefore = g.getNbCellsFlagged();
 		Assert.assertTrue(g.changeCellState(3, 3, false));
-		Assert.assertEquals(nbFlagsBefore + 1, g.getNbFlags());
+		Assert.assertEquals(nbFlagsBefore + 1, g.getNbCellsFlagged());
 		// Pour vérifier qu'on est bien à l'état FLAGGED, on essaie de découvrir la case et on doit avoir Faux en retour.
 		Assert.assertFalse(g.changeCellState(3, 3, true));
 		
 		// Cas valide 4 : La position est valide, l'état de la cellule est FLAGGED et on veut la changer pour DUBIOUS.
 		g = new Game(0);
 		g.changeCellState(3, 3, false);
-		nbFlagsBefore = g.getNbFlags();
+		nbFlagsBefore = g.getNbCellsFlagged();
 		Assert.assertTrue(g.changeCellState(3, 3, false));
-		Assert.assertEquals(nbFlagsBefore - 1, g.getNbFlags());
+		Assert.assertEquals(nbFlagsBefore - 1, g.getNbCellsFlagged());
 		// Pour vérifier qu'on est bien à l'état DUBIOUS, on essaie de découvrir la case et on doit avoir Vrai en retour.
 		Assert.assertTrue(g.changeCellState(3, 3, true));
 		
@@ -140,9 +233,9 @@ public class GameTest
 		g = new Game(0);
 		g.changeCellState(3, 3, false);
 		g.changeCellState(3, 3, false);
-		nbFlagsBefore = g.getNbFlags();
+		nbFlagsBefore = g.getNbCellsFlagged();
 		Assert.assertTrue(g.changeCellState(3, 3, false));
-		Assert.assertEquals(nbFlagsBefore, g.getNbFlags());
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
 		// Pour vérifier qu'on est revenu à l'état HIDDEN, on essaie de découvrir la case et on doit avoir Vrai en retour.
 		Assert.assertTrue(g.changeCellState(3, 3, true));
 		
@@ -205,6 +298,7 @@ public class GameTest
 	public void testIsLost()
 	{
 		Game g = new Game(0);
+		g.start(new Point(0, 0));
 		
 		// Cas 1 : La partie vient de demarrer et n'est donc pas perdue.
 		Assert.assertFalse(g.isOver());
@@ -221,7 +315,8 @@ public class GameTest
 	public void testIsWon()
 	{
 		Game g = new Game(0);
-		
+		g.start(new Point(0, 0));
+
 		// Cas 1 : La partie vient de demarrer et n'est donc pas gagnée.
 		Assert.assertFalse(g.isOver());
 		
@@ -237,6 +332,7 @@ public class GameTest
 	public void testIsOver()
 	{
 		Game g = new Game(0);
+		g.start(new Point(0, 0));
 		
 		// Cas 1 : La partie vient de demarrer et n'est donc pas terminée.
 		Assert.assertFalse(g.isOver());
@@ -288,22 +384,22 @@ public class GameTest
 	}
 	
 	/**
-	 * 	Méthode de test pour {@link appDemineur.model.Game#getNbFlags()}
+	 * 	Méthode de test pour {@link appDemineur.model.Game#getNbCellsFlagged()}
 	 */
 	@Test
-	public void testGetNbFlags()
+	public void testGetNbCellsFlagged()
 	{
 		Game g = new Game(0);
 		
 		// Cas 1 : La partie vient d'être créée, donc aucun drapeau n'a été placé.
-		Assert.assertEquals(0, g.getNbFlags());
+		Assert.assertEquals(0, g.getNbCellsFlagged());
 		
 		// Cas 2 : La partie est en cours et le joueur n'a pas placé tous les drapeaux.
 		g = new Game(0);
 		g.changeCellState(0, 0, false);
 		g.changeCellState(0, 1, false);
 		g.changeCellState(1, 0, false);
-		Assert.assertEquals(3, g.getNbFlags());
+		Assert.assertEquals(3, g.getNbCellsFlagged());
 		
 		// Cas 3 : La partie est en cours et le joueur a placé un nombre de drapeau supérieur au nombre
 		// 		   de mines cachées dans la grille.
@@ -316,7 +412,7 @@ public class GameTest
 				g.changeCellState(i, j, false);
 			}
 		}
-		Assert.assertEquals(18, g.getNbFlags());
+		Assert.assertEquals(18, g.getNbCellsFlagged());
 	}
 	
 	/**
