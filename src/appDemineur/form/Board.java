@@ -71,7 +71,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Objet parent
 	private AppFrame parent = null;
 	
-	// Images utilisées par la classe pour dessiner les cellules
+	// Images utilisées pour le bouton newGameButton
 	private static BufferedImage smiley_won = null;
 	private static BufferedImage smiley_normal = null;
 	private static BufferedImage smiley_lost = null;
@@ -123,8 +123,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 //		this.newGameButton.setFocusPainted(false);
 //		this.newGameButton.setBorder(null);
 //		this.newGameButton.setBorderPainted(false);
-		
-		
 		
 		this.timerLabel.setHorizontalAlignment(JLabel.CENTER);
 		this.timerLabel.setFont(new Font(null, Font.BOLD, 20));
@@ -197,8 +195,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	
 	// Cette classe pourrait implémenter le mouse listener
 	/**
-	 * La classe DrawingPanel ne sert qu'à fournir un accès au paintComponent() 
-	 * du panneau de jeu, qui est un enfant du panneau de type Board.
+	 * La classe DrawingPanel ne sert qu'à fournir un accès à 
+	 * la méthode paintComponent() du panneau de jeu, qui est un enfant 
+	 * du panneau de type Board.
 	 * 
 	 * @author Christian Lesage
 	 * @author Alexandre Tremblay
@@ -216,7 +215,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		public DrawingPanel(Board parent)
 		{
 			this.parent = parent;
-			this.setBackground(Color.WHITE);
+			this.setBackground(Color.LIGHT_GRAY);
 		}
 
 		/**
@@ -313,15 +312,15 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 		else if (evt.getActionCommand().equals("SCORES"))
 		{
-			//
+			// TODO : meilleurs scores
 		}
 		else if (evt.getActionCommand().equals("ABOUT"))
 		{
-			//
+			// TODO : À propos
 		}
 		else if (evt.getActionCommand().equals("HELP"))
 		{
-			//
+			// TODO : Aide
 		}
 	}
 	
@@ -354,8 +353,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	 */
 	public void mouseReleased(MouseEvent evt)
 	{
-		//		System.out.println(String.format("Clic à (%d, %d)", evt.getX(), evt.getY()));
-
 		if (!this.currentGame.isOver())
 		{
 			Point gridOffset = this.getGridOffset();
@@ -392,7 +389,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 
 				if (repaint)
 				{
-					this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbFlags()));
+					this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbCellsFlagged()));
 					this.repaint();
 				}
 

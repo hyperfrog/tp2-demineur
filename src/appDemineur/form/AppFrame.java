@@ -25,17 +25,19 @@ import javax.swing.UIManager;
  * @author Alexandre Tremblay
  * 
  */
-
-public class AppFrame extends JFrame implements ComponentListener //, ItemListener
+public class AppFrame extends JFrame implements ComponentListener
 {
+	// Sert à l'implémentation du singleton
+	private static AppFrame instance = null;
+	
 	// Dimension initiale de la fenêtre
-	private static final Dimension INIT_SIZE = new Dimension(617, 690);
+	private static final Dimension INIT_SIZE = new Dimension(640, 745);
 	
 	// Largeur minimale de la fenêtre
-	private static final int MIN_WIDTH = 350;
+	private static final int MIN_WIDTH = 640;
 
 	// Hauteur minimale de la fenêtre
-	private static final int MIN_HEIGHT = 410;
+	private static final int MIN_HEIGHT = 480;
 	
 	// Titre de la fenêtre
 	private static final String INIT_TITLE = "Démineur par Alexandre Tremblay et Christian Lesage";
@@ -79,10 +81,10 @@ public class AppFrame extends JFrame implements ComponentListener //, ItemListen
 	//
 	private ButtonGroup difficultyGroup;
 	
-	/**
-	 * Crée une nouvelle fenêtre contenant un nouveau plateau de jeu.
+	/*
+	 * Crée la fenêtre du jeu, qui contient les menus et le plateau de jeu
 	 */
-	public AppFrame()
+	protected AppFrame()
 	{
 		super();
 		
@@ -171,12 +173,29 @@ public class AppFrame extends JFrame implements ComponentListener //, ItemListen
 		this.aboutMenu.addActionListener(this.mBoard);
 		this.helpMenu.addActionListener(this.mBoard);
 		
-//		this.easyDifficultyOptMenu.addItemListener(this);
-//		this.normalDifficultyOptMenu.addItemListener(this);
-//		this.hardDifficultyOptMenu.addItemListener(this);
 		this.cheatChkMenu.addItemListener(this.mBoard);
 		
 		this.addComponentListener(this);
+	}
+	
+	
+	// TODO : Tester le singleton?
+	/**
+	 * Crée et retourne la fenêtre du jeu en tant que singleton.
+	 *  
+	 * La fenêtre du jeu contient les menus et un plateau de jeu de type Board.
+	 * 
+	 * @see appDemineur.form.Board
+	 * 
+	 * @return l'instance du singleton
+	 */
+	public static AppFrame getInstance()
+	{
+		if (AppFrame.instance == null)
+		{
+			AppFrame.instance = new AppFrame();
+		}
+		return AppFrame.instance;
 	}
 	
 	/**
@@ -198,31 +217,6 @@ public class AppFrame extends JFrame implements ComponentListener //, ItemListen
 	{
 		return this.cheatChkMenu.isSelected();
 	}
-	
-//	/**
-//	 * Méthode appelée quand l'état d'un élément de menu change.
-//	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
-//	 * 
-//	 * @param evt évènement déclencheur
-//	 * 
-//	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-//	 */
-//	@Override
-//	public void itemStateChanged(ItemEvent evt)
-//	{
-//		JMenuItem e = (JMenuItem) evt.getItem();
-//		
-//		if (e.getActionCommand().equals("CHEATS"))
-//		{
-////			this.mBoard.setCheatMode(evt.getStateChange() == ItemEvent.SELECTED);
-//			this.repaint();
-//		}
-////		else if ((e.getActionCommand().equals("0") || e.getActionCommand().equals("1") || e.getActionCommand().equals("2")) 
-////				&& evt.getStateChange() == ItemEvent.SELECTED)
-////		{
-////			this.mBoard.setCurrentLevel(Integer.parseInt(e.getActionCommand()));
-////		}
-//	}
 	
 	/** 
 	 * Méthode appelée quand la fenêtre est cachée.
