@@ -23,7 +23,7 @@ import util.BaseMatrix;
 public class Game extends BaseMatrix
 {
 	// Classe définissant les propriétés d'un niveau de difficulté
-	public static class Level
+	private static class Level
 	{
 		public final Dimension dim;
 		public final int mineAmount;
@@ -36,7 +36,7 @@ public class Game extends BaseMatrix
 	}
 	
 	// Les trois niveaux de difficulté du jeu
-	public static final Level[] LEVELS = new Level[] { 
+	private static final Level[] LEVELS = new Level[] { 
 		new Level(new Dimension(9, 9), 10), 
 		new Level(new Dimension(16, 16), 40), 
 		new Level(new Dimension(30, 16), 99)
@@ -56,6 +56,9 @@ public class Game extends BaseMatrix
 	// Nombre de cases non minées dévoilées
 	private int nbCellsShown;
 	
+	// Indique si des mines ont été placées dans la grille
+//	private boolean containsMines;
+	
 	/**
 	 * Construit une partie avec le niveau de difficulté spécifié.
 	 * 
@@ -74,91 +77,96 @@ public class Game extends BaseMatrix
 		// Remplit la matrice de cellules
 		this.populate();
 		
-//		this.addMines(Game.LEVELS[this.level].mineAmount, null);
-		
 		// Définit l'état de départ 
 		this.isLost = false;
 		this.isWon = false;
 		this.nbCellsFlagged = 0;
 		this.nbCellsShown = 0;
+//		this.containsMines = false;
 	}
 	
-	/**
-	 * Remplit la matrice avec un nombre de mines déterminé par le niveau de difficulté, 
+	/*
+	 * Remplit la matrice avec le nombre de mines déterminé par le niveau de difficulté, 
 	 * celles-ci étant distribuées au hasard, et détermine, pour chaque cellule, 
 	 * le nombre de mines adjacentes.
 	 * 
 	 * La méthode garantit que la cellule aux coordonnées définies par cellToExclude
-	 * ne contiendra pas de mine.
+	 * ne contiendra pas de mine. 
+	 *  
+	 * @param cellToExclude coordonnées de la cellule ne devant pas contenir de mine
 	 * 
-	 * @param cellToExclude coordonnées de la cellule ne devant pas contenir de mine 
+	 * @return vrai si l'opération a réussi, faux sinon
+	 *  
 	 */
-	public void start(Point cellToExclude)
+	private boolean addMines(Point cellToExclude)
 	{
-		this.addMines(Game.LEVELS[this.level].mineAmount, cellToExclude);
-	}
+		boolean success = true;
+		
+		// «Chapeau» duquel on va tirer des cellules 
+		ArrayList<Point> eligibleCells = new ArrayList<Point>();
 	
-	// TODO : À flusher... Méthode laissée en place seulement pour les tests.
-	/**
-	 * Change l'état d'une case non dévoilée. N'a pas d'effet si la case est déjà dévoilée.  
-	 * 
-	 * @param x coordonnée x de la case dont on souhaite changer l'état
-	 * @param y coordonnée y de la case dont on souhaite changer l'état
-	 * 
-	 * @param show 
-	 * si vrai, dévoile la case si elle n'est pas marquée d'un drapeau; 
-	 * si faux, alterne entre le drapeau, le point d'interrogation et l'état non marqué.
-	 * 
-	 * @return vrai si la cellule a changé d'état, faux sinon
-	 */
-	public boolean changeCellState(int x, int y, boolean show)
-	{
-		boolean changed = false;
-		
-		Cell c = this.getElement(x, y);
-		
-		if (c != null && !c.getState().equals(CellState.SHOWN))
+		// Parcourt toute la matrice
+		for (int i = 0; i < this.getWidth(); i++)
 		{
-			// Si on souhaite la dévoiler
-			if (show)
+			for (int j = 0; j < this.getHeight(); j++)
 			{
-                // Si elle n'est pas marquée d'un drapeau
-                if (!c.getState().equals(CellState.FLAGGED))
-                {
-                	this.showCell(x, y, null);
-                	changed = true;
-                }
-			}
-			else // Alterne entre FLAGGED, DUBIOUS et HIDDEN
-			{
-				CellState newState = null;
+				Point cellCoords = new Point(i, j);
 				
-				switch(c.getState())
+				// Ajoute dans le chapeau la coordonnée de chaque cellule qui n'est pas 
+				// la cellule à exclure 
+				if (cellToExclude == null || !cellToExclude.equals(cellCoords))
 				{
-					case HIDDEN:
-						newState = CellState.FLAGGED;
-						this.nbCellsFlagged++;
-						break;
-					case FLAGGED:
-						newState = CellState.DUBIOUS;
-						this.nbCellsFlagged--;
-						break;
-					case DUBIOUS:
-						newState = CellState.HIDDEN;
-						break;
+					eligibleCells.add(cellCoords);
 				}
-				
-				changed = c.setState(newState);
 			}
 		}
 		
-		return changed;
+		if (eligibleCells.size() >= Game.LEVELS[this.level].mineAmount)
+		{
+			// Tire le nombre approprié de cellules du chapeau
+			for (int i = 0; i < Game.LEVELS[this.level].mineAmount; i++)
+			{
+				Random rand = new Random();
+
+				int cellIdx = rand.nextInt(eligibleCells.size());
+				
+				Point p = eligibleCells.remove(cellIdx);
+				
+				// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
+				for (int r = p.y - 1 ; r <= p.y + 1; r++)
+				{
+					for (int c = p.x - 1 ; c <= p.x + 1; c++)
+					{
+						Cell cell = this.getElement(c, r);
+						// S'il y a vraiment une cellule à ces coordonnées
+						if (cell != null)
+						{
+							// Si ce n'est pas la cellule courante
+							if (!(r == p.y && c == p.x))
+							{
+								// Incrémente le compteur de mines adjacentes
+								cell.setAdjacentMines(cell.getAdjacentMines() + 1);
+							}
+							else // On place une mine dans cette cellule
+							{
+								cell.setAsMine(true);
+							}
+						}
+					}
+				}
+			}			
+		}
+		else
+		{
+			success = false;
+		}
+		
+		return success;
 	}
 	
-	// TODO : Adapter les tests.
 	/**
 	 * Change l'état d'une case non dévoilée en alternant entre FLAGGED, DUBIOUS et HIDDEN.
-	 * N'a pas d'effet si la case est dévoilée.  
+	 * N'a pas d'effet si la case est dévoilée (état = SHOWN).  
 	 * 
 	 * @param x coordonnée x de la case dont on souhaite changer l'état
 	 * @param y coordonnée y de la case dont on souhaite changer l'état
@@ -197,7 +205,6 @@ public class Game extends BaseMatrix
 		return changed;
 	}
 	
-	// TODO : Adapter les tests.
 	/**
 	 * Dévoile une cellule et, si elle n'a pas de mines adjacentes, 
 	 * toutes les cellules voisines avec ou sans mines adjacentes, et ce, 
@@ -242,6 +249,12 @@ public class Game extends BaseMatrix
 				&& !curCell.getState().equals(CellState.SHOWN)
 				&& !curCell.getState().equals(CellState.FLAGGED))
 		{
+			// Ajoute les mines si c'est la première cellule à être dévoilée  
+			if (this.nbCellsShown == 0)
+			{
+				this.addMines(new Point(x, y));
+			}
+			
 			// Change l'état de la cellule courante
 			curCell.setState(CellState.SHOWN);
 			
@@ -343,8 +356,10 @@ public class Game extends BaseMatrix
 	}
 	
 	/**
-	 * Retourne le nombre de mines dans la partie
-	 * @return le nombre de mines dans la partie
+	 * Retourne le nombre de mines associé au niveau de difficulté
+	 * de la partie courante 
+	 * 
+	 * @return nombre de mines associé au niveau de difficulté de la partie courante
 	 */
 	public int getMineAmount()
 	{
@@ -389,64 +404,7 @@ public class Game extends BaseMatrix
 			}
 		}
 	}
-	
-	// Remplit la matrice avec un nombre de mines déterminé par «amount», 
-	// celles-ci étant distribuées au hasard, et détermine, pour chaque cellule, 
-	// le nombre de mines adjacentes.
-	//
-	// La méthode garantit que la cellule aux coordonnées définies par cellToExclude
-	// ne contiendra pas de mine.
-	private void addMines(int amount, Point cellToExclude)
-	{
-		// «Chapeau» duquel on va tirer des cellules 
-		ArrayList<Point> allCells = new ArrayList<Point>();
-	
-		// Ajoute la coordonnée de chaque cellule dans le chapeau
-		for (int i = 0; i < this.getWidth(); i++)
-		{
-			for (int j = 0; j < this.getHeight(); j++)
-			{
-				if (cellToExclude == null || !cellToExclude.equals(new Point(i, j))) 
-				{
-					allCells.add(new Point(i, j));
-				}
-			}
-		}
-		
-		// Tire un nombre «amount» de cellules du chapeau
-		for (int i = 0; i < amount && i < this.getWidth() * this.getHeight() - 1; i++)
-		{
-			Random rand = new Random();
 
-			int cellIdx = rand.nextInt(allCells.size());
-			
-			Point p = allCells.remove(cellIdx);
-			
-			// Parcourt les 9 cellules incluant la cellule courante et les cellules adjacentes
-			for (int r = p.y - 1 ; r <= p.y + 1; r++)
-			{
-				for (int c = p.x - 1 ; c <= p.x + 1; c++)
-				{
-					Cell cell = this.getElement(c, r);
-					// S'il y a vraiment une cellule à ces coordonnées
-					if (cell != null)
-					{
-						// Si ce n'est pas la cellule courante
-						if (!(r == p.y && c == p.x))
-						{
-							// Incrémente le compteur de mines adjacentes
-							cell.setAdjacentMines(cell.getAdjacentMines() + 1);
-						}
-						else // On place une mine dans cette cellule
-						{
-							cell.setAsMine(true);
-						}
-					}
-				}
-			}
-		}
-	}
-	
 	/**
 	 * Dessine la matrice dans le Graphics spécifié
 	 * 
