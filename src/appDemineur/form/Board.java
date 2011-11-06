@@ -62,6 +62,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Libellé pour le nombre de cases marquées d'un drapeau
 	private JLabel flagsLabel;
 	
+	// TODO : la minuterie doit s'arrêter quand la fenêtre n'est pas active
 	// Minuterie déclenchée une fois par seconde
 	private Timer timer;
 	
@@ -365,29 +366,32 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 						(int)((evt.getX() - gridOffset.x) / cellSize),
 						(int)((evt.getY() - gridOffset.y) / cellSize));
 
-				boolean repaint = false;
+				boolean hasChanged = false;
 
 				switch (evt.getButton())
 				{
 					case MouseEvent.BUTTON1: // Bouton de gauche
 					{
-						if (this.currentGame.getNbCellsShown() == 0)
+						int nbCellsShown = this.currentGame.getNbCellsShown();
+
+						hasChanged = this.currentGame.showCell(clickedCell.x, clickedCell.y);
+						
+						// Premier clic gauche sur une cellule non dévoilée et sans drapeau?
+						if (hasChanged && nbCellsShown == 0)
 						{
-							this.currentGame.start(clickedCell);
 							this.timer.restart();
 						}
 						
-						repaint = this.currentGame.showCell(clickedCell.x, clickedCell.y);
 						break;
 					}
 					case MouseEvent.BUTTON3: // Bouton de droite
 					{
-						repaint = this.currentGame.changeCellState(clickedCell.x, clickedCell.y);
+						hasChanged = this.currentGame.changeCellState(clickedCell.x, clickedCell.y);
 						break;
 					}
 				}
 
-				if (repaint)
+				if (hasChanged)
 				{
 					this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbCellsFlagged()));
 					this.repaint();

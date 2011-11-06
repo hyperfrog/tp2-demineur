@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import appDemineur.model.*;
+import appDemineur.model.Cell.CellState;
 
 /**
  * La classe de test JUnit 4 pour la classe Game.java
@@ -89,53 +90,6 @@ public class GameTest
 		Assert.assertFalse(g.isLost());
 	}
 	
-	/**
-	 * 	Méthode de test pour {@link appDemineur.model.Game#start(Point)}
-	 */
-	@Test
-	public void testStartPoint()
-	{
-		// Cas valide 1 : Le niveau est situé entre 0 et 2.
-		Game g = new Game(1);
-		Assert.assertNotNull(g);
-		g.start(new Point(0, 0));
-		Assert.assertFalse(g.getElement(0, 0).isMine());
-		Assert.assertEquals(40, this.mineOnGrid(g));
-		Assert.assertTrue(this.checkAdjacentMines(g));
-		
-		// Cas limite 1 : Le niveau est 0
-		g = new Game(0);
-		Assert.assertNotNull(g);
-		g.start(new Point(0, 0));
-		Assert.assertFalse(g.getElement(0, 0).isMine());
-		Assert.assertEquals(10, this.mineOnGrid(g));
-		Assert.assertTrue(this.checkAdjacentMines(g));
-		
-		// Cas limite 2 : Le niveau est 2
-		g = new Game(2);
-		Assert.assertNotNull(g);
-		g.start(new Point(0, 0));
-		Assert.assertFalse(g.getElement(0, 0).isMine());
-		Assert.assertEquals(99, this.mineOnGrid(g));
-		Assert.assertTrue(this.checkAdjacentMines(g));
-		
-		// Cas invalide 1 : Le niveau est inférieur à 0
-		g = new Game(-1);
-		Assert.assertNotNull(g);
-		g.start(new Point(0, 0));
-		Assert.assertFalse(g.getElement(0, 0).isMine());
-		Assert.assertEquals(10, this.mineOnGrid(g));
-		Assert.assertTrue(this.checkAdjacentMines(g));
-		
-		// Cas invalide 2 : Le niveau est supérieur à 2
-		g = new Game(3);
-		Assert.assertNotNull(g);
-		g.start(new Point(0, 0));
-		Assert.assertFalse(g.getElement(0, 0).isMine());
-		Assert.assertEquals(10, this.mineOnGrid(g));
-		Assert.assertTrue(this.checkAdjacentMines(g));
-	}
-	
 	// Vérifie la validité du nombre de mines adjacentes de chaque cellule
 	private boolean checkAdjacentMines(Game g)
 	{
@@ -194,103 +148,246 @@ public class GameTest
 	}
 		
 	/**
-	 *  Méthode de test pour {@link appDemineur.model.Game#changeCellState(int, int, boolean)}
+	 *  Méthode de test pour {@link appDemineur.model.Game#changeCellState(int, int)}
 	 */
 	@Test
-	public void testChangeCellState()
+	public void testChangeCellStateIntInt()
 	{
+		Game g;
 		int nbFlagsBefore = 0;
 		
-		// Cas valide 1 : La position est valide, l'état de la cellule est HIDDEN et on veut la découvrir.
-		Game g = new Game(0);
-		Assert.assertTrue(g.changeCellState(3, 3, true));
-		Assert.assertFalse(g.changeCellState(3, 3, true));
-		
-		// Cas valide 2 : La position est valide et l'état de la cellule est DUBIOUS et on veut la découvrir.
-		g = new Game(0);
-		g.changeCellState(3, 3, false);
-		g.changeCellState(3, 3, false);
-		Assert.assertTrue(g.changeCellState(3, 3, true));
-		
-		// Cas valide 3 : La position est valide, l'état de la cellule est HIDDEN et on veut la changer pour FLAGGED.
+		// Cas valide 1 : La position est valide, l'état de la cellule est HIDDEN et on veut la changer pour FLAGGED.
 		g = new Game(0);
 		nbFlagsBefore = g.getNbCellsFlagged();
-		Assert.assertTrue(g.changeCellState(3, 3, false));
+		Assert.assertTrue(g.changeCellState(3, 3));
 		Assert.assertEquals(nbFlagsBefore + 1, g.getNbCellsFlagged());
-		// Pour vérifier qu'on est bien à l'état FLAGGED, on essaie de découvrir la case et on doit avoir Faux en retour.
-		Assert.assertFalse(g.changeCellState(3, 3, true));
+		Assert.assertEquals(CellState.FLAGGED, g.getElement(3, 3).getState());
 		
-		// Cas valide 4 : La position est valide, l'état de la cellule est FLAGGED et on veut la changer pour DUBIOUS.
+		// Cas valide 2 : La position est valide, l'état de la cellule est FLAGGED et on veut la changer pour DUBIOUS.
 		g = new Game(0);
-		g.changeCellState(3, 3, false);
+		g.changeCellState(3, 3);
 		nbFlagsBefore = g.getNbCellsFlagged();
-		Assert.assertTrue(g.changeCellState(3, 3, false));
+		Assert.assertTrue(g.changeCellState(3, 3));
 		Assert.assertEquals(nbFlagsBefore - 1, g.getNbCellsFlagged());
-		// Pour vérifier qu'on est bien à l'état DUBIOUS, on essaie de découvrir la case et on doit avoir Vrai en retour.
-		Assert.assertTrue(g.changeCellState(3, 3, true));
+		Assert.assertEquals(CellState.DUBIOUS, g.getElement(3, 3).getState());
 		
-		// Cas valide 5 : La position est valide, l'état de la cellule est DUBIOUS et on veut la changer pour HIDDEN.
+		// Cas valide 3 : La position est valide, l'état de la cellule est DUBIOUS et on veut la changer pour HIDDEN.
 		g = new Game(0);
-		g.changeCellState(3, 3, false);
-		g.changeCellState(3, 3, false);
+		g.changeCellState(3, 3);
+		g.changeCellState(3, 3);
 		nbFlagsBefore = g.getNbCellsFlagged();
-		Assert.assertTrue(g.changeCellState(3, 3, false));
+		Assert.assertTrue(g.changeCellState(3, 3));
 		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
-		// Pour vérifier qu'on est revenu à l'état HIDDEN, on essaie de découvrir la case et on doit avoir Vrai en retour.
-		Assert.assertTrue(g.changeCellState(3, 3, true));
+		Assert.assertEquals(CellState.HIDDEN, g.getElement(3, 3).getState());
 		
 		// Cas limite 1 : La position est (0, 0) et la cellule n'est pas null donc on peut changer son état.
 		g = new Game(0);
-		Assert.assertTrue(g.changeCellState(0, 0, false));
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertTrue(g.changeCellState(0, 0));
+		Assert.assertEquals(nbFlagsBefore + 1, g.getNbCellsFlagged());
+		Assert.assertEquals(CellState.FLAGGED, g.getElement(0, 0).getState());
 		
 		// Cas limite 2 : La position est (largeur - 1, hauteur - 1) et la cellule n'est pas null donc on peut changer son état.
 		g = new Game(0);
-		Assert.assertTrue(g.changeCellState(8, 8, false));
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertTrue(g.changeCellState(8, 8));
+		Assert.assertEquals(nbFlagsBefore + 1, g.getNbCellsFlagged());
+		Assert.assertEquals(CellState.FLAGGED, g.getElement(8, 8).getState());
 		
 		// Cas limite 3 : La position est (largeur - 1, 0) et la cellule n'est pas null donc on peut changer son état.
 		g = new Game(0);
-		Assert.assertTrue(g.changeCellState(8, 0, false));
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertTrue(g.changeCellState(8, 0));
+		Assert.assertEquals(nbFlagsBefore + 1, g.getNbCellsFlagged());
+		Assert.assertEquals(CellState.FLAGGED, g.getElement(8, 0).getState());
 		
 		// Cas limite 4 : La position est (0, hauteur - 1) et la cellule n'est pas null donc on peut changer son état.
 		g = new Game(0);
-		Assert.assertTrue(g.changeCellState(0, 8, false));
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertTrue(g.changeCellState(0, 8));
+		Assert.assertEquals(nbFlagsBefore + 1, g.getNbCellsFlagged());
+		Assert.assertEquals(CellState.FLAGGED, g.getElement(0, 8).getState());
 		
-		// Cas invalide 1 : La position est valide et l'état de la cellule est FLAGGED et on veut la décourvrir.
+		// Cas invalide 1 : La position est inférieure à 0 en x et en y.
 		g = new Game(0);
-		g.changeCellState(3, 3, false);
-		Assert.assertFalse(g.changeCellState(3, 3, true));
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(-1, -1));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
 		
-		// Cas invalide 2 : La position est valide, l'état de la cellule est SHOWN et on veut la découvrir.
+		// Cas invalide 2 : La position en x est valide et inférieure à 0 en y.
 		g = new Game(0);
-		g.changeCellState(3, 3, true);
-		Assert.assertFalse(g.changeCellState(3, 3, true));
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(1, -1));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
+		
+		// Cas invalide 3 : La position en y est valide et inférieure à 0 en x.
+		g = new Game(0);
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(-1, 1));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
+		
+		// Cas invalide 4 : La position en x est supérieure ou égale à la largeur de la grille et  
+		// 					la position en y est supérieure ou égale à la hauteur de la grille.
+		g = new Game(0);
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(9, 9));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
+
+		// Cas invalide 5 : La position en x est supérieure ou égale à la largeur de la grille et la position en y est valide.
+		g = new Game(0);
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(9, 1));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
+		
+		// Cas invalide 6 : La position en y est supérieure ou égale à la hauteur de la grille et la position en x est valide
+		g = new Game(0);
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(1, 9));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
+		
+		// Cas invalide 7 : La position est valide, l'état de la cellule est SHOWN et on essaie de changer son état
+		g = new Game(0);
+		g.showCell(3, 3);
+		nbFlagsBefore = g.getNbCellsFlagged();
+		Assert.assertFalse(g.changeCellState(3, 3));
+		Assert.assertEquals(nbFlagsBefore, g.getNbCellsFlagged());
+		Assert.assertEquals(CellState.SHOWN, g.getElement(3, 3).getState());
+	}
+
+	/**
+	 *  Méthode de test pour {@link appDemineur.model.Game#showCell(int, int)}
+	 */
+	@Test
+	public void testShowCellIntInt()
+	{
+		Game g;
+		int nbCellsShownBefore;
+		
+		// Cas valide 1 : La position est valide, l'état de la cellule est HIDDEN.
+		g = new Game(0);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertTrue(g.showCell(3, 3));
+		Assert.assertTrue(nbCellsShownBefore < g.getNbCellsShown());
+		
+		// Cas valide 2 : La position est valide et l'état de la cellule est DUBIOUS.
+		g = new Game(0);
+		g.changeCellState(3, 3);
+		g.changeCellState(3, 3);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertTrue(g.showCell(3, 3));
+		Assert.assertTrue(nbCellsShownBefore < g.getNbCellsShown());
+		
+		// Cas valide 3 : Ajout des mines : La position est valide et le niveau est situé entre 0 et 2.
+		g = new Game(1);
+		Assert.assertTrue(g.showCell(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(40, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas limite 1 : La position est (0, 0).
+		g = new Game(0);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertTrue(g.showCell(0, 0));
+		Assert.assertTrue(nbCellsShownBefore < g.getNbCellsShown());
+		
+		// Cas limite 2 : La position est (largeur - 1, hauteur - 1).
+		g = new Game(0);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertTrue(g.showCell(8, 8));
+		Assert.assertTrue(nbCellsShownBefore < g.getNbCellsShown());
+		
+		// Cas limite 3 : La position est (largeur - 1, 0).
+		g = new Game(0);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertTrue(g.showCell(8, 0));
+		Assert.assertTrue(nbCellsShownBefore < g.getNbCellsShown());
+		
+		// Cas limite 4 : La position est (0, hauteur - 1).
+		g = new Game(0);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertTrue(g.showCell(0, 8));
+		Assert.assertTrue(nbCellsShownBefore < g.getNbCellsShown());
+		
+		// Cas limite 5 : Ajout des mines : La position est valide et le niveau est 0
+		g = new Game(0);
+		Assert.assertTrue(g.showCell(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas limite 6 : Ajout des mines : La position est valide et le niveau est 2
+		g = new Game(2);
+		Assert.assertTrue(g.showCell(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(99, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas invalide 1 : La position est valide et l'état de la cellule est FLAGGED.
+		g = new Game(0);
+		g.changeCellState(3, 3);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(3, 3));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
+		
+		// Cas invalide 2 : La position est valide, l'état de la cellule est SHOWN.
+		g = new Game(0);
+		g.showCell(3, 3);
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(3, 3));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
 		
 		// Cas invalide 3 : La position est inférieure à 0 en x et en y.
 		g = new Game(0);
-		Assert.assertFalse(g.changeCellState(-1, -1, false));
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(-1, -1));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
 		
 		// Cas invalide 4 : La position en x est valide et inférieure à 0 en y.
 		g = new Game(0);
-		Assert.assertFalse(g.changeCellState(1, -1, false));
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(1, -1));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
 		
 		// Cas invalide 5 : La position en y est valide et inférieure à 0 en x.
 		g = new Game(0);
-		Assert.assertFalse(g.changeCellState(-1, 1, false));
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(-1, 1));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
 		
 		// Cas invalide 6 : La position en x est supérieure ou égale à la largeur de la grille et  
 		// 					la position en y est supérieure ou égale à la hauteur de la grille.
 		g = new Game(0);
-		Assert.assertFalse(g.changeCellState(9, 9, false));
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(9, 9));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
 
 		// Cas invalide 7 : La position en x est supérieure ou égale à la largeur de la grille et la position en y est valide.
 		g = new Game(0);
-		Assert.assertFalse(g.changeCellState(9, 1, false));
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(9, 1));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
 		
 		// Cas invalide 8 : La position en y est supérieure ou égale à la hauteur de la grille et la position en x est valide
 		g = new Game(0);
-		Assert.assertFalse(g.changeCellState(1, 9, false));
+		nbCellsShownBefore = g.getNbCellsShown();
+		Assert.assertFalse(g.showCell(1, 9));
+		Assert.assertEquals(nbCellsShownBefore, g.getNbCellsShown());
+		
+		// Cas invalide 9 : Le niveau est inférieur à 0
+		g = new Game(-1);
+		Assert.assertTrue(g.showCell(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));
+		
+		// Cas invalide 10 : Le niveau est supérieur à 2
+		g = new Game(3);
+		Assert.assertTrue(g.showCell(0, 0));
+		Assert.assertFalse(g.getElement(0, 0).isMine());
+		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertTrue(this.checkAdjacentMines(g));		
 	}
-	
+
 	/**
 	 * 	Méthode de test pour {@link appDemineur.model.Game#isLost()}
 	 */
@@ -298,7 +395,6 @@ public class GameTest
 	public void testIsLost()
 	{
 		Game g = new Game(0);
-		g.start(new Point(0, 0));
 		
 		// Cas 1 : La partie vient de demarrer et n'est donc pas perdue.
 		Assert.assertFalse(g.isOver());
@@ -315,7 +411,6 @@ public class GameTest
 	public void testIsWon()
 	{
 		Game g = new Game(0);
-		g.start(new Point(0, 0));
 
 		// Cas 1 : La partie vient de demarrer et n'est donc pas gagnée.
 		Assert.assertFalse(g.isOver());
@@ -331,17 +426,19 @@ public class GameTest
 	@Test
 	public void testIsOver()
 	{
-		Game g = new Game(0);
-		g.start(new Point(0, 0));
+		Game g;
 		
 		// Cas 1 : La partie vient de demarrer et n'est donc pas terminée.
+		g = new Game(0);
 		Assert.assertFalse(g.isOver());
 		
 		// Cas 2 : Le joueur a perdu la partie.
+		g = new Game(0);
 		this.loseGame(g);
 		Assert.assertTrue(g.isOver());
 
 		// Cas 3 : Le joueur a gagné la partie.
+		g = new Game(0);
 		this.winGame(g);
 		Assert.assertTrue(g.isOver());
 	}
@@ -357,7 +454,7 @@ public class GameTest
 				// On découvre toutes les cellules qui ne sont pas des mines
 				if (!g.getElement(i, j).isMine())
 				{
-					g.changeCellState(i, j, true);
+					g.showCell(i, j);
 				}
 			}
 		}
@@ -368,6 +465,8 @@ public class GameTest
 	{
 		boolean lost = false;
 
+		g.showCell(0, 0);
+		
 		// On parcours la matrice au complet
 		for (int i = 0; !lost && i < g.getWidth(); i++)
 		{
@@ -376,7 +475,7 @@ public class GameTest
 				// On découvre la première mine trouvée
 				if (g.getElement(i, j).isMine())
 				{
-					g.changeCellState(i, j, true);
+					g.showCell(i, j);
 					lost = true;
 				}
 			}
@@ -396,9 +495,9 @@ public class GameTest
 		
 		// Cas 2 : La partie est en cours et le joueur n'a pas placé tous les drapeaux.
 		g = new Game(0);
-		g.changeCellState(0, 0, false);
-		g.changeCellState(0, 1, false);
-		g.changeCellState(1, 0, false);
+		g.changeCellState(0, 0);
+		g.changeCellState(0, 1);
+		g.changeCellState(1, 0);
 		Assert.assertEquals(3, g.getNbCellsFlagged());
 		
 		// Cas 3 : La partie est en cours et le joueur a placé un nombre de drapeau supérieur au nombre
@@ -409,7 +508,7 @@ public class GameTest
 			for (int j = 0; j < 2; j++)
 			{
 				// On pose un drapeau sur 18 cases.
-				g.changeCellState(i, j, false);
+				g.changeCellState(i, j);
 			}
 		}
 		Assert.assertEquals(18, g.getNbCellsFlagged());
@@ -498,5 +597,25 @@ public class GameTest
 //		g.setElement(1, 2, null);
 //		Assert.assertNull(g.getElement(1, 2));
 //		Assert.assertFalse(g.getElement(1, 2) instanceof Cell);
+	}
+	
+	// TODO : À terminer
+	/**
+	 * 	Méthode de test pour {@link appDemineur.model.Game#getNbCellsShown()}
+	 */
+	@Test
+	public void testGetNbCellsShown()
+	{
+		Game g = new Game(0);
+		
+		// Cas 1 : La partie vient d'être créée, donc aucune cellule n'est dévoilée.
+		Assert.assertEquals(0, g.getNbCellsShown());
+		
+		// Cas 2 : La partie est en cours et le joueur n'a pas dévoilé toutes les cases non minées.
+
+		// Cas 3 : La partie est gagnée
+
+		// Cas 4 : La partie est perdue
+		
 	}
 }
