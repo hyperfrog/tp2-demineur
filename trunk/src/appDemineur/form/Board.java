@@ -29,6 +29,7 @@ import javax.swing.border.LineBorder;
 
 import appDemineur.model.Cell;
 import appDemineur.model.Game;
+import appDemineur.model.XMLFile;
 
 /**
  * La classe Board implémente l'interface du jeu du Démineur.
@@ -191,7 +192,40 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 //			this.timer.restart();
 			this.timer.stop();
 			this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
+			
 		}
+	}
+	
+	private void winGame(Game g)
+	{
+		// On parcours la matrice au complet
+		for (int i = 0; i < g.getWidth(); i++)
+		{
+			for (int j = 0; j < g.getHeight(); j++)
+			{
+				// On découvre toutes les cellules qui ne sont pas des mines
+				if (!g.getElement(i, j).isMine())
+				{
+					g.showCell(i, j);
+				}
+			}
+		}
+	}
+	
+	// 
+	private void showScoresDialog()
+	{
+		String scoreboard = "";
+		
+		String[] difficulty = new String[] {"Débutant", "Intermédiaire", "Expert"};
+		String[][] scores = XMLFile.getScores();
+		
+		for (int i = 0; i < 3; i++)
+		{
+			scoreboard += String.format("%s\n%s, %s seconde(s)\n\n", difficulty[i], scores[i][1], scores[i][0]);
+		}
+		
+		JOptionPane.showMessageDialog(this, scoreboard, "Meilleurs temps...", JOptionPane.PLAIN_MESSAGE, new ImageIcon(Board.smileyWon));
 	}
 	
 	// Cette classe pourrait implémenter le mouse listener
@@ -380,6 +414,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 						if (hasChanged && nbCellsShown == 0)
 						{
 							this.timer.restart();
+							winGame(this.currentGame);
 						}
 						
 						break;
@@ -414,7 +449,17 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 							this, 
 							"Vous avez gagné !", 
 							"Bravo !", 
-							JOptionPane.PLAIN_MESSAGE);		
+							JOptionPane.PLAIN_MESSAGE);
+					
+					String[] difficulty = new String[] {"beginner", "intermediate", "expert"};
+					
+					String bestTime = XMLFile.getScores("/best_times/level[@name='" + difficulty[this.currentGame.getCurrentLevel()] + "']/time");
+					if (this.elapsedTime > Integer.parseInt(bestTime))
+					{
+						// Demander le nouveau record.
+					}
+					
+					this.showScoresDialog();
 				}
 				else if (this.currentGame.isLost())
 				{
