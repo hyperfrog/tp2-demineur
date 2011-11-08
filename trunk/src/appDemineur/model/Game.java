@@ -37,9 +37,9 @@ public class Game extends BaseMatrix
 	
 	// Les trois niveaux de difficulté du jeu
 	private static final Level[] LEVELS = new Level[] { 
-		new Level(new Dimension(9, 9), 10), 
-		new Level(new Dimension(16, 16), 40), 
-		new Level(new Dimension(30, 16), 99)
+		new Level(new Dimension(9, 9), 10), 	// Débutant : 9 x 9 avec 10 mines
+		new Level(new Dimension(16, 16), 40), 	// Intermédiaire : 16 x 16 avec 40 mines
+		new Level(new Dimension(30, 16), 99)	// Expert : 30 x 16 avec 99 mines
 		};
 
 	private int level;

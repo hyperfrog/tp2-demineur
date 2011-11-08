@@ -73,18 +73,18 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	private AppFrame parent = null;
 	
 	// Images utilisées pour le bouton newGameButton
-	private static BufferedImage smiley_won = null;
-	private static BufferedImage smiley_normal = null;
-	private static BufferedImage smiley_lost = null;
+	private static BufferedImage smileyWon = null;
+	private static BufferedImage smileyNormal = null;
+	private static BufferedImage smileyLost = null;
 	
 	// Initialisation des images
 	static
 	{
 		try
 		{
-			Board.smiley_won = ImageIO.read(Cell.class.getResource("../../smiley_won.png"));
-			Board.smiley_normal = ImageIO.read(Cell.class.getResource("../../smiley_normal.png"));
-			Board.smiley_lost = ImageIO.read(Cell.class.getResource("../../smiley_lost.png"));
+			Board.smileyWon = ImageIO.read(Cell.class.getResource("../../smiley_won.png"));
+			Board.smileyNormal = ImageIO.read(Cell.class.getResource("../../smiley_normal.png"));
+			Board.smileyLost = ImageIO.read(Cell.class.getResource("../../smiley_lost.png"));
 		}
 		catch (IOException e)
 		{
@@ -176,9 +176,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 			
 			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
 			
-			if (Board.smiley_normal != null)
+			if (Board.smileyNormal != null)
 			{
-				this.newGameButton.setIcon(new ImageIcon(Board.smiley_normal));
+				this.newGameButton.setIcon(new ImageIcon(Board.smileyNormal));
 				this.newGameButton.setText("");
 			}
 			else
@@ -399,9 +399,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 
 				if (this.currentGame.isWon())
 				{
-					if (Board.smiley_won != null)
+					if (Board.smileyWon != null)
 					{
-						this.newGameButton.setIcon(new ImageIcon(Board.smiley_won));
+						this.newGameButton.setIcon(new ImageIcon(Board.smileyWon));
 						this.newGameButton.setText("");
 					}
 					else
@@ -418,9 +418,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				}
 				else if (this.currentGame.isLost())
 				{
-					if (Board.smiley_lost != null)
+					if (Board.smileyLost != null)
 					{
-						this.newGameButton.setIcon(new ImageIcon(Board.smiley_lost));
+						this.newGameButton.setIcon(new ImageIcon(Board.smileyLost));
 						this.newGameButton.setText("");
 					}
 					else
