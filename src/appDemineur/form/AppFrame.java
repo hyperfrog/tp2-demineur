@@ -298,7 +298,7 @@ public class AppFrame extends JFrame implements ComponentListener
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error setting native LAF: " + e);
+			System.out.println("Incapable de changer l'apparence de l'application.");
 		}
 	}
 	
