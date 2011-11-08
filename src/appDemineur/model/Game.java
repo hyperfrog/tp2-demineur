@@ -375,7 +375,18 @@ public class Game extends BaseMatrix
 	 */
 	public int getNbCellsShown()
 	{
-		return nbCellsShown;
+		return this.nbCellsShown;
+	}
+	
+	// TODO : Méthode de test
+	/**
+	 * Retourne le niveau de la partie en cours.
+	 * 
+	 * @return le niveau de la partie en cours
+	 */
+	public int getCurrentLevel()
+	{
+		return this.level;
 	}
 
 	/**
