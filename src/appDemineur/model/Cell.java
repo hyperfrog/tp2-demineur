@@ -60,7 +60,11 @@ public class Cell
 		catch (IOException e)
 		{
 			System.out.println(e.getMessage());
-		}	
+		}
+		catch (IllegalArgumentException e)
+		{
+			System.out.println("Incapable de trouver une ou plusieurs image(s) de la classe Cell.");
+		}
 	}
 	
 	/**

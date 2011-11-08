@@ -29,7 +29,7 @@ import javax.swing.border.LineBorder;
 
 import appDemineur.model.Cell;
 import appDemineur.model.Game;
-import appDemineur.model.XMLFile;
+import appDemineur.model.BestTimes;
 
 /**
  * La classe Board implémente l'interface du jeu du Démineur.
@@ -73,6 +73,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Objet parent
 	private AppFrame parent = null;
 	
+	//
+	private BestTimes bestTimes = null;
+	
 	// Images utilisées pour le bouton newGameButton
 	private static BufferedImage smileyWon = null;
 	private static BufferedImage smileyNormal = null;
@@ -90,7 +93,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		catch (IOException e)
 		{
 			System.out.println(e.getMessage());
-		}	
+		}
+		catch (IllegalArgumentException e)
+		{
+			System.out.println("Incapable de trouver une ou plusieurs image(s) de la classe Board.");
+		}
 	}
 	
 	/**
@@ -105,6 +112,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		super();
 		
 		this.parent = parent;
+		this.bestTimes = new BestTimes("c:\\file.xml");
 		
         // Initialise les composantes
 		this.gamePanel = new DrawingPanel(this);
@@ -218,11 +226,16 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		String scoreboard = "";
 		
 		String[] difficulty = new String[] {"Débutant", "Intermédiaire", "Expert"};
-		String[][] scores = XMLFile.getScores();
 		
 		for (int i = 0; i < 3; i++)
 		{
-			scoreboard += String.format("%s\n%s, %s seconde(s)\n\n", difficulty[i], scores[i][1], scores[i][0]);
+			String time = bestTimes.getData(
+					"/best_times/level[@name='" + BestTimes.levelNames[this.currentGame.getCurrentLevel()] + "']/time");
+			
+			String player = bestTimes.getData(
+					"/best_times/level[@name='" + BestTimes.levelNames[this.currentGame.getCurrentLevel()] + "']/player");
+			
+			scoreboard += String.format("%s :\n%s, %s seconde(s)\n\n", difficulty[i], player, time);
 		}
 		
 		JOptionPane.showMessageDialog(this, scoreboard, "Meilleurs temps...", JOptionPane.PLAIN_MESSAGE, new ImageIcon(Board.smileyWon));
@@ -453,7 +466,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 					
 					String[] difficulty = new String[] {"beginner", "intermediate", "expert"};
 					
-					String bestTime = XMLFile.getScores("/best_times/level[@name='" + difficulty[this.currentGame.getCurrentLevel()] + "']/time");
+					String bestTime = bestTimes.getData("/best_times/level[@name='" + difficulty[this.currentGame.getCurrentLevel()] + "']/time");
 					if (this.elapsedTime > Integer.parseInt(bestTime))
 					{
 						// Demander le nouveau record.
