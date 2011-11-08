@@ -43,7 +43,7 @@ public class AppFrame extends JFrame implements ComponentListener
 	private static final String INIT_TITLE = "Démineur par Alexandre Tremblay et Christian Lesage";
 	
 	// Objet du plateau de jeu
-	private Board mBoard;
+	private Board gameBoard;
 	
 	//
 	private JMenuBar menuBar;
@@ -165,15 +165,15 @@ public class AppFrame extends JFrame implements ComponentListener
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.mBoard = new Board(this);
-		this.getContentPane().add(this.mBoard);
+		this.gameBoard = new Board(this);
+		this.getContentPane().add(this.gameBoard);
 		
-		this.newGameMenu.addActionListener(this.mBoard);
-		this.scoresMenu.addActionListener(this.mBoard);
-		this.aboutMenu.addActionListener(this.mBoard);
-		this.helpMenu.addActionListener(this.mBoard);
+		this.newGameMenu.addActionListener(this.gameBoard);
+		this.scoresMenu.addActionListener(this.gameBoard);
+		this.aboutMenu.addActionListener(this.gameBoard);
+		this.helpMenu.addActionListener(this.gameBoard);
 		
-		this.cheatChkMenu.addItemListener(this.mBoard);
+		this.cheatChkMenu.addItemListener(this.gameBoard);
 		
 		this.addComponentListener(this);
 	}
