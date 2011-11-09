@@ -22,18 +22,19 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
+import appDemineur.model.Game;
 
 public class BestTimes
 {
-	// TODO : Ajouter le fichier xml dans le projet
-//	public static final String SCORE_FILE_NAME = "C:\\file.xml";
-
-	public static final String[] levelNames = new String[] {"beginner", "intermediate", "expert"};
-	
+	// Chemin du fichier des meilleurs temps
 	private String fileName;
 	
+	// Objet DOM 
 	private Document doc = null;
 	
+	/**
+	 * @param fileName
+	 */
 	public BestTimes(String fileName)
 	{
 		this.fileName = fileName;
@@ -47,7 +48,6 @@ public class BestTimes
 
 			if (!xmlFile.exists())
 			{
-//				xmlFile.createNewFile();
 				doc = dBuilder.newDocument();
 			}
 			else
@@ -76,7 +76,10 @@ public class BestTimes
 		}
 	}
 	
-	// 
+	/**
+	 * @param xpathRequest
+	 * @return
+	 */
 	public String getData(String xpathRequest)
 	{
 		String data = null;
@@ -104,7 +107,10 @@ public class BestTimes
 		return data;
 	}
 	
-	// 
+	/**
+	 * @param xpathRequest
+	 * @param newData
+	 */
 	public void setData(String xpathRequest, String newData)
 	{
 		if (this.doc != null)
@@ -128,7 +134,9 @@ public class BestTimes
 		}
 	}
 
-	// This method writes a DOM document to a file
+	/**
+	 * Écrit les données des meilleurs temps dans le fichier
+	 */
 	public void write()
 	{
 		if (this.doc != null)
@@ -160,7 +168,7 @@ public class BestTimes
 		}
 	}
 	
-	// 
+	// Valide l'objet DOM
 	private void validateDocument()
 	{
 		if (this.doc != null)
@@ -187,11 +195,10 @@ public class BestTimes
 					this.doc.appendChild(root);
 				}
 
-//				String[] levelNames = new String[] {"beginner", "intermediate", "expert"};
-
-				for (String levelName : BestTimes.levelNames)
+				// Valide chacun des niveaux
+				for (Game.Level level : Game.LEVELS)
 				{
-					this.validateLevel(root, levelName);
+					this.validateLevel(root, level.name.toLowerCase());
 				}
 			}
 			catch (ParserConfigurationException e)
@@ -201,7 +208,7 @@ public class BestTimes
 		}
 	}
 
-	// 
+	// Valide un niveau (élément level)
 	private void validateLevel(Element bestTimes, String levelName)
 	{
 		if (this.doc != null)
@@ -210,6 +217,7 @@ public class BestTimes
 			{
 				XPath xpath = XPathFactory.newInstance().newXPath();
 
+				// Présence sous l'élément best_times d'un élément level avec l'attribut name à la bonne valeur ?
 				Element level = (Element) xpath.evaluate("level[@name='" + levelName + "']", bestTimes, XPathConstants.NODE);
 
 				if (level == null)
@@ -219,6 +227,7 @@ public class BestTimes
 					bestTimes.appendChild(level);
 				}
 
+				// Présence sous l'élément level d'un élément player ?
 				Element player = (Element) xpath.evaluate("player", level, XPathConstants.NODE);
 
 				if (player == null)
@@ -227,6 +236,7 @@ public class BestTimes
 					level.appendChild(player);
 				}
 
+				// Présence sous l'élément level d'un élément time ?
 				Element time = (Element) xpath.evaluate("time", level, XPathConstants.NODE);
 
 				if (time == null)

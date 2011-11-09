@@ -46,7 +46,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	private static final boolean USE_CELL_SIZE_FLOOR = true;
 	
 	// Objet de la partie courante
-	private Game currentGame = null;
+	private Game game = null;
 	
 	// Panneau dans lequel la partie est dessinée
 	private DrawingPanel gamePanel;
@@ -73,7 +73,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Objet parent
 	private AppFrame parent = null;
 	
-	//
+	// Objet de gestion des meilleurs temps 
 	private BestTimes bestTimes = null;
 	
 	// Images utilisées pour le bouton newGameButton
@@ -112,6 +112,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		super();
 		
 		this.parent = parent;
+		
+		// TODO : Changer le path
 		this.bestTimes = new BestTimes("c:\\file.xml");
 		
         // Initialise les composantes
@@ -171,7 +173,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		int response = 0;
 		
 		// Demande une confirmation si une partie est en cours
-		if (this.currentGame != null && !this.currentGame.isOver() && this.currentGame.getNbCellsShown() > 0)
+		if (this.game != null && !this.game.isOver() && this.game.getNbCellsShown() > 0)
 		{
 			response = JOptionPane.showConfirmDialog(this, 
 					"Êtes-vous sûr de vouloir commencer une nouvelle partie ? \nLa partie en cours n'est pas terminée.",
@@ -181,9 +183,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		if (response == 0)
 		{
 			// Crée une nouvelle partie
-			this.currentGame = new Game(this.parent.getNextGameLevel());
+			this.game = new Game(this.parent.getNextGameLevel());
 			
-			this.flagsLabel.setText("Mines : " + this.currentGame.getMineAmount());
+			this.flagsLabel.setText("Mines : " + this.game.getMineAmount());
 			
 			if (Board.smileyNormal != null)
 			{
@@ -204,6 +206,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 	}
 	
+	// Gagne une partie (option «sale tricheur»)
 	private void winGame(Game g)
 	{
 		// On parcours la matrice au complet
@@ -220,25 +223,29 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 	}
 	
-	// 
+	// Affiche la boîte de dialogue des meilleurs temps
 	private void showScoresDialog()
 	{
 		String scoreboard = "";
 		
-		String[] difficulty = new String[] {"Débutant", "Intermédiaire", "Expert"};
+		String levelXpath = "/best_times/level";
 		
-		for (int i = 0; i < 3; i++)
+		for (Game.Level level : Game.LEVELS)
 		{
 			String time = bestTimes.getData(
-					"/best_times/level[@name='" + BestTimes.levelNames[this.currentGame.getCurrentLevel()] + "']/time");
+					levelXpath + "[@name='" + level.name.toLowerCase() + "']/time");
 			
 			String player = bestTimes.getData(
-					"/best_times/level[@name='" + BestTimes.levelNames[this.currentGame.getCurrentLevel()] + "']/player");
-			
-			scoreboard += String.format("%s :\n%s, %s seconde(s)\n\n", difficulty[i], player, time);
+					levelXpath + "[@name='" + level.name.toLowerCase() + "']/player");
+
+			scoreboard += String.format("%s :\n%s, %s seconde(s)\n\n", level.displayName, player, time);
 		}
 		
-		JOptionPane.showMessageDialog(this, scoreboard, "Meilleurs temps...", JOptionPane.PLAIN_MESSAGE, new ImageIcon(Board.smileyWon));
+		JOptionPane.showMessageDialog(this, 
+				scoreboard, 
+				"Meilleurs temps", 
+				JOptionPane.PLAIN_MESSAGE, 
+				new ImageIcon(Board.smileyWon));
 	}
 	
 	// Cette classe pourrait implémenter le mouse listener
@@ -287,10 +294,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 
 				Point gridOffset = this.parent.getGridOffset();
 				
-				this.parent.currentGame.redraw(
+				this.parent.game.redraw(
 						g2, 
 						this.parent.getCellSize(), 
-						this.parent.currentGame.isOver() || this.parent.parent.getCheatMode());
+						this.parent.game.isOver() || this.parent.parent.getCheatMode());
 				
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}
@@ -302,10 +309,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	{
 		float size = 0;
 		
-		if (this.currentGame.getWidth() > 0 && this.currentGame.getHeight() > 0)
+		if (this.game.getWidth() > 0 && this.game.getHeight() > 0)
 		{
-			float width = (float) Math.max(this.gamePanel.getWidth(), 0) / this.currentGame.getWidth();
-			float height = (float) Math.max(this.gamePanel.getHeight(), 0) / this.currentGame.getHeight();
+			float width = (float) Math.max(this.gamePanel.getWidth(), 0) / this.game.getWidth();
+			float height = (float) Math.max(this.gamePanel.getHeight(), 0) / this.game.getHeight();
 
 			size = Math.min(height, width);
 		}
@@ -326,13 +333,13 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Retourne la largeur de la grille à l'écran (en pixels)
 	private int getGridScreenWidth()
 	{
-		return Math.max(Math.round(this.getCellSize() * this.currentGame.getWidth()), 1);
+		return Math.max(Math.round(this.getCellSize() * this.game.getWidth()), 1);
 	}
 	
 	// Retourne la hauteur de la grille à l'écran (en pixels)
 	private int getGridScreenHeight()
 	{
-		return Math.max(Math.round(this.getCellSize() * this.currentGame.getHeight()), 1);
+		return Math.max(Math.round(this.getCellSize() * this.game.getHeight()), 1);
 	}
 
 	/**
@@ -347,7 +354,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	{
 		if (evt.getActionCommand().equals("TICK"))
 		{
-			if (!this.currentGame.isOver())
+			if (!this.game.isOver())
 			{
 				this.elapsedTime++;
 				this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
@@ -360,7 +367,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 		else if (evt.getActionCommand().equals("SCORES"))
 		{
-			// TODO : meilleurs scores
+			this.showScoresDialog();
 		}
 		else if (evt.getActionCommand().equals("ABOUT"))
 		{
@@ -401,7 +408,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	 */
 	public void mouseReleased(MouseEvent evt)
 	{
-		if (!this.currentGame.isOver())
+		if (!this.game.isOver())
 		{
 			Point gridOffset = this.getGridOffset();
 
@@ -418,34 +425,40 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				switch (evt.getButton())
 				{
 					case MouseEvent.BUTTON1: // Bouton de gauche
+					case MouseEvent.BUTTON2: // Bouton du centre 
 					{
-						int nbCellsShown = this.currentGame.getNbCellsShown();
+						int nbCellsShown = this.game.getNbCellsShown();
 
-						hasChanged = this.currentGame.showCell(clickedCell.x, clickedCell.y);
+						hasChanged = this.game.showCell(clickedCell.x, clickedCell.y);
 						
 						// Premier clic gauche sur une cellule non dévoilée et sans drapeau?
 						if (hasChanged && nbCellsShown == 0)
 						{
 							this.timer.restart();
-							winGame(this.currentGame);
 						}
-						
+
+						// Sale tricheur !
+						if (evt.getButton() == MouseEvent.BUTTON2)
+						{
+							this.winGame(this.game);
+						}
+								
 						break;
 					}
 					case MouseEvent.BUTTON3: // Bouton de droite
 					{
-						hasChanged = this.currentGame.changeCellState(clickedCell.x, clickedCell.y);
+						hasChanged = this.game.changeCellState(clickedCell.x, clickedCell.y);
 						break;
 					}
 				}
 
 				if (hasChanged)
 				{
-					this.flagsLabel.setText("Mines : " + (this.currentGame.getMineAmount() - this.currentGame.getNbCellsFlagged()));
+					this.flagsLabel.setText("Mines : " + (this.game.getMineAmount() - this.game.getNbCellsFlagged()));
 					this.repaint();
 				}
 
-				if (this.currentGame.isWon())
+				if (this.game.isWon())
 				{
 					if (Board.smileyWon != null)
 					{
@@ -464,17 +477,32 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 							"Bravo !", 
 							JOptionPane.PLAIN_MESSAGE);
 					
-					String[] difficulty = new String[] {"beginner", "intermediate", "expert"};
+					String bestTimeXpath = "/best_times/level[@name='" + Game.LEVELS[this.game.getLevel()].name.toLowerCase() + "']/time";
 					
-					String bestTime = bestTimes.getData("/best_times/level[@name='" + difficulty[this.currentGame.getCurrentLevel()] + "']/time");
-					if (this.elapsedTime > Integer.parseInt(bestTime))
+					int bestTime;
+					
+					try
 					{
-						// Demander le nouveau record.
+						bestTime = Integer.parseInt(this.bestTimes.getData(bestTimeXpath));
+					}
+					catch (NumberFormatException e)
+					{
+						bestTime = Integer.MAX_VALUE;
 					}
 					
-					this.showScoresDialog();
+					if (this.elapsedTime < bestTime)
+					{
+						// TODO: Demander le nom du joueur pour établir le nouveau record.
+						
+						this.bestTimes.setData(bestTimeXpath, "" + this.elapsedTime);
+						// Écrit le fichier des meilleurs temps
+						this.bestTimes.write();
+						// Montre les meilleurs temps
+						this.showScoresDialog();
+					}
+					
 				}
-				else if (this.currentGame.isLost())
+				else if (this.game.isLost())
 				{
 					if (Board.smileyLost != null)
 					{
