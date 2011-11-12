@@ -79,9 +79,9 @@ public class GameTest
 		// Cas invalide 2 : Le niveau est supérieur à 2
 		g = new Game(3);
 		Assert.assertNotNull(g);
-		Assert.assertEquals(9, g.getWidth());
-		Assert.assertEquals(9, g.getHeight());
-		Assert.assertEquals(10, g.getMineAmount());
+		Assert.assertEquals(30, g.getWidth());
+		Assert.assertEquals(16, g.getHeight());
+		Assert.assertEquals(99, g.getMineAmount());
 		Assert.assertEquals(0, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbCellsFlagged());
 		Assert.assertEquals(0, g.getNbCellsShown());
@@ -384,7 +384,7 @@ public class GameTest
 		g = new Game(3);
 		Assert.assertTrue(g.showCell(0, 0));
 		Assert.assertFalse(g.getElement(0, 0).isMine());
-		Assert.assertEquals(10, this.mineOnGrid(g));
+		Assert.assertEquals(99, this.mineOnGrid(g));
 		Assert.assertTrue(this.checkAdjacentMines(g));		
 	}
 
