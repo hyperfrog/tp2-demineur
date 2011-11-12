@@ -22,30 +22,53 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import appDemineur.model.Game;
 
 public class BestTimes
 {
-	// Chemin du fichier des meilleurs temps
-	private String fileName;
+//	// Chemin du fichier des meilleurs temps
+//	private String fileName;
 	
 	// Objet DOM 
 	private Document doc = null;
 	
+	private static final String FILE_PATH = "best_times.xml";
+	
+	private static final String ROOT_TAG = "best_times";
+	private static final String LEVEL_TAG = "level";
+	private static final String NAME_ATTR = "name";
+	private static final String TIME_TAG = "time";
+	private static final String PLAYER_TAG = "player";
+	
+	private static final String LEVEL_XPATH = "/" + ROOT_TAG + "/" + LEVEL_TAG + "[@" + NAME_ATTR + "='%s']";
+	private static final String TIME_XPATH = LEVEL_XPATH + "/" + TIME_TAG;
+	private static final String PLAYER_XPATH = LEVEL_XPATH + "/" + PLAYER_TAG;
+	
 	/**
-	 * @param fileName
+	 * Construit un objet de gestion des meilleurs temps. 
+	 * Lit le fichier spécifié s'il existe, puis le valide.
+	 * 
 	 */
-	public BestTimes(String fileName)
+	public BestTimes()
 	{
-		this.fileName = fileName;
-		
 		try
 		{
-			File xmlFile = new File(this.fileName);
+			// Malheureusement, getFile() retourne des caractères «échappés», 
+			// alors la ligne suivante ne fonctionne pas quand il y a des espaces 
+			// ou des caractères accentués dans le chemin du fichier :
 			
+//			File xmlFile = new File(this.getClass().getResource(BestTimes.FILE_PATH).getFile());
+
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
+			URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
+			File xmlFile = new File(new URI(url.toString()).getPath() + BestTimes.FILE_PATH);
+			
 			if (!xmlFile.exists())
 			{
 				doc = dBuilder.newDocument();
@@ -74,13 +97,77 @@ public class BestTimes
 		{
 			e.printStackTrace();
 		}
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
-	/**
+	public String getTime(int levelNum)
+	{
+		String time = null;
+
+		try
+		{
+			String levelName = Game.LEVELS[levelNum].name.toLowerCase();
+			time = this.getData(String.format(BestTimes.TIME_XPATH, levelName));
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			e.printStackTrace();
+		}
+
+		return time;
+	}
+	
+	public void setTime(int levelNum, String time)
+	{
+		try
+		{
+			String levelName = Game.LEVELS[levelNum].name.toLowerCase();
+			this.setData(String.format(BestTimes.TIME_XPATH, levelName), time);
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public String getPlayer(int levelNum)
+	{
+		String player = null;
+		
+		try
+		{
+			String levelName = Game.LEVELS[levelNum].name.toLowerCase();
+			return this.getData(String.format(BestTimes.PLAYER_XPATH, levelName));
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return player;
+	}
+	
+	public void setPlayer(int levelNum, String player)
+	{
+		try
+		{
+			String levelName = Game.LEVELS[levelNum].name.toLowerCase();
+			this.setData(String.format(BestTimes.PLAYER_XPATH, levelName), player);
+		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/*
 	 * @param xpathRequest
 	 * @return
 	 */
-	public String getData(String xpathRequest)
+	private String getData(String xpathRequest)
 	{
 		String data = null;
 
@@ -107,11 +194,11 @@ public class BestTimes
 		return data;
 	}
 	
-	/**
+	/*
 	 * @param xpathRequest
 	 * @param newData
 	 */
-	public void setData(String xpathRequest, String newData)
+	private void setData(String xpathRequest, String newData)
 	{
 		if (this.doc != null)
 		{
@@ -143,15 +230,17 @@ public class BestTimes
 		{
 			try
 			{
-				// Prepare the output file
-				File file = new File(this.fileName);
+				// Prépare le fichier de sortie
+				URL url= getClass().getProtectionDomain().getCodeSource().getLocation();
+				File file = new File(new URI(url.toString()).getPath() + BestTimes.FILE_PATH);
+
 				StreamResult result = new StreamResult(file);
 
-				// Write the DOM document to the file
-				TransformerFactory tf = TransformerFactory.newInstance();
-				tf.setAttribute("indent-number", new Integer(2));
+				// Écrit l'objet DOM dans le fichier
+				TransformerFactory factory = TransformerFactory.newInstance();
+				factory.setAttribute("indent-number", new Integer(2));
 
-				Transformer xformer = tf.newTransformer();
+				Transformer xformer = factory.newTransformer();
 
 				xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
@@ -162,6 +251,10 @@ public class BestTimes
 				e.printStackTrace();
 			}
 			catch (TransformerException e)
+			{
+				e.printStackTrace();
+			}
+			catch (URISyntaxException e)
 			{
 				e.printStackTrace();
 			}
@@ -178,7 +271,7 @@ public class BestTimes
 				Element root = this.doc.getDocumentElement();
 
 				// S'il y a une racine et que ce n'est pas la bonne
-				if (root != null && !root.getNodeName().equals("best_times"))
+				if (root != null && !root.getNodeName().equals(BestTimes.ROOT_TAG))
 				{
 					// On ne peut pas changer la racine; il faut créer un nouveau document
 					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -191,7 +284,7 @@ public class BestTimes
 				// S'il n'y a pas de racine
 				if (root == null)
 				{
-					root = this.doc.createElement("best_times");
+					root = this.doc.createElement(BestTimes.ROOT_TAG);
 					this.doc.appendChild(root);
 				}
 
@@ -218,30 +311,33 @@ public class BestTimes
 				XPath xpath = XPathFactory.newInstance().newXPath();
 
 				// Présence sous l'élément best_times d'un élément level avec l'attribut name à la bonne valeur ?
-				Element level = (Element) xpath.evaluate("level[@name='" + levelName + "']", bestTimes, XPathConstants.NODE);
-
+				Element level = (Element) xpath.evaluate(
+						String.format("%s[@%s='%s']", BestTimes.LEVEL_TAG, BestTimes.NAME_ATTR, levelName), 
+						bestTimes, 
+						XPathConstants.NODE);
+				
 				if (level == null)
 				{
-					level = this.doc.createElement("level");
-					level.setAttribute("name", levelName);
+					level = this.doc.createElement(BestTimes.LEVEL_TAG);
+					level.setAttribute(BestTimes.NAME_ATTR, levelName);
 					bestTimes.appendChild(level);
 				}
 
 				// Présence sous l'élément level d'un élément player ?
-				Element player = (Element) xpath.evaluate("player", level, XPathConstants.NODE);
+				Element player = (Element) xpath.evaluate(BestTimes.PLAYER_TAG, level, XPathConstants.NODE);
 
 				if (player == null)
 				{
-					player = this.doc.createElement("player");
+					player = this.doc.createElement(BestTimes.PLAYER_TAG);
 					level.appendChild(player);
 				}
 
 				// Présence sous l'élément level d'un élément time ?
-				Element time = (Element) xpath.evaluate("time", level, XPathConstants.NODE);
+				Element time = (Element) xpath.evaluate(BestTimes.TIME_TAG, level, XPathConstants.NODE);
 
 				if (time == null)
 				{
-					time = this.doc.createElement("time");
+					time = this.doc.createElement(BestTimes.TIME_TAG);
 					level.appendChild(time);
 				}
 			}

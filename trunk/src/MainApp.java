@@ -33,8 +33,8 @@ public class MainApp
 		
 		ArrayList<Class<?>> classesToTest = new ArrayList<Class<?>>();
 		// TODO : Ajouter ici les classes à tester
-		//classesToTest.add(util.test.BaseMatrixTest.class);
-		//classesToTest.add(appDemineur.model.test.GameTest.class);
+		classesToTest.add(util.test.BaseMatrixTest.class);
+		classesToTest.add(appDemineur.model.test.GameTest.class);
 		
 		for(Class<?> someClass : classesToTest)
 		{

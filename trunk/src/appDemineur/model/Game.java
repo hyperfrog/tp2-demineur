@@ -49,7 +49,7 @@ public class Game extends BaseMatrix
 		new Level(new Dimension(30, 16), 99, "Expert", "Expert")	
 		};
 
-	private int level;
+	private int levelNum;
 	
 	// Indique si la partie est perdue
 	private boolean isLost;
@@ -63,23 +63,21 @@ public class Game extends BaseMatrix
 	// Nombre de cases non minées dévoilées
 	private int nbCellsShown;
 	
-	// Indique si des mines ont été placées dans la grille
-//	private boolean containsMines;
-	
 	/**
 	 * Construit une partie avec le niveau de difficulté spécifié.
 	 * 
-	 * @param level niveau de difficulté de la partie; doit être 0, 1 ou 2, sinon 0 est utilisé
+	 * @param levelNum niveau de difficulté de la partie; si < 0, 0 est utilisé et si > 2, 2 est utilisé
 	 */
-	public Game(int level)
+	public Game(int levelNum)
 	{
 		super();
 
 		// Fixe le niveau
-		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;		
+//		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;
+		this.levelNum = Math.max(0, Math.min(Game.LEVELS.length - 1, levelNum));
 		
 		// Redimensionne la matrice sous-jacente
-		this.redim(Game.LEVELS[this.level].dim.width, Game.LEVELS[this.level].dim.height);
+		this.redim(Game.LEVELS[this.levelNum].dim.width, Game.LEVELS[this.levelNum].dim.height);
 		
 		// Remplit la matrice de cellules
 		this.populate();
@@ -89,8 +87,19 @@ public class Game extends BaseMatrix
 		this.isWon = false;
 		this.nbCellsFlagged = 0;
 		this.nbCellsShown = 0;
-//		this.containsMines = false;
 	}
+	
+	public static int validateLevelNum(int levelNum)
+	{
+		return Math.max(0, Math.min(Game.LEVELS.length - 1, levelNum));
+	}
+	
+//	public static Level getLevel(int levelNum)
+//	{
+//		levelNum = (levelNum < 0 || levelNum > Game.LEVELS.length - 1) ? 0 : levelNum;
+//		
+//		return Game.LEVELS[levelNum];
+//	}
 	
 	/*
 	 * Remplit la matrice avec le nombre de mines déterminé par le niveau de difficulté, 
@@ -128,10 +137,10 @@ public class Game extends BaseMatrix
 			}
 		}
 		
-		if (eligibleCells.size() >= Game.LEVELS[this.level].mineAmount)
+		if (eligibleCells.size() >= Game.LEVELS[this.levelNum].mineAmount)
 		{
 			// Tire le nombre approprié de cellules du chapeau
-			for (int i = 0; i < Game.LEVELS[this.level].mineAmount; i++)
+			for (int i = 0; i < Game.LEVELS[this.levelNum].mineAmount; i++)
 			{
 				Random rand = new Random();
 
@@ -370,7 +379,7 @@ public class Game extends BaseMatrix
 	 */
 	public int getMineAmount()
 	{
-		return Game.LEVELS[this.level].mineAmount;
+		return Game.LEVELS[this.levelNum].mineAmount;
 	}
 	
 	
@@ -391,9 +400,9 @@ public class Game extends BaseMatrix
 	 * 
 	 * @return le niveau de la partie en cours
 	 */
-	public int getLevel()
+	public int getLevelNum()
 	{
-		return this.level;
+		return this.levelNum;
 	}
 
 	/**

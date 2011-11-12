@@ -112,9 +112,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		super();
 		
 		this.parent = parent;
-		
-		// TODO : Changer le path
-		this.bestTimes = new BestTimes("c:\\file.xml");
+
+		this.bestTimes = new BestTimes();
 		
         // Initialise les composantes
 		this.gamePanel = new DrawingPanel(this);
@@ -126,15 +125,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		this.setLayout(new BorderLayout());
 		
 		this.newGameButton.setActionCommand("NEW_GAME");
-//		this.newGameButton.setMinimumSize(new Dimension(54, 54));
-//		this.newGameButton.setMaximumSize(new Dimension(54, 54));
 		this.newGameButton.setPreferredSize(new Dimension(60, 60));
 		this.newGameButton.setToolTipText("Cliquez ici pour commencer une nouvelle partie.");
 		this.newGameButton.setContentAreaFilled(false);
 		this.newGameButton.setFocusable(false);
-//		this.newGameButton.setFocusPainted(false);
-//		this.newGameButton.setBorder(null);
-//		this.newGameButton.setBorderPainted(false);
 		
 		this.timerLabel.setHorizontalAlignment(JLabel.CENTER);
 		this.timerLabel.setFont(new Font(null, Font.BOLD, 20));
@@ -199,7 +193,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 			}
 			
 			this.elapsedTime = 0;
-//			this.timer.restart();
 			this.timer.stop();
 			this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
 			
@@ -228,17 +221,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	{
 		String scoreboard = "";
 		
-		String levelXpath = "/best_times/level";
-		
-		for (Game.Level level : Game.LEVELS)
+		for (int i = 0; i < Game.LEVELS.length; i++)
 		{
-			String time = bestTimes.getData(
-					levelXpath + "[@name='" + level.name.toLowerCase() + "']/time");
-			
-			String player = bestTimes.getData(
-					levelXpath + "[@name='" + level.name.toLowerCase() + "']/player");
-
-			scoreboard += String.format("%s :\n%s, %s seconde(s)\n\n", level.displayName, player, time);
+			String time =  this.bestTimes.getTime(i);
+			String player = this.bestTimes.getPlayer(i);
+			scoreboard += String.format("%s :\n%s, %s seconde(s)\n\n", Game.LEVELS[i].displayName, player, time);
 		}
 		
 		JOptionPane.showMessageDialog(this, 
@@ -477,13 +464,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 							"Bravo !", 
 							JOptionPane.PLAIN_MESSAGE);
 					
-					String bestTimeXpath = "/best_times/level[@name='" + Game.LEVELS[this.game.getLevel()].name.toLowerCase() + "']/time";
-					
 					int bestTime;
 					
 					try
 					{
-						bestTime = Integer.parseInt(this.bestTimes.getData(bestTimeXpath));
+						bestTime = Integer.parseInt(this.bestTimes.getTime(this.game.getLevelNum()));
 					}
 					catch (NumberFormatException e)
 					{
@@ -494,7 +479,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 					{
 						// TODO: Demander le nom du joueur pour établir le nouveau record.
 						
-						this.bestTimes.setData(bestTimeXpath, "" + this.elapsedTime);
+						this.bestTimes.setTime(this.game.getLevelNum(), "" + this.elapsedTime);
 						// Écrit le fichier des meilleurs temps
 						this.bestTimes.write();
 						// Montre les meilleurs temps
