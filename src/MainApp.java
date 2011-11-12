@@ -49,7 +49,6 @@ public class MainApp
 
 		if (!error)
 		{
-//			AppFrame appFrame = new AppFrame();
 			AppFrame appFrame = AppFrame.getInstance();
 			appFrame.setVisible(true);
 		}

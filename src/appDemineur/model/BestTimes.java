@@ -28,6 +28,14 @@ import java.net.URL;
 
 import appDemineur.model.Game;
 
+/**
+ * La classe BestTimes permet la gestion des meilleurs temps par le bias d'un document XML.
+ * 
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
+ *
+ */
+
 public class BestTimes
 {
 //	// Chemin du fichier des meilleurs temps
@@ -51,7 +59,6 @@ public class BestTimes
 	/**
 	 * Construit un objet de gestion des meilleurs temps. 
 	 * Lit le fichier spécifié s'il existe, puis le valide.
-	 * 
 	 */
 	public BestTimes()
 	{
@@ -103,6 +110,12 @@ public class BestTimes
 		}
 	}
 	
+	/**
+	 * Retourne le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * 
+	 * @param levelNum le niveau de difficulté de la partie jouée
+	 * @return le meilleur temps pour le niveau de difficulté passé en paramètre
+	 */
 	public String getTime(int levelNum)
 	{
 		String time = null;
@@ -120,6 +133,12 @@ public class BestTimes
 		return time;
 	}
 	
+	/**
+	 * Modifie le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * 
+	 * @param levelNum le niveau de difficulté de la partie jouée
+	 * @param time le nouveau meilleur temps
+	 */
 	public void setTime(int levelNum, String time)
 	{
 		try
@@ -133,6 +152,12 @@ public class BestTimes
 		}
 	}
 	
+	/**
+	 * Retourne le nom du joueur qui possède le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * 
+	 * @param levelNum le niveau de difficulté de la partie jouée
+	 * @return le nom du joueur qui possède le meilleur temps
+	 */
 	public String getPlayer(int levelNum)
 	{
 		String player = null;
@@ -150,6 +175,12 @@ public class BestTimes
 		return player;
 	}
 	
+	/**
+	 * Modifie le nom du joueur possèdant le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * 
+	 * @param levelNum le niveau de difficulté de la partie jouée
+	 * @param player le nom du joueur
+	 */
 	public void setPlayer(int levelNum, String player)
 	{
 		try
@@ -164,8 +195,10 @@ public class BestTimes
 	}
 	
 	/*
-	 * @param xpathRequest
-	 * @return
+	 * Exécute une requête XPath dans le but d'obtenir une valeur présente dans le document courant
+	 * 
+	 * @param xpathRequest la requête à exécuter
+	 * @return null si la requête est invalide, sinon le résultat de la requête
 	 */
 	private String getData(String xpathRequest)
 	{
@@ -175,7 +208,6 @@ public class BestTimes
 		{
 			try
 			{
-				// 
 				XPath xpath = XPathFactory.newInstance().newXPath();
 
 				Node node = (Node) xpath.evaluate(xpathRequest, this.doc, XPathConstants.NODE);
@@ -195,8 +227,10 @@ public class BestTimes
 	}
 	
 	/*
-	 * @param xpathRequest
-	 * @param newData
+	 * Exécute une requête XPath dans le but de modifier le document courant
+	 * 
+	 * @param xpathRequest la requête à exécuter
+	 * @param newData la nouvelle valeur
 	 */
 	private void setData(String xpathRequest, String newData)
 	{
@@ -204,7 +238,6 @@ public class BestTimes
 		{
 			try
 			{
-				// 
 				XPath xpath = XPathFactory.newInstance().newXPath();
 
 				Node node = (Node) xpath.evaluate(xpathRequest, this.doc, XPathConstants.NODE);

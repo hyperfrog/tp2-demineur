@@ -67,9 +67,9 @@ public class BaseMatrix
 	/**
 	 * Retourne l'élément de la matrice présent à la position (x, y) donnée.
 	 * 
-	 * @param x		Position en largeur.
-	 * @param y		Position en hauteur
-	 * @return		L'élément à la position donnée
+	 * @param x	Position en largeur.
+	 * @param y	Position en hauteur
+	 * @return L'élément à la position donnée
 	 */
 	public Object getElement(int x, int y)
 	{
@@ -110,7 +110,7 @@ public class BaseMatrix
 	/**
 	 * Retourne une représentation visuelle de la matrice.
 	 * 
-	 * @return s	Représentation visuelle de la matrice.
+	 * @return s Représentation visuelle de la matrice.
 	 */
 	public String toString()
 	{
@@ -139,7 +139,7 @@ public class BaseMatrix
 	/**
 	 * Retourne la largeur de la matrice.
 	 * 
-	 * @return		La largeur de la matrice.
+	 * @return La largeur de la matrice.
 	 */
 	public int getWidth()
 	{
@@ -149,7 +149,7 @@ public class BaseMatrix
 	/**
 	 * Retourne la hauteur de la matrice.
 	 * 
-	 * @return		La hauteur de la matrice.
+	 * @return La hauteur de la matrice.
 	 */
 	public int getHeight()
 	{

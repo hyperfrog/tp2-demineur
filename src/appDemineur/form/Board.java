@@ -10,8 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -21,7 +21,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -39,7 +38,8 @@ import appDemineur.model.BestTimes;
  * @author Alexandre Tremblay
  *
  */
-public class Board extends JPanel implements ActionListener, MouseListener, ItemListener
+
+public class Board extends JPanel implements ActionListener, MouseListener, FocusListener
 {
 	// Si vrai, la taille des cellules est fixée au plus grand entier inférieur à la taille possible
 	// Si faux, la taille des cellules comporte une partie fractionnaire
@@ -63,7 +63,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Libellé pour le nombre de cases marquées d'un drapeau
 	private JLabel flagsLabel;
 	
-	// TODO : la minuterie doit s'arrêter quand la fenêtre n'est pas active
 	// Minuterie déclenchée une fois par seconde
 	private Timer timer;
 	
@@ -76,19 +75,21 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 	// Objet de gestion des meilleurs temps 
 	private BestTimes bestTimes = null;
 	
-	// Images utilisées pour le bouton newGameButton
+	// Images utilisées pour le bouton newGameButton et la boîte de dialogue À propos
 	private static BufferedImage smileyWon = null;
 	private static BufferedImage smileyNormal = null;
 	private static BufferedImage smileyLost = null;
+	private static BufferedImage aboutLogo = null;
 	
 	// Initialisation des images
 	static
 	{
 		try
 		{
-			Board.smileyWon = ImageIO.read(Cell.class.getResource("../../smiley_won.png"));
-			Board.smileyNormal = ImageIO.read(Cell.class.getResource("../../smiley_normal.png"));
-			Board.smileyLost = ImageIO.read(Cell.class.getResource("../../smiley_lost.png"));
+			Board.smileyWon = ImageIO.read(Board.class.getResource("../../smiley_won.png"));
+			Board.smileyNormal = ImageIO.read(Board.class.getResource("../../smiley_normal.png"));
+			Board.smileyLost = ImageIO.read(Board.class.getResource("../../smiley_lost.png"));
+			Board.aboutLogo = ImageIO.read(Board.class.getResource("../../demineur_logo.png"));
 		}
 		catch (IOException e)
 		{
@@ -140,7 +141,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		
 		JPanel newGameButtonPanel = new JPanel();
 		newGameButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		newGameButtonPanel.add(newGameButton);
+		newGameButtonPanel.add(this.newGameButton);
 		
 		this.controlPanel.add(this.timerLabel);
 		this.controlPanel.add(newGameButtonPanel);
@@ -161,8 +162,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		this.replay();
 	}
 	
-	// Réinitialise la partie
-	private void replay()
+	/**
+	 * Réinitialise la partie
+	 */
+	public void replay()
 	{
 		int response = 0;
 		
@@ -177,7 +180,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		if (response == 0)
 		{
 			// Crée une nouvelle partie
-			this.game = new Game(this.parent.getNextGameLevel());
+			this.game = new Game(((AppMenu)this.parent.getJMenuBar()).getNextGameLevel());
 			
 			this.flagsLabel.setText("Mines : " + this.game.getMineAmount());
 			
@@ -216,8 +219,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		}
 	}
 	
-	// Affiche la boîte de dialogue des meilleurs temps
-	private void showScoresDialog()
+	/**
+	 * Affiche la boîte de dialogue des meilleurs temps
+	 */
+	public void showScoresDialog()
 	{
 		String scoreboard = "";
 		
@@ -225,7 +230,17 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 		{
 			String time =  this.bestTimes.getTime(i);
 			String player = this.bestTimes.getPlayer(i);
-			scoreboard += String.format("%s :\n%s, %s seconde(s)\n\n", Game.LEVELS[i].displayName, player, time);
+			
+			scoreboard += String.format("%s :\n", Game.LEVELS[i].displayName);
+			
+			if (time != "" && player != "")
+			{
+				scoreboard += String.format("%s, %s seconde(s)\n\n", player, time);
+			}
+			else
+			{
+				scoreboard += "Aucun record\n\n";
+			}
 		}
 		
 		JOptionPane.showMessageDialog(this, 
@@ -235,7 +250,30 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				new ImageIcon(Board.smileyWon));
 	}
 	
-	// Cette classe pourrait implémenter le mouse listener
+	/**
+	 * Affiche la boîte de dialogue À propos
+	 */
+	public void showAboutDialog()
+	{
+		AppAboutDialog aboutDialog = new AppAboutDialog(this.parent);
+		aboutDialog.setLocationRelativeTo(this.parent);
+		aboutDialog.setVisible(true);
+	}
+	
+	/**
+	 * Affiche la boîte de dialogue d'aide
+	 */
+	public void showHelpDialog()
+	{
+		String aboutText = "Test";
+		
+		JOptionPane.showMessageDialog(this, 
+				aboutText, 
+				"À Propos", 
+				JOptionPane.PLAIN_MESSAGE, 
+				new ImageIcon(Board.aboutLogo));
+	}
+	
 	/**
 	 * La classe DrawingPanel ne sert qu'à fournir un accès à 
 	 * la méthode paintComponent() du panneau de jeu, qui est un enfant 
@@ -259,7 +297,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 			this.parent = parent;
 			this.setBackground(Color.LIGHT_GRAY);
 		}
-
+		
 		/**
 		 * Redessine le plateau de jeu.
 		 * Vous ne devriez pas avoir à appeler cette méthode directement.
@@ -284,7 +322,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				this.parent.game.redraw(
 						g2, 
 						this.parent.getCellSize(), 
-						this.parent.game.isOver() || this.parent.parent.getCheatMode());
+						this.parent.game.isOver() || ((AppMenu)this.parent.parent.getJMenuBar()).getCheatMode());
 				
 				g.drawImage(image, gridOffset.x, gridOffset.y, null);
 			}
@@ -352,39 +390,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 			this.replay();
 			this.repaint();
 		}
-		else if (evt.getActionCommand().equals("SCORES"))
-		{
-			this.showScoresDialog();
-		}
-		else if (evt.getActionCommand().equals("ABOUT"))
-		{
-			// TODO : À propos
-		}
-		else if (evt.getActionCommand().equals("HELP"))
-		{
-			// TODO : Aide
-		}
 	}
 	
-	/**
-	 * Méthode appelée quand l'état d'un élément de menu change.
-	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
-	 * 
-	 * @param evt évènement déclencheur
-	 * 
-	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-	 */
-	@Override
-	public void itemStateChanged(ItemEvent evt)
-	{
-		JMenuItem e = (JMenuItem) evt.getItem();
-		
-		if (e.getActionCommand().equals("CHEATS"))
-		{
-			this.repaint();
-		}
-	}
-
 	/**
 	 * Reçoit et traite les événements relatifs aux clics de la souris.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
@@ -429,7 +436,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 						{
 							this.winGame(this.game);
 						}
-								
+						
 						break;
 					}
 					case MouseEvent.BUTTON3: // Bouton de droite
@@ -475,13 +482,37 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 						bestTime = Integer.MAX_VALUE;
 					}
 					
-					if (this.elapsedTime < bestTime)
+					// Ajout du nouveau temps seulement si il est plus bas et que la partie courante n'est pas
+					// en mode triche
+					if (this.elapsedTime < bestTime && !((AppMenu)this.parent.getJMenuBar()).getCheatMode())
 					{
-						// TODO: Demander le nom du joueur pour établir le nouveau record.
+						// Demande le nom du joueur
+						String playerName = "";
 						
+						do
+						{
+							playerName = JOptionPane.showInputDialog(
+									this, 
+									"Entrez votre nom de joueur : ", 
+									"Nouveau record", 
+									JOptionPane.DEFAULT_OPTION);
+							
+							// Si le joueur à appuyer sur « Cancel », on met son nom de joueur à « Anonyme »
+							if (playerName == null)
+							{
+								playerName = "Anonyme";
+								break;
+							}
+						}
+						while (playerName.length() <= 0);
+						
+						// Inscrit le nouveau record
+						this.bestTimes.setPlayer(this.game.getLevelNum(), playerName);
 						this.bestTimes.setTime(this.game.getLevelNum(), "" + this.elapsedTime);
+						
 						// Écrit le fichier des meilleurs temps
 						this.bestTimes.write();
+						
 						// Montre les meilleurs temps
 						this.showScoresDialog();
 					}
@@ -502,6 +533,34 @@ public class Board extends JPanel implements ActionListener, MouseListener, Item
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Reçoit et traite les événements relatifs au gain de focus.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+	 * 
+	 * @param evt événement déclencheur
+	 */
+	@Override
+	public void focusGained(FocusEvent evt)
+	{
+		this.timer.start();
+	}
+	
+	/**
+	 * Reçoit et traite les événements relatifs à la perte de focus.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+	 * 
+	 * @param evt événement déclencheur
+	 */
+	@Override
+	public void focusLost(FocusEvent evt)
+	{
+		this.timer.stop();
 	}
 	
 	public void mouseEntered(MouseEvent e) {}

@@ -49,6 +49,7 @@ public class Game extends BaseMatrix
 		new Level(new Dimension(30, 16), 99, "Expert", "Expert")	
 		};
 
+	// Indique le niveau de la partie courante
 	private int levelNum;
 	
 	// Indique si la partie est perdue
@@ -73,8 +74,7 @@ public class Game extends BaseMatrix
 		super();
 
 		// Fixe le niveau
-//		this.level = (level < 0 || level > Game.LEVELS.length - 1) ? 0 : level;
-		this.levelNum = Math.max(0, Math.min(Game.LEVELS.length - 1, levelNum));
+		this.levelNum = validateLevelNum(levelNum); 
 		
 		// Redimensionne la matrice sous-jacente
 		this.redim(Game.LEVELS[this.levelNum].dim.width, Game.LEVELS[this.levelNum].dim.height);
@@ -93,13 +93,6 @@ public class Game extends BaseMatrix
 	{
 		return Math.max(0, Math.min(Game.LEVELS.length - 1, levelNum));
 	}
-	
-//	public static Level getLevel(int levelNum)
-//	{
-//		levelNum = (levelNum < 0 || levelNum > Game.LEVELS.length - 1) ? 0 : levelNum;
-//		
-//		return Game.LEVELS[levelNum];
-//	}
 	
 	/*
 	 * Remplit la matrice avec le nombre de mines déterminé par le niveau de difficulté, 
@@ -382,8 +375,7 @@ public class Game extends BaseMatrix
 		return Game.LEVELS[this.levelNum].mineAmount;
 	}
 	
-	
-	// TODO : Méthode de test
+	// TODO : Méthode de test : getNbCellsShown
 	/**
 	 * Retourne le nombre de cases non minées dévoilées.
 	 * 
@@ -394,7 +386,7 @@ public class Game extends BaseMatrix
 		return this.nbCellsShown;
 	}
 	
-	// TODO : Méthode de test
+	// TODO : Méthode de test : getLevelNum
 	/**
 	 * Retourne le niveau de la partie en cours.
 	 * 
