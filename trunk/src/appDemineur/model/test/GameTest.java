@@ -599,7 +599,7 @@ public class GameTest
 //		Assert.assertFalse(g.getElement(1, 2) instanceof Cell);
 	}
 	
-	// TODO : À terminer
+	// TODO : À terminer testGetNbCellShown
 	/**
 	 * 	Méthode de test pour {@link appDemineur.model.Game#getNbCellsShown()}
 	 */

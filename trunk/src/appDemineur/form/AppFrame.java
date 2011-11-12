@@ -3,19 +3,8 @@ package appDemineur.form;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-//import java.awt.event.ItemEvent;
-//import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
 
 /**
  * La classe AppFrame permet de créer une fenêtre qui sert de contenant
@@ -35,7 +24,7 @@ public class AppFrame extends JFrame implements ComponentListener
 	
 	// Largeur minimale de la fenêtre
 	private static final int MIN_WIDTH = 640;
-
+	
 	// Hauteur minimale de la fenêtre
 	private static final int MIN_HEIGHT = 480;
 	
@@ -45,42 +34,9 @@ public class AppFrame extends JFrame implements ComponentListener
 	// Objet du plateau de jeu
 	private Board gameBoard;
 	
-	//
-	private JMenuBar menuBar;
-	
-	//
-	private JMenu gameMenu;
-	
-	//
-	private JMenu infoMenu;
-	
-	//
-	private JMenuItem newGameMenu;
-	
-	//
-	private JMenuItem scoresMenu;
-	
-	//
-	private JMenuItem aboutMenu;
-	
-	//
-	private JMenuItem helpMenu;
-	
-	//
-	private JRadioButtonMenuItem easyDifficultyOptMenu;
-	
-	//
-	private JRadioButtonMenuItem normalDifficultyOptMenu;
-	
-	//
-	private JRadioButtonMenuItem hardDifficultyOptMenu;
-	
-	//
-	private JCheckBoxMenuItem cheatChkMenu;
-	
-	//
-	private ButtonGroup difficultyGroup;
-	
+	// Menu de l'application
+	private AppMenu appMenu;
+
 	/*
 	 * Crée la fenêtre du jeu, qui contient les menus et le plateau de jeu
 	 */
@@ -88,77 +44,10 @@ public class AppFrame extends JFrame implements ComponentListener
 	{
 		super();
 		
-		this.setNativeLookAndFeel();
+		// Initialise le menu
+		this.appMenu = new AppMenu(this);
 		
-		this.menuBar = new JMenuBar();
-		this.gameMenu = new JMenu();
-		this.infoMenu = new JMenu();
-		this.newGameMenu = new JMenuItem();
-		this.scoresMenu = new JMenuItem();
-		this.aboutMenu = new JMenuItem();
-		this.helpMenu = new JMenuItem();
-		this.easyDifficultyOptMenu = new JRadioButtonMenuItem();
-		this.normalDifficultyOptMenu = new JRadioButtonMenuItem();
-		this.hardDifficultyOptMenu = new JRadioButtonMenuItem();
-		this.cheatChkMenu = new JCheckBoxMenuItem();
-		this.difficultyGroup = new ButtonGroup();
-		
-		this.gameMenu.setText("Partie");
-		this.infoMenu.setText("?");
-		
-		this.newGameMenu.setText("Nouvelle partie");
-		this.newGameMenu.setActionCommand("NEW_GAME");
-		this.newGameMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		
-		this.easyDifficultyOptMenu.setText("Débutant");
-		this.easyDifficultyOptMenu.setActionCommand("0");
-		
-		this.normalDifficultyOptMenu.setText("Intermédiaire");
-		this.normalDifficultyOptMenu.setActionCommand("1");
-		this.normalDifficultyOptMenu.setSelected(true);
-		
-		this.hardDifficultyOptMenu.setText("Expert");
-		this.hardDifficultyOptMenu.setActionCommand("2");
-		
-		this.cheatChkMenu.setText("Tricher");
-		this.cheatChkMenu.setActionCommand("CHEATS");
-		this.cheatChkMenu.setSelected(false);
-		
-		this.scoresMenu.setText("Meilleurs temps...");
-		this.scoresMenu.setActionCommand("SCORES");
-		
-		this.aboutMenu.setText("À propos...");
-		this.aboutMenu.setActionCommand("ABOUT");
-		
-		this.helpMenu.setText("Aide");
-		this.helpMenu.setActionCommand("HELP");
-		
-		//
-		this.difficultyGroup.add(this.easyDifficultyOptMenu);
-		this.difficultyGroup.add(this.normalDifficultyOptMenu);
-		this.difficultyGroup.add(this.hardDifficultyOptMenu);
-		
-		//
-		this.gameMenu.add(this.newGameMenu);
-		this.gameMenu.addSeparator();
-		this.gameMenu.add(this.easyDifficultyOptMenu);
-		this.gameMenu.add(this.normalDifficultyOptMenu);
-		this.gameMenu.add(this.hardDifficultyOptMenu);
-		this.gameMenu.addSeparator();
-		this.gameMenu.add(this.cheatChkMenu);
-		this.gameMenu.addSeparator();
-		this.gameMenu.add(this.scoresMenu);
-		
-		//
-		this.infoMenu.add(this.aboutMenu);
-		this.infoMenu.add(this.helpMenu);
-		
-		//
-		this.menuBar.add(this.gameMenu);
-		this.menuBar.add(this.infoMenu);
-		
-		//
-		this.setJMenuBar(this.menuBar);
+		this.setJMenuBar(this.appMenu);
 		
 		this.setTitle(AppFrame.INIT_TITLE);
 		this.setSize(AppFrame.INIT_SIZE);
@@ -168,16 +57,10 @@ public class AppFrame extends JFrame implements ComponentListener
 		this.gameBoard = new Board(this);
 		this.getContentPane().add(this.gameBoard);
 		
-		this.newGameMenu.addActionListener(this.gameBoard);
-		this.scoresMenu.addActionListener(this.gameBoard);
-		this.aboutMenu.addActionListener(this.gameBoard);
-		this.helpMenu.addActionListener(this.gameBoard);
-		
-		this.cheatChkMenu.addItemListener(this.gameBoard);
-		
+		// Spécifie les écouteurs pour la fenêtre
 		this.addComponentListener(this);
+		this.addFocusListener(this.gameBoard);
 	}
-	
 	
 	// TODO : Tester le singleton?
 	/**
@@ -199,23 +82,13 @@ public class AppFrame extends JFrame implements ComponentListener
 	}
 	
 	/**
-	 * Retourne le niveau sélectionné dans le menu pour la prochaine partie.
+	 * Retourne l'objet gameBoard qui contient la partie en cours.
 	 * 
-	 * @return le niveau sélectionné dans le menu pour la prochaine partie
+	 * @return l'objet gameBoard qui contient la partie en cours
 	 */
-	public int getNextGameLevel()
+	public Board getBoard()
 	{
-		return Integer.parseInt(this.difficultyGroup.getSelection().getActionCommand());
-	}
-	
-	/**
-	 * Retourne l'état de l'élément de menu «Tricher».
-	 * 
-	 * @return l'état de l'élément de menu «Tricher»
-	 */
-	public boolean getCheatMode()
-	{
-		return this.cheatChkMenu.isSelected();
+		return this.gameBoard;
 	}
 	
 	/** 
@@ -289,17 +162,4 @@ public class AppFrame extends JFrame implements ComponentListener
 	public void componentShown(ComponentEvent e)
 	{
 	}
-	
-	private void setNativeLookAndFeel()
-	{
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e)
-		{
-			System.out.println("Incapable de changer l'apparence de l'application.");
-		}
-	}
-	
 }

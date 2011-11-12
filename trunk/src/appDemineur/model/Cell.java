@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
  * @author Alexandre Tremblay
  *
  */
+
 public class Cell
 {
 	/**
@@ -163,6 +164,7 @@ public class Cell
 		}
 	}
 	
+	// Dessine une mine
 	private void drawMine(Graphics2D g2d, int cellSize)
 	{
 		BufferedImage img = this.state == CellState.SHOWN ? Cell.explodedMineImage : Cell.mineImage;
@@ -190,6 +192,7 @@ public class Cell
 		}
 	}
 	
+	// Dessine un drapeau
 	private void drawFlag(Graphics2D g2d, int cellSize)
 	{
 		if (Cell.flagImage != null)
@@ -214,6 +217,7 @@ public class Cell
 		}		
 	}
 	
+	// Dessine les effets 3D sur la grille de jeu
 	private void draw3dEffect(Graphics2D g2d, int cellSize, boolean isPushed)
 	{
 		g2d.setStroke(new BasicStroke(6));
@@ -231,6 +235,7 @@ public class Cell
 		g2d.drawRect(0, 0, cellSize - 1, cellSize - 1);
 	}
 	
+	// Dessine un texte avec une ombre selon la distance définit par « shadowDistance ».
 	private void drawStringWithShadow(Graphics2D g2d, String str, int x, int y, int shadowDistance, Color textColor, Color shadowColor)
 	{
 		if (textColor == null)
