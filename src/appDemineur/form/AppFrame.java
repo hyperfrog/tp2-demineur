@@ -35,6 +35,7 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 	// Titre de la fenêtre
 	private static final String INIT_TITLE = "Démineur par Alexandre Tremblay et Christian Lesage";
 	
+	// Messages pour la boîte de dialogue de confirmation de sortie
 	private static final String QUIT_MESSAGE = "Voulez-vous quitter le jeu ?";
 	private static final String QUIT_TITLE = "Quitter";
 
@@ -72,7 +73,8 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 		this.addWindowListener(this);
 	}
 	
-	public void quitterApplication()
+	// Confirme que l'utilisateur veut vraiment sortir de l'application
+	private void quitApplication()
 	{
 		int confirm = JOptionPane.showConfirmDialog(this,
 				AppFrame.QUIT_MESSAGE, AppFrame.QUIT_TITLE,
@@ -179,7 +181,7 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 	@Override
 	public void windowClosing(WindowEvent e)
 	{
-		this.quitterApplication();
+		this.quitApplication();
 	}
 
 	@Override

@@ -26,40 +26,61 @@ import appDemineur.model.Game;
 
 public class AppScoresDialog extends JDialog implements ActionListener, WindowListener
 {
-    private JPanel buttonsPanel;
+    // Panneau contenant les boutons
+	private JPanel buttonsPanel;
+
+	// Bouton pour effacer les scores
     private JButton eraseButton;
-    private JTextPane levelsTextPane;
+    
+    // Bouton pour fermer la boîte
     private JButton okButton;
-    private JTextPane playersTextPane;
+    
+    // Panneau contenant les TextPanes
     private JPanel scoresPanel;
+    
+    // TextPane contenant les noms des niveaux 
+    private JTextPane levelsTextPane;
+    
+    // TextPane contenant les meilleurs temps 
     private JTextPane timesTextPane;
     
-//    private AppFrame parent;
-	
+    // TextPane contenant les noms des joueurs 
+    private JTextPane playersTextPane;
+    
+    // Objet de gestion des meilleurs temps
     private BestTimes bestTimes;
     
 	/**
+	 * Construit la boîte de dialogue des meilleurs temps. 
 	 * 
-	 * @param parent
+	 * @param parent objet parent de la boîte de dialogue
 	 */
 	public AppScoresDialog(AppFrame parent)
 	{
 		super(parent);
 		
-//		this.parent = parent;
+		// 
 		this.bestTimes = new BestTimes();
 		
 		this.setTitle("Démineurs les plus rapides");
 		this.setResizable(false);
 		this.setModal(true);
 		
+		// Initialise les composants
 		this.initComponents();
-		this.showScores();
-		this.pack();
 		
+		// Remplit les TextPanes avec l'information des meilleurs temps
+		this.showScores();
+		
+		this.pack();
+
+		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+		// Cette boîte de dialogue implémente so propre écouteur Window 
 		this.addWindowListener(this);
 	}
 
+	// Initialise les composants
     private void initComponents() {
 
         this.buttonsPanel = new JPanel();
@@ -70,19 +91,15 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
         this.timesTextPane = new JTextPane();
         this.playersTextPane = new JTextPane();
 
-        this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
         this.buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
         this.eraseButton.setText("Effacer les scores");
         this.eraseButton.setActionCommand("ERASE");
         this.buttonsPanel.add(this.eraseButton);
-        this.eraseButton.addActionListener(this);
 
         this.okButton.setText("OK");
         this.okButton.setActionCommand("CLOSE");
         this.buttonsPanel.add(this.okButton);
-        this.okButton.addActionListener(this);
 
         this.getContentPane().add(this.buttonsPanel, BorderLayout.PAGE_END);
 
@@ -91,40 +108,45 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
         this.levelsTextPane.setMaximumSize(null);
         this.levelsTextPane.setMinimumSize(null);
         this.levelsTextPane.setPreferredSize(new Dimension(100, 60));
+        this.levelsTextPane.setEditable(false);
+        this.levelsTextPane.setOpaque(false);
         this.scoresPanel.add(this.levelsTextPane);
 
         this.timesTextPane.setMaximumSize(null);
         this.timesTextPane.setMinimumSize(null);
         this.timesTextPane.setPreferredSize(new Dimension(100, 60));
+        this.timesTextPane.setEditable(false);
+        this.timesTextPane.setOpaque(false);
         this.scoresPanel.add(this.timesTextPane);
 
         this.playersTextPane.setMaximumSize(null);
         this.playersTextPane.setMinimumSize(null);
         this.playersTextPane.setPreferredSize(new Dimension(100, 60));
-        this.scoresPanel.add(this.playersTextPane);
-
-        this.levelsTextPane.setEditable(false);
-        this.levelsTextPane.setOpaque(false);
-
         this.playersTextPane.setEditable(false);
         this.playersTextPane.setOpaque(false);
-
-        this.timesTextPane.setEditable(false);
-        this.timesTextPane.setOpaque(false);
+        this.scoresPanel.add(this.playersTextPane);
 
         this.getContentPane().add(this.scoresPanel, BorderLayout.CENTER);
+        
+        // Spécifie les écouteurs d'action pour les boutons
+        this.eraseButton.addActionListener(this);
+        this.okButton.addActionListener(this);
     }
     
+	// Remplit les TextPanes avec l'information des meilleurs temps
     private void showScores()
     {
     	String levels = "";
     	String times = "";
     	String players = "";
     	
-		for (int i = 0; i < Game.LEVELS.length; i++)
+		// Pour chacun des niveaux de difficulté
+    	for (int i = 0; i < Game.LEVELS.length; i++)
 		{
+    		// Ajoute le nom du niveau
 			levels += Game.LEVELS[i].displayName + " :\n";
 			
+			// Obtient le meilleur temps
 			String time =  this.bestTimes.getTime(i);
 			
 			if (time != "")
@@ -137,6 +159,7 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 			}
 			times += "\n";
 			
+			// Obtient le nom du joueur
 			String player = this.bestTimes.getPlayer(i);
 
 			if (player != "")
@@ -145,12 +168,14 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 			}
 			players += "\n";
 		}
-		
+    	
+		// Remplit les TextPanes
 		this.levelsTextPane.setText(levels);
 		this.timesTextPane.setText(times);
 		this.playersTextPane.setText(players);
     }
 	
+    // Efface les données des meilleurs temps
     private void eraseScores()
     {
 		for (int i = 0; i < Game.LEVELS.length; i++)
@@ -162,12 +187,21 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 		this.bestTimes.write();
     }
     
+    // Ferme la boîte de dialogue
 	private void close()
 	{
 		this.setVisible(false);
 		this.dispose();
 	}
 	
+	/**
+	 * Reçoit et traite les événements relatifs aux boutons
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * 
+	 * @param evt événement déclencheur
+	 */
 	@Override
 	public void actionPerformed(ActionEvent evt)
 	{
@@ -181,6 +215,12 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 		}
 	}
 	
+	/** 
+	 * Méthode appelée quand la fenêtre va être fermée.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @param evt événement déclencheur
+	 */
 	@Override
 	public void windowClosing(WindowEvent evt)
 	{
