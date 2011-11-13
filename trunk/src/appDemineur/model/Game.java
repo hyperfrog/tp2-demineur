@@ -22,23 +22,6 @@ import util.BaseMatrix;
  */
 public class Game extends BaseMatrix
 {
-	// Classe définissant les propriétés d'un niveau de difficulté
-	public static class Level
-	{
-		public final Dimension dim;
-		public final int mineAmount;
-		public final String name;
-		public final String displayName;
-		
-		public Level(Dimension dim, int mineAmount, String name, String displayName)
-		{
-			this.dim = dim;
-			this.mineAmount = mineAmount;
-			this.name = name;
-			this.displayName = displayName;
-		}
-	}
-	
 	// Les trois niveaux de difficulté du jeu
 	public static final Level[] LEVELS = new Level[] { 
 		// Débutant : 9 x 9 avec 10 mines
@@ -74,7 +57,7 @@ public class Game extends BaseMatrix
 		super();
 
 		// Fixe le niveau
-		this.levelNum = validateLevelNum(levelNum); 
+		this.levelNum = this.validateLevelNum(levelNum); 
 		
 		// Redimensionne la matrice sous-jacente
 		this.redim(Game.LEVELS[this.levelNum].dim.width, Game.LEVELS[this.levelNum].dim.height);
@@ -89,7 +72,7 @@ public class Game extends BaseMatrix
 		this.nbCellsShown = 0;
 	}
 	
-	public static int validateLevelNum(int levelNum)
+	private int validateLevelNum(int levelNum)
 	{
 		return Math.max(0, Math.min(Game.LEVELS.length - 1, levelNum));
 	}

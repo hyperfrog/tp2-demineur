@@ -1,6 +1,7 @@
 package appDemineur.form;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -76,8 +77,8 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 	{
 		super(owner);
 		
-		this.setTitle("À Propos...");
-		this.setResizable(true);
+		this.setTitle("À propos...");
+		this.setResizable(false);
 		this.setModal(true);
 		
 		this.container = new JPanel();
@@ -88,12 +89,14 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 		this.authors = new JLabel();
 		this.closeButton = new JButton();
 		
-		this.container.setLayout(new GridLayout(0, 2));
+//		this.container.setLayout(new GridLayout(0, 2));
+		this.container.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		
 		this.containerInfo.setLayout(new GridLayout(3, 0));
 		
 		this.logo = new JLabel();
 		this.logo.setIcon(AppAboutDialog.aboutLogo);
+		this.logo.setPreferredSize(new Dimension(200, 200));
 		
 		this.title.setText(AppAboutDialog.APP_NAME);
 		this.title.setFont(new Font(null, Font.BOLD, 20));
@@ -108,7 +111,7 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 		this.closeButton.setActionCommand("CLOSE");
 		
 		JPanel closeButtonPanel = new JPanel();
-		closeButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		closeButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
 		closeButtonPanel.add(this.closeButton);
 		
 		this.containerInfo.add(this.title);

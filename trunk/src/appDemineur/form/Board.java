@@ -79,7 +79,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	private static BufferedImage smileyWon = null;
 	private static BufferedImage smileyNormal = null;
 	private static BufferedImage smileyLost = null;
-//	private static BufferedImage aboutLogo = null;
 	
 	// Initialisation des images
 	static
@@ -89,7 +88,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 			Board.smileyWon = ImageIO.read(Board.class.getResource("../../smiley_won.png"));
 			Board.smileyNormal = ImageIO.read(Board.class.getResource("../../smiley_normal.png"));
 			Board.smileyLost = ImageIO.read(Board.class.getResource("../../smiley_lost.png"));
-//			Board.aboutLogo = ImageIO.read(Board.class.getResource("../../demineur_logo.png"));
 		}
 		catch (IOException e)
 		{
@@ -106,7 +104,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	 * Le plateau d'une partie initiale est d'une dimension de 16x16
 	 * et contient 40 mines.
 	 * 
-	 * @param parent Objet parent du panneau, doit être du type AppFrame
+	 * @param parent Objet parent du plateau
 	 */
 	public Board(AppFrame parent)
 	{
@@ -116,6 +114,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 
         // Initialise les composantes
 		this.gamePanel = new DrawingPanel(this);
+		this.gamePanel.setBackground(Color.LIGHT_GRAY);
+
 		this.controlPanel = new JPanel();
 		this.newGameButton = new JButton();
 		this.timerLabel = new JLabel();
@@ -180,8 +180,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 			// Crée une nouvelle partie
 			this.game = new Game(((AppMenu)this.parent.getJMenuBar()).getNextGameLevel());
 			
-			this.flagsLabel.setText("Mines : " + this.game.getMineAmount());
-			
+			// Change l'icône du bouton newGameButton
 			if (Board.smileyNormal != null)
 			{
 				this.newGameButton.setIcon(new ImageIcon(Board.smileyNormal));
@@ -193,10 +192,13 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 				this.newGameButton.setText(":¬)");
 			}
 			
-			this.elapsedTime = 0;
 			this.timer.stop();
+			this.elapsedTime = 0;
 			this.timerStarted = false;
+
+			// Réinitialise les labels
 			this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
+			this.flagsLabel.setText("Mines : " + this.game.getMineAmount());
 			
 		}
 	}
@@ -219,15 +221,15 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	}
 	
 	/**
-	 * La classe DrawingPanel ne sert qu'à fournir un accès à 
-	 * la méthode paintComponent() du panneau de jeu, qui est un enfant 
-	 * du panneau de type Board.
+	 * La classe DrawingPanel est imbriquée pour permettre à la méthode paintComponent() 
+	 * du panneau de jeu (gamePanel) d'avoir accès aux membres privés de la classe Board.
+	 * Ça évite d'avoir à fournir plusieurs accesseurs autrement inutiles.
 	 * 
 	 * @author Christian Lesage
 	 * @author Alexandre Tremblay
 	 *
 	 */
-	private static class DrawingPanel extends JPanel
+	private class DrawingPanel extends JPanel
 	{
 		private Board parent = null;
 		
@@ -239,7 +241,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 		public DrawingPanel(Board parent)
 		{
 			this.parent = parent;
-			this.setBackground(Color.LIGHT_GRAY);
 		}
 		
 		/**
@@ -289,7 +290,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 		return Board.USE_CELL_SIZE_FLOOR ? (float) Math.floor(size) : size;
 	}
 	
-	// Retourne le point du coin supérieur droit de la grille de manière à la centrer 
+	// Retourne la position du coin supérieur droit de la grille de manière à la centrer 
 	// dans un panneau de jeu de dimensions variables
 	private Point getGridOffset()
 	{
@@ -312,7 +313,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	}
 
 	/**
-	 * Reçoit et traite les événements relatifs aux boutons, à la minuterie et aux menus.
+	 * Reçoit et traite les événements relatifs aux boutons et à la minuterie. 
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -348,16 +349,21 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	{
 		if (!this.game.isOver())
 		{
+			// Position de la grille
 			Point gridOffset = this.getGridOffset();
 
+			// Si l'utilisateur a cliqué à gauche ou en haut de la grille, 
+			// on évite le cas où une valeur négative serait arrondie à 0 
 			if (evt.getX() - gridOffset.x >= 0 && evt.getY() - gridOffset.y >= 0)
 			{
 				float cellSize = this.getCellSize();
 
+				// Détermine la coordonnée de la cellule dans la matrice
 				Point clickedCell = new Point(
 						(int)((evt.getX() - gridOffset.x) / cellSize),
 						(int)((evt.getY() - gridOffset.y) / cellSize));
 
+				// On présume que l'affichage ne changera pas
 				boolean hasChanged = false;
 
 				switch (evt.getButton())
@@ -372,6 +378,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 						// Premier clic gauche sur une cellule non dévoilée et sans drapeau?
 						if (hasChanged && nbCellsShown == 0)
 						{
+							// La partie commence maintenant pour vrai
 							this.timer.restart();
 							this.timerStarted = true;
 						}
@@ -391,6 +398,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 					}
 				}
 
+				// Si l'affichage doit être rafraîchi 
 				if (hasChanged)
 				{
 					this.flagsLabel.setText("Mines : " + (this.game.getMineAmount() - this.game.getNbCellsFlagged()));

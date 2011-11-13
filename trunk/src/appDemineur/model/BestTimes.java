@@ -38,20 +38,21 @@ import appDemineur.model.Game;
 
 public class BestTimes
 {
-//	// Chemin du fichier des meilleurs temps
-//	private String fileName;
-	
-	// Objet DOM 
+	// Document DOM qui reçoit le contenu du fichier XML lors de la lecture
+	// et à partir duquel un fichier XML est créé lors de l'écriture
 	private Document doc = null;
 	
+	// Chemin du fichier utilisé
 	private static final String FILE_PATH = "best_times.xml";
 	
+	// Nom des étiquettes et attributs utilisés
 	private static final String ROOT_TAG = "best_times";
 	private static final String LEVEL_TAG = "level";
 	private static final String NAME_ATTR = "name";
 	private static final String TIME_TAG = "time";
 	private static final String PLAYER_TAG = "player";
 	
+	// Requêtes XPath utiles
 	private static final String LEVEL_XPATH = "/" + ROOT_TAG + "/" + LEVEL_TAG + "[@" + NAME_ATTR + "='%s']";
 	private static final String TIME_XPATH = LEVEL_XPATH + "/" + TIME_TAG;
 	private static final String PLAYER_XPATH = LEVEL_XPATH + "/" + PLAYER_TAG;
@@ -64,15 +65,16 @@ public class BestTimes
 	{
 		try
 		{
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
 			// Malheureusement, getFile() retourne des caractères «échappés», 
 			// alors la ligne suivante ne fonctionne pas quand il y a des espaces 
 			// ou des caractères accentués dans le chemin du fichier :
 			
 //			File xmlFile = new File(this.getClass().getResource(BestTimes.FILE_PATH).getFile());
 
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
+			// Passe-passe pour obtenir un chemin absolu valide
 			URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
 			File xmlFile = new File(new URI(url.toString()).getPath() + BestTimes.FILE_PATH);
 			
@@ -176,7 +178,7 @@ public class BestTimes
 	}
 	
 	/**
-	 * Modifie le nom du joueur possèdant le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * Modifie le nom du joueur possédant le meilleur temps pour le niveau de difficulté passé en paramètre.
 	 * 
 	 * @param levelNum le niveau de difficulté de la partie jouée
 	 * @param player le nom du joueur
@@ -255,7 +257,7 @@ public class BestTimes
 	}
 
 	/**
-	 * Écrit les données des meilleurs temps dans le fichier
+	 * Écrit les données des meilleurs temps dans le fichier XML
 	 */
 	public void write()
 	{
@@ -322,7 +324,7 @@ public class BestTimes
 				}
 
 				// Valide chacun des niveaux
-				for (Game.Level level : Game.LEVELS)
+				for (Level level : Game.LEVELS)
 				{
 					this.validateLevel(root, level.name.toLowerCase());
 				}

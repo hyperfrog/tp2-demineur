@@ -18,48 +18,56 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
-import javax.swing.UIManager;
 
+import appDemineur.model.Game;
+
+/**
+ * La classe AppMenu implémente la barre de menus du jeu du démineur.
+ * 
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
+ *
+ */
 public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 {
-	//
+	// Menu «Partie»
 	private JMenu gameMenu;
 	
-	//
+	// Menu «?»
 	private JMenu infoMenu;
 	
-	//
+	// Élément «Nouvelle partie»
 	private JMenuItem newGameMenu;
 	
-	//
+	// Élément «Meilleurs temps...»
 	private JMenuItem scoresMenu;
 	
-	//
+	// Élément «À propos»
 	private JMenuItem aboutMenu;
 	
-	//
+	// Élément «Aide»
 	private JMenuItem helpMenu;
 	
-	//
+	// Option «Débutant»
 	private JRadioButtonMenuItem easyDifficultyOptMenu;
 	
-	//
+	// Option «Intermédiaire»
 	private JRadioButtonMenuItem normalDifficultyOptMenu;
 	
-	//
+	// Option «Expert»
 	private JRadioButtonMenuItem hardDifficultyOptMenu;
 	
-	//
+	// Case à cocher «Tricher»
 	private JCheckBoxMenuItem cheatChkMenu;
 	
-	//
+	// Groupe d'options des niveaux
 	private ButtonGroup difficultyGroup;
 	
-	// 
+	// Objet parent
 	private AppFrame parent = null; 
 	
+	// Image pour la boîte de dialogue «À propos»
 	private static BufferedImage aboutLogo = null;
-
 	
 	// Initialisation des images
 	static
@@ -79,7 +87,9 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 	}
 	
 	/**
+	 * Construit la barre de menus du jeu application du Démineur.
 	 * 
+	 * @param parent objet parent de la barre de menu
 	 */
 	public AppMenu(AppFrame parent)
 	{
@@ -107,14 +117,15 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 		this.newGameMenu.setActionCommand("NEW_GAME");
 		this.newGameMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 		
-		this.easyDifficultyOptMenu.setText("Débutant");
+		this.easyDifficultyOptMenu.setText(Game.LEVELS[0].displayName);
+
 		this.easyDifficultyOptMenu.setActionCommand("0");
 		
-		this.normalDifficultyOptMenu.setText("Intermédiaire");
+		this.normalDifficultyOptMenu.setText(Game.LEVELS[1].displayName);
 		this.normalDifficultyOptMenu.setActionCommand("1");
 		this.normalDifficultyOptMenu.setSelected(true);
 		
-		this.hardDifficultyOptMenu.setText("Expert");
+		this.hardDifficultyOptMenu.setText(Game.LEVELS[2].displayName);
 		this.hardDifficultyOptMenu.setActionCommand("2");
 		
 		this.cheatChkMenu.setText("Tricher");
@@ -183,7 +194,7 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 	}
 	
 	/**
-	 * Affiche la boîte de dialogue des meilleurs temps
+	 * Affiche la boîte de dialogue des meilleurs temps.
 	 */
 	public void showScoresDialog()
 	{
@@ -191,7 +202,6 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 		scoresDialog.setLocationRelativeTo(this.parent);
 		scoresDialog.setVisible(true);
 	}
-
 	
 	/**
 	 * Retourne le niveau sélectionné dans le menu pour la prochaine partie.
@@ -245,23 +255,24 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 	{
 		if (evt.getActionCommand().equals("NEW_GAME"))
 		{
+			// Nouvelle partie
 			this.parent.getBoard().replay();
 			this.parent.getBoard().repaint();
 		}
 		else if (evt.getActionCommand().equals("SCORES"))
 		{
-//			this.parent.getBoard().showScoresDialog();
+			// Affiche les meilleurs temps
 			this.showScoresDialog();
 		}
 		else if (evt.getActionCommand().equals("ABOUT"))
 		{
-//			this.parent.getBoard().showAboutDialog();
+			// Affiche la boîte «À propos»
 			this.showAboutDialog();
 		}
 		
 		else if (evt.getActionCommand().equals("HELP"))
 		{
-//			this.parent.getBoard().showHelpDialog();
+			// Affiche la boîte «Aide»
 			this.showHelpDialog();
 		}
 	}
