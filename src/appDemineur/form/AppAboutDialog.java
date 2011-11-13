@@ -83,7 +83,7 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 	private JButton closeButton;
 	
 	/**
-	 * Construit la boîte de dialogue À Propos
+	 * Construit la boîte de dialogue À propos
 	 * 
 	 * @param parent objet parent de la boîte de dialogue
 	 */
@@ -91,7 +91,7 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 	{
 		super(parent);
 		
-		this.setTitle("À propos...");
+		this.setTitle("À propos du Démineur");
 		this.setResizable(false);
 		this.setModal(true);
 		
@@ -123,7 +123,7 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 		this.infoPanel.setLayout(new GridLayout(3, 0));
 		
 		this.logo = new JLabel();
-		this.logo.setIcon(new ImageIcon(AppAboutDialog.aboutLogo));
+		this.logo.setIcon(AppAboutDialog.aboutLogo != null ? new ImageIcon(AppAboutDialog.aboutLogo) : null);
 		this.logo.setPreferredSize(new Dimension(256, 256));
 		
 		this.title.setText(AppAboutDialog.APP_NAME);
