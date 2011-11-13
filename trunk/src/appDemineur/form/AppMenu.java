@@ -5,12 +5,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -53,6 +58,26 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 	// 
 	private AppFrame parent = null; 
 	
+	private static BufferedImage aboutLogo = null;
+
+	
+	// Initialisation des images
+	static
+	{
+		try
+		{
+			AppMenu.aboutLogo = ImageIO.read(Board.class.getResource("../../demineur_logo.png"));
+		}
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		catch (IllegalArgumentException e)
+		{
+			System.out.println("Incapable de trouver une ou plusieurs image(s) de la classe Board.");
+		}
+	}
+	
 	/**
 	 * 
 	 */
@@ -61,7 +86,6 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 		super();
 		
 		this.parent = parent;
-		this.setNativeLookAndFeel();
 		
 		// Initialise les composants
 		this.gameMenu = new JMenu();
@@ -134,6 +158,41 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 		this.cheatChkMenu.addItemListener(this);
 	}
 	
+	/*
+	 * Affiche la boîte de dialogue À propos
+	 */
+	private void showAboutDialog()
+	{
+		AppAboutDialog aboutDialog = new AppAboutDialog(this.parent);
+		aboutDialog.setLocationRelativeTo(this.parent);
+		aboutDialog.setVisible(true);
+	}
+	
+	/*
+	 * Affiche la boîte de dialogue d'aide
+	 */
+	private void showHelpDialog()
+	{
+		String aboutText = "Test";
+		
+		JOptionPane.showMessageDialog(this, 
+				aboutText, 
+				"Aide", 
+				JOptionPane.PLAIN_MESSAGE, 
+				AppMenu.aboutLogo != null ? new ImageIcon(AppMenu.aboutLogo) : null);
+	}
+	
+	/**
+	 * Affiche la boîte de dialogue des meilleurs temps
+	 */
+	public void showScoresDialog()
+	{
+		AppScoresDialog scoresDialog = new AppScoresDialog(this.parent);
+		scoresDialog.setLocationRelativeTo(this.parent);
+		scoresDialog.setVisible(true);
+	}
+
+	
 	/**
 	 * Retourne le niveau sélectionné dans le menu pour la prochaine partie.
 	 * 
@@ -191,27 +250,19 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 		}
 		else if (evt.getActionCommand().equals("SCORES"))
 		{
-			this.parent.getBoard().showScoresDialog();
+//			this.parent.getBoard().showScoresDialog();
+			this.showScoresDialog();
 		}
 		else if (evt.getActionCommand().equals("ABOUT"))
 		{
-			this.parent.getBoard().showAboutDialog();
+//			this.parent.getBoard().showAboutDialog();
+			this.showAboutDialog();
 		}
+		
 		else if (evt.getActionCommand().equals("HELP"))
 		{
-			this.parent.getBoard().showHelpDialog();
-		}
-	}
-	
-	private void setNativeLookAndFeel()
-	{
-		try
-		{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch (Exception e)
-		{
-			System.out.println("Incapable de changer l'apparence de l'application.");
+//			this.parent.getBoard().showHelpDialog();
+			this.showHelpDialog();
 		}
 	}
 }
