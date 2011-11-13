@@ -14,7 +14,6 @@ import appDemineur.form.AppFrame;
  * @author Alexandre Tremblay
  *
  */
-
 public class MainApp
 {
 	/**

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<best_times>
+<level name="beginner">
+<player>Alex</player>
+<time>27</time>
+</level>
+<level name="intermediate">
+<player/>
+<time/>
+</level>
+<level name="expert">
+<player/>
+<time/>
+</level>
+</best_times>

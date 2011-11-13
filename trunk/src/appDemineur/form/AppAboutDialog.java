@@ -9,8 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,29 +20,37 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * La classe AppAboutDialog sert de boîte de dialogue pour la fenêtre À Propos... 
+ * La classe AppAboutDialog sert de boîte de dialogue pour la fenêtre À Propos.
  *
  * @author Christian Lesage
  * @author Alexandre Tremblay
  *
  */
-
 public class AppAboutDialog extends JDialog implements ActionListener, WindowListener
 {
-	private static final String APP_NAME		= "Travail Pratique 2 : Démineur";
-	private static final String APP_VERSION 	= "v 1.0";
-	private static final String APP_AUTHOR_ONE 	= "Christian Lesage";
-	private static final String APP_AUTHOR_TWO 	= "Alexandre Tremblay";
+	// Nom de l'application
+	private static final String APP_NAME = "Travail Pratique 2 : Démineur";
+	
+	// Version de l'application
+	private static final String APP_VERSION = "v 1.0";
+	
+	// Auteurs de l'application
+	private static final String APP_AUTHOR_ONE = "Christian Lesage";
+	private static final String APP_AUTHOR_TWO = "Alexandre Tremblay";
 	
 	// Images utilisées pour la boîte de dialogue À propos
-	private static ImageIcon aboutLogo = null;
+	private static BufferedImage aboutLogo = null;
 	
-	// Initialisation des images
+	// Initialisation de l'image
 	static
 	{
 		try
 		{
-			//AppAboutDialog.aboutLogo = new ImageIcon(AppAboutDialog.class.getResource("../../demineur_logo.png"));
+			AppAboutDialog.aboutLogo = ImageIO.read(AppAboutDialog.class.getResource("../../res/demineur_logo.png"));
+		}
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -48,58 +58,76 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 		}
 	}
 	
-	// 
-	private JPanel container;
+	// Panneau contenant le logo et les informations
+	private JPanel aboutPanel;
 	
-	// 
-	private JPanel containerInfo;
+	// Panneau contenant les informations
+	private JPanel infoPanel;
 	
-	//
+	// Label contenant le logo de l'application
 	private JLabel logo;
 	
-	// 
+	// Label contenant le titre de l'application
 	private JLabel title;
 	
-	//
+	// Label contenant la version de l'application
 	private JLabel version;
 	
-	//
+	// Label contenant les auteurs de l'application
 	private JLabel authors;
 	
-	//
+	// Panneau contenant le bouton fermer
+	private JPanel buttonsPanel;
+	
+	// Bouton pour fermer la fenêtre
 	private JButton closeButton;
 	
 	/**
+	 * Construit la boîte de dialogue À Propos
 	 * 
-	 * @param owner
+	 * @param parent objet parent de la boîte de dialogue
 	 */
-	public AppAboutDialog(AppFrame owner)
+	public AppAboutDialog(AppFrame parent)
 	{
-		super(owner);
+		super(parent);
 		
 		this.setTitle("À propos...");
 		this.setResizable(false);
 		this.setModal(true);
 		
-		this.container = new JPanel();
-		this.containerInfo = new JPanel();
+		// Initialise les composants
+		this.initComponents();
+		
+		this.pack();
+		
+		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		
+		// Cette boîte de dialogue implémente son propre écouteur Window
+		this.addWindowListener(this);
+	}
+	
+	// Initialise les composants de la boîte de dialogue
+	private void initComponents()
+	{
+		this.aboutPanel = new JPanel();
+		this.infoPanel = new JPanel();
 		this.logo = new JLabel();
 		this.title = new JLabel();
 		this.version = new JLabel();
 		this.authors = new JLabel();
+		this.buttonsPanel = new JPanel();
 		this.closeButton = new JButton();
 		
-//		this.container.setLayout(new GridLayout(0, 2));
-		this.container.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		this.aboutPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		
-		this.containerInfo.setLayout(new GridLayout(3, 0));
+		this.infoPanel.setLayout(new GridLayout(3, 0));
 		
 		this.logo = new JLabel();
-		this.logo.setIcon(AppAboutDialog.aboutLogo);
-		this.logo.setPreferredSize(new Dimension(200, 200));
+		this.logo.setIcon(new ImageIcon(AppAboutDialog.aboutLogo));
+		this.logo.setPreferredSize(new Dimension(256, 256));
 		
 		this.title.setText(AppAboutDialog.APP_NAME);
-		this.title.setFont(new Font(null, Font.BOLD, 20));
+		this.title.setFont(new Font(null, Font.BOLD, 24));
 		
 		this.version.setText(AppAboutDialog.APP_VERSION);
 		this.version.setFont(new Font(null, Font.ITALIC, 10));
@@ -107,35 +135,43 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 		this.authors.setText("Auteurs : " + AppAboutDialog.APP_AUTHOR_ONE + " et " + AppAboutDialog.APP_AUTHOR_TWO);
 		this.authors.setFont(new Font(null, Font.PLAIN, 14));
 		
+		this.infoPanel.add(this.title);
+		this.infoPanel.add(this.version);
+		this.infoPanel.add(this.authors);
+		
+		this.buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+		
 		this.closeButton.setText("Fermer");
 		this.closeButton.setActionCommand("CLOSE");
 		
-		JPanel closeButtonPanel = new JPanel();
-		closeButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
-		closeButtonPanel.add(this.closeButton);
+		this.buttonsPanel.add(this.closeButton);
 		
-		this.containerInfo.add(this.title);
-		this.containerInfo.add(this.version);
-		this.containerInfo.add(this.authors);
+		this.getContentPane().add(this.buttonsPanel, BorderLayout.PAGE_END);
 		
-		this.container.add(this.logo);
-		this.container.add(this.containerInfo);
+		this.aboutPanel.add(this.logo);
+		this.aboutPanel.add(this.infoPanel);
 		
-		this.getContentPane().add(this.container, BorderLayout.CENTER);
-		this.getContentPane().add(closeButtonPanel, BorderLayout.PAGE_END);
+		this.getContentPane().add(this.aboutPanel, BorderLayout.CENTER);
 		
+        // Spécifie les écouteurs d'action pour les boutons
 		this.closeButton.addActionListener(this);
-		this.addWindowListener(this);
-		
-		this.pack();
 	}
-
+	
+	// Ferme la boîte de dialogue
 	private void close()
 	{
 		this.setVisible(false);
 		this.dispose();
 	}
 	
+	/**
+	 * Reçoit et traite les événements relatifs aux boutons
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * 
+	 * @param evt événement déclencheur
+	 */
 	@Override
 	public void actionPerformed(ActionEvent evt)
 	{
@@ -145,6 +181,12 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 		}
 	}
 	
+	/** 
+	 * Méthode appelée quand la fenêtre va être fermée.
+	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
+	 * 
+	 * @param evt événement déclencheur
+	 */
 	@Override
 	public void windowClosing(WindowEvent evt)
 	{
@@ -152,21 +194,32 @@ public class AppAboutDialog extends JDialog implements ActionListener, WindowLis
 	}
 	
 	@Override
-	public void windowActivated(WindowEvent evt) {}
+	public void windowActivated(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowClosed(WindowEvent evt) {}
+	public void windowClosed(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowDeactivated(WindowEvent evt) {}
+	public void windowDeactivated(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowDeiconified(WindowEvent evt) {}
+	public void windowDeiconified(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowIconified(WindowEvent evt) {}
+	public void windowIconified(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowOpened(WindowEvent evt) {}
-	
+	public void windowOpened(WindowEvent evt)
+	{
+	}
 }

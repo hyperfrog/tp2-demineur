@@ -7,7 +7,6 @@ package util;
  * @author Christian Lesage
  *
  */
-
 public class BaseMatrix
 {
 	// Contient la matrice courante.

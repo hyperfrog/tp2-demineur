@@ -1,0 +1,1339 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sim-project version="4.97">
+  <meta>
+    <name>Project</name>
+    <authors />
+    <description />
+  </meta>
+  <management>
+    <persons />
+    <tasks />
+    <requirements />
+    <issues />
+    <to-dos />
+  </management>
+  <types>
+    <type-sets>
+      <type-set file="UmlTypes.xml" />
+    </type-sets>
+    <custom-types>
+      <type id="Object" name="Object" description="" />
+      <type id="int" name="int" description="" />
+      <type id="boolean" name="boolean" description="" />
+      <type id="Node" name="Node" description="" />
+      <type id="Disk" name="Disk" description="" />
+      <type id="Tower[3]" name="Tower[3]" description="" />
+      <type id="String[]" name="String[]" description="" />
+      <type id="Color" name="Color" description="" />
+      <type id="Object[]" name="Object[]" description="" />
+      <type id="Tower" name="Tower" description="" />
+      <type id="GameBoard" name="GameBoard" description="" />
+      <type id="Game" name="Game" description="" />
+      <type id="Graphics" name="Graphics" description="" />
+      <type id="INT" name="INT" description="" />
+      <type id="Matrix" name="Matrix" description="" />
+      <type id="CellState" name="CellState" description="" />
+      <type id="g" name="g" description="" />
+      <type id="Object[][]" name="Object[][]" description="" />
+      <type id="Cell" name="Cell" description="" />
+      <type id="Board" name="Board" description="" />
+      <type id="AppFrame" name="AppFrame" description="" />
+      <type id="BufferedImage" name="BufferedImage" description="" />
+      <type id="Dimension" name="Dimension" description="" />
+      <type id="float" name="float" description="" />
+      <type id="BaseMatrix" name="BaseMatrix" description="" />
+    </custom-types>
+  </types>
+  <items>
+    <item id="di688138813942401208" cid="C001" type="class" name="Stack" style-class="" is-abstract="true">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations>
+        <operation id="" name="push" type="Object" type-id="Object" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="element" type="Object" type-id="Object" default-value="">
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="pop" type="Object" type-id="Object" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="size" type="int" type-id="int" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="isEmpty" type="boolean" type-id="boolean" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="clear" type="" type-id="" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="peek" type="Object" type-id="Object" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="search" type="int" type-id="int" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="element " type="Object" type-id="Object" default-value="">
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="get" type="Object" type-id="Object" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="position " type="int" type-id="int" default-value="">
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="toString" type="String" type-id="Uml.String" visibility="public" abstract="true" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di767206065361629935" cid="C002" type="class" name="ImplStack" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="TABLE_SIZE" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="table" type="Object[]" type-id="Object[]" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="size" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="ImplStack" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="resize" type="" type-id="" visibility="private" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="isFull" type="boolean" type-id="boolean" visibility="private" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di855803818871989209" cid="GNR001" type="generalization" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di661639373696137859" cid="C003" type="class" name="ImplStack" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="size" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="head" type="Node" type-id="Node" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="ImplStack" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getNode" type="Node" type-id="Node" visibility="private" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="position" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di565324033484660392" cid="PKG001" type="package" name="arrayStack" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="di699161422538403915" cid="PKG002" type="package" name="linkedStack" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="di531854966744974880" cid="C004" type="class" name="Node" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="next" type="Node" type-id="Node" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="value" type="Object" type-id="Object" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="Node" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="toString" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di227515328769844763" cid="GNR002" type="generalization" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di440703643698490250" cid="REL002" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di531854966744974880" to="di661639373696137859">
+        <start-role id="" name="" multiplicity="0..*" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="1" navigability="" association-type="aggregation" visibility="private" />
+      </relation>
+    </item>
+    <item id="di897768975496410271" cid="PKG003" type="package" name="util" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="di365485101325211857" cid="PKG004" type="package" name="appDemineur" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="di711628313583651250" cid="PKG005" type="package" name="form" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="di925040645232202115" cid="PKG006" type="package" name="model" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <nestedItems />
+    </item>
+    <item id="di346211912203185711" cid="C005" type="class" name="MainApp" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style background-type="vertical-linear" background-color="#FFD3D3D3" background-color2="#FFFFFFFF" border-color="#FF000000" border-width="1" shadow-type="smooth" shadow-offset="-2,-2" shadow-size="6,6" shadow-visible="true" shadow-color="#50000000" shadow-radius="6" gloss-effect="true" threed-gloss-effect="false" wrap-name-text="true" wrap-other-text="true" name-color="#FF000000" name-font="Arial;10;B" name-horizontal-alignment="center" name-vertical-alignment="center" part-header-color="#FF1E1E1E" part-header-font="Arial;9;I" part-header-horizontal-alignment="center" part-header-vertical-alignment="center" text-color="#FF000000" text-font="Arial;10;" text-horizontal-alignment="left" text-vertical-alignment="center" tagged-value-color="#FF1E1E1E" tagged-value-font="Arial;9;I" tagged-value-horizontal-alignment="center" tagged-value-vertical-alignment="center" stereotype-color="#FF1E1E1E" stereotype-font="Arial;9;I" stereotype-horizontal-alignment="center" stereotype-vertical-alignment="center" />
+      <attributes />
+      <operations>
+        <operation id="" name="main" type="" type-id="" visibility="public" abstract="false" virtual="false" static="true">
+          <parameters>
+            <parameter id="" name="args" type="String[]" type-id="String[]" default-value="">
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di183625964853496055" cid="C006" type="class" name="Board" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="smileyWon" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="smileyNormal" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="smileyLost" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="elapsedTime" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="Board" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="parent" type="AppFrame" type-id="AppFrame" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di237449427409736077" cid="C007" type="class" name="AppFrame" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="instance" type="AppFrame" type-id="AppFrame" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="AppFrame" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getInstance" type="AppFrame" type-id="AppFrame" visibility="public" abstract="false" virtual="false" static="true">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="getCheatMode" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getNextGameLevel" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di140578570167052464" cid="C008" type="class" name="Disk" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="diameter" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="color" type="Color" type-id="Color" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="Disk" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="diameter" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="color" type="Color" type-id="Color" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="redraw" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="g" type="Graphics" type-id="Graphics" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="nbDisks" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di883961475482793801" cid="C009" type="class" name="Tower" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations>
+        <operation id="" name="Tower" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="push" type="Disk" type-id="Disk" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="element" type="Disk" type-id="Disk" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="push" type="Object" type-id="Object" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="element" type="Object" type-id="Object" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="pop" type="Disk" type-id="Disk" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="redraw" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="g" type="Graphics" type-id="Graphics" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="nbDisks" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di975531004501205257" cid="C010" type="class" name="Game" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="isLost" type="boolean" type-id="boolean" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="isWon" type="boolean" type-id="boolean" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="level" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="nbCellsFlagged" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="nbCellsShown" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="Game" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="level" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="redraw" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="g" type="Graphics" type-id="Graphics" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="cellSize" type="float" type-id="float" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="showMines" type="boolean" type-id="boolean" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="changeCellState" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="x " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name=" y " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="showCell" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="x" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="y" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="getElement" type="Cell" type-id="Cell" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="x " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name=" y " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="getMineAmount" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="getNbCellsFlagged" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="getNbCellsShown" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="isLost" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="isWon" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="isOver" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di620392031952072128" cid="GNR003" type="generalization" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di286070708504022134" cid="REL011" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di975531004501205257" to="di883961475482793801">
+        <start-role id="" name="" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+        <end-role id="" name="" multiplicity="3" navigability="" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di619388479581055226" cid="REL007" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di661639373696137859" to="di140578570167052464">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di867096208908536491" cid="REL010" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di883961475482793801" to="di140578570167052464">
+        <start-role id="" name="" multiplicity="1" navigability="" association-type="aggregation" visibility="private" />
+        <end-role id="" name="" multiplicity="0..64" navigability="" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di168743522340463089" cid="REL002" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style background-type="vertical-linear" background-color="#FFD3D3D3" background-color2="#FFFFFFFF" border-color="#FF000000" border-width="1" shadow-type="smooth" shadow-offset="-2,-2" shadow-size="6,6" shadow-visible="true" shadow-color="#50000000" shadow-radius="6" gloss-effect="true" threed-gloss-effect="false" wrap-name-text="true" wrap-other-text="true" name-color="#FF000000" name-font="Arial;10;B" name-horizontal-alignment="center" name-vertical-alignment="center" part-header-color="#FF1E1E1E" part-header-font="Arial;9;I" part-header-horizontal-alignment="center" part-header-vertical-alignment="center" text-color="#FF000000" text-font="Arial;10;" text-horizontal-alignment="left" text-vertical-alignment="center" tagged-value-color="#FF1E1E1E" tagged-value-font="Arial;9;I" tagged-value-horizontal-alignment="center" tagged-value-vertical-alignment="center" stereotype-color="#FF1E1E1E" stereotype-font="Arial;9;I" stereotype-horizontal-alignment="center" stereotype-vertical-alignment="center" />
+      <relation from="di183625964853496055" to="di975531004501205257">
+        <start-role id="" name="" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+        <end-role id="" name="currentGame" multiplicity="1" navigability="" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di180670361767670573" cid="REL002" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di183625964853496055" to="di237449427409736077">
+        <start-role id="" name="gameBoard" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di814632306385918038" cid="REL003" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di365485101325211857" to="di365485101325211857">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="" association-type="aggregation" visibility="private" />
+      </relation>
+    </item>
+    <item id="di969948136447148851" cid="DEP002" type="dependency" name="" style-class="" is-abstract="false">
+      <stereotypes>
+        <stereotype name="create" />
+      </stereotypes>
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di293621876285368367" cid="C001" type="class" name="Matrix" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations>
+        <operation id="" name="Matrix" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="width" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="height" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="nbMines" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="redraw" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="g" type="Graphics" type-id="Graphics" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getElement" type="Cell" type-id="Cell" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="x" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="y" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di203138079580042572" cid="C002" type="class" name="Cell" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="adjacentMines" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="state" type="CellState" type-id="CellState" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="isMine" type="boolean" type-id="boolean" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="flagImage" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="mineImage" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="explodedMineImage" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="Cell" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="redraw" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="Graphics" type="g" type-id="g" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di323314330116563542" cid="C003" type="class" name="CellState" style-class="" is-abstract="false">
+      <stereotypes>
+        <stereotype name="enumeration" />
+      </stereotypes>
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="FLAGGED" type="" type-id="" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="DUBIOUS" type="" type-id="" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="SHOWN" type="" type-id="" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="HIDDEN" type="" type-id="" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations />
+      <template-parameters />
+    </item>
+    <item id="di780838262996876782" cid="C001" type="class" name="BaseMatrix" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="m" type="Object[][]" type-id="Object[][]" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="width" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="height" type="int" type-id="int" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="BaseMatrix" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="BaseMatrix" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="width " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name=" height " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="redim" type="BaseMatrix" type-id="BaseMatrix" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="width  " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="  height  " type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </operation>
+        <operation id="" name="getElement" type="Object" type-id="Object" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="x" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="y" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="setElement" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="x" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="y" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="o" type="Object" type-id="Object" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="toString" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di116949447163463235" cid="GNR002" type="generalization" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di279970080668055398" cid="C001" type="class" name="Level" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="dim" type="Dimension" type-id="Dimension" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="mineAmount" type="int" type-id="int" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="Level" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="dim" type="Dimension" type-id="Dimension" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="mineAmount" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di391063864353256576" cid="REL001" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes>
+        <stereotype name="static" />
+      </stereotypes>
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di279970080668055398" to="di975531004501205257">
+        <start-role id="" name="LEVELS" multiplicity="3" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di781721277953685086" cid="GNR001" type="generalization" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+    </item>
+    <item id="di832652365400915954" cid="REL002" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di323314330116563542" to="di203138079580042572">
+        <start-role id="" name="state" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="0..n" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di224980747294287562" cid="REL003" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di975531004501205257" to="di203138079580042572">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
+  </items>
+  <models>
+    <model id="p596569284923989752" name="Model 1" type="model" namespace="">
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <sub-models />
+      <diagram type="uml-class" id="p900199842110313320" name="ClassDiagram1" namespace="">
+        <meta>
+          <authors>
+            <author />
+          </authors>
+          <description />
+          <creation-date>09/23/2011 09:24:32</creation-date>
+          <change-date>11/08/2011 14:53:16</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="61" ay="-89" awidth="1475" aheight="819" x="61" y="-89" width="1475" height="819" />
+          </item>
+          <item id="di925040645232202115" container="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="729" ay="81" awidth="789" aheight="602" x="729" y="81" width="789" height="602" />
+          </item>
+          <item id="di346211912203185711" container="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="103" ay="-18" awidth="168" aheight="137" x="103" y="-18" width="168" height="137" />
+            <class />
+          </item>
+          <item id="di711628313583651250" container="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="82" ay="199" awidth="618" aheight="384" x="82" y="197" width="618" height="384" />
+          </item>
+          <item id="di183625964853496055" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="442" ay="266" awidth="206" aheight="162" x="442" y="266" width="206" height="162" />
+            <class />
+          </item>
+          <item id="di237449427409736077" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="92" ay="271" awidth="191" aheight="155" x="92" y="272" width="191" height="155" />
+            <class />
+          </item>
+          <item id="di975531004501205257" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="824" ay="144" awidth="356" aheight="300" x="824" y="144" width="356" height="300" />
+            <class />
+          </item>
+          <item id="di168743522340463089" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="11,-10" x1="648" y1="335" x2="824" y2="315">
+              <points>
+                <point x="648" y="335" />
+                <point x="824" y="315" />
+              </points>
+            </layout>
+            <relation from="di183625964853496055" to="di975531004501205257" />
+            <role-positions start-role="25,15" end-role="47.702,23.34385" start-multiplicity="25,-15" end-multiplicity="25,-15" />
+          </item>
+          <item id="di180670361767670573" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="442" y1="347" x2="283" y2="348">
+              <points>
+                <point x="442" y="347" />
+                <point x="283" y="348" />
+              </points>
+            </layout>
+            <relation from="di183625964853496055" to="di237449427409736077" />
+            <role-positions start-role="48.09405,21.67443" end-role="29.99948,14.92859" start-multiplicity="25,-15" end-multiplicity="25,-15" />
+          </item>
+          <item id="di969948136447148851" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="35,-13" x1="187" y1="119" x2="188" y2="271">
+              <points>
+                <point x="187" y="119" />
+                <point x="188" y="271" />
+              </points>
+            </layout>
+            <relation from="di346211912203185711" to="di237449427409736077" />
+          </item>
+          <item id="di337601696580562476" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="drawing-text">
+            <layout ax="76" ay="-918" awidth="300" aheight="274" x="76" y="-918" width="300" height="274" />
+            <drawing-text>
+              <text>TOURS DE HANOI
+
+par Alexandre Tremblay et Christian Lesage</text>
+            </drawing-text>
+            <style class="default" />
+          </item>
+          <item id="di897768975496410271" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="811" ay="-383" awidth="368" aheight="280" x="811" y="-383" width="368" height="280" />
+          </item>
+          <item id="di203138079580042572" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="1244" ay="168" awidth="253" aheight="253" x="1244" y="168" width="253" height="253" />
+            <class />
+          </item>
+          <item id="di323314330116563542" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="1316" ay="527" awidth="105" aheight="130" x="1316" y="527" width="105" height="130" />
+            <class />
+          </item>
+          <item id="di780838262996876782" container="di897768975496410271" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="837" ay="-328" awidth="305" aheight="198" x="871" y="-336" width="305" height="198" />
+            <class />
+          </item>
+          <item id="di279970080668055398" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="870" ay="521" awidth="270" aheight="97" x="869" y="524" width="270" height="97" />
+            <class />
+          </item>
+          <item id="di391063864353256576" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="30,-4" x1="1004" y1="521" x2="1004" y2="444">
+              <points>
+                <point x="1004" y="521" />
+                <point x="1004" y="444" />
+              </points>
+            </layout>
+            <relation from="di279970080668055398" to="di975531004501205257" />
+            <role-positions start-role="16.21951,44.04297" end-role="25,15" start-multiplicity="22.9825,-16.9824" end-multiplicity="25,-15" />
+          </item>
+          <item id="di781721277953685086" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1000" y1="144" x2="997" y2="-103">
+              <points>
+                <point x="1000" y="144" />
+                <point x="997" y="-103" />
+              </points>
+            </layout>
+            <relation from="di975531004501205257" to="di897768975496410271" />
+          </item>
+          <item id="di832652365400915954" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1368" y1="527" x2="1369" y2="421">
+              <points>
+                <point x="1368" y="527" />
+                <point x="1369" y="421" />
+              </points>
+            </layout>
+            <relation from="di323314330116563542" to="di203138079580042572" />
+            <role-positions start-role="24.08732,26.00753" end-role="25,15" start-multiplicity="25,-15" end-multiplicity="25,-15" />
+          </item>
+          <item id="di224980747294287562" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1180" y1="294" x2="1244" y2="294">
+              <points>
+                <point x="1180" y="294" />
+                <point x="1244" y="294" />
+              </points>
+            </layout>
+            <relation from="di975531004501205257" to="di203138079580042572" />
+            <role-positions start-role="25,15" end-role="25,15" start-multiplicity="25,-15" end-multiplicity="25,-15" />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+  </models>
+</sim-project>

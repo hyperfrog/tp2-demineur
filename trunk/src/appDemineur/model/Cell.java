@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
  * @author Alexandre Tremblay
  *
  */
-
 public class Cell
 {
 	/**
@@ -54,9 +53,9 @@ public class Cell
 	{
 		try
 		{
-			Cell.flagImage = ImageIO.read(Cell.class.getResource("../../flag.png"));
-			Cell.mineImage = ImageIO.read(Cell.class.getResource("../../mine.png"));
-			Cell.explodedMineImage = ImageIO.read(Cell.class.getResource("../../mine_exploded.png"));
+			Cell.flagImage = ImageIO.read(Cell.class.getResource("../../res/flag.png"));
+			Cell.mineImage = ImageIO.read(Cell.class.getResource("../../res/mine.png"));
+			Cell.explodedMineImage = ImageIO.read(Cell.class.getResource("../../res/mine_exploded.png"));
 		}
 		catch (IOException e)
 		{

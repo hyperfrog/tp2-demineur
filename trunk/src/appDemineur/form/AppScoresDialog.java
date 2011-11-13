@@ -25,7 +25,6 @@ import appDemineur.model.Game;
  * @author Alexandre Tremblay
  *
  */
-
 public class AppScoresDialog extends JDialog implements ActionListener, WindowListener
 {
     // Panneau contenant les boutons
@@ -52,9 +51,9 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
     // Objet de gestion des meilleurs temps
     private BestTimes bestTimes;
     
-	// Messages pour la boîte de dialogue de confirmation de l'effacement des scores
-	private static final String CONFIRM_MESSAGE = "Voulez-vous vraiment effacer les meilleurs temps?";
-	private static final String CONFIRM_TITLE = "Effacer";
+    // Messages pour la boîte de dialogue de confirmation de l'effacement des scores
+    private static final String CONFIRM_MESSAGE = "Voulez-vous vraiment effacer les meilleurs temps?";
+    private static final String CONFIRM_TITLE = "Effacer";
 
 	/**
 	 * Construit la boîte de dialogue des meilleurs temps. 
@@ -83,20 +82,21 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 
 		// Cette boîte de dialogue implémente so propre écouteur Window 
 		this.addWindowListener(this);
-		
+
 		// Passe-passe pôur donner le focus au bouton OK
 		// Les autres méthodes ne fonctionnent pas bien...
-		SwingUtilities.invokeLater(new Runnable() { 
+		SwingUtilities.invokeLater(new Runnable()
+		{ 
 			public void run() 
 			{ 
 				AppScoresDialog.this.okButton.requestFocus(); 
 			} 
-		}); 
+		});
 	}
 
 	// Initialise les composants
-    private void initComponents() {
-
+    private void initComponents()
+    {
         this.buttonsPanel = new JPanel();
         this.eraseButton = new JButton();
         this.okButton = new JButton();
@@ -192,7 +192,7 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
     // Efface les données des meilleurs temps
     private void eraseScores()
     {
-		Object[] options = { "Oui", "Non" };
+    	Object[] options = { "Oui", "Non" };
 		
 		int confirm = JOptionPane.showOptionDialog(
 				this, 
@@ -257,21 +257,32 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 	}
 	
 	@Override
-	public void windowActivated(WindowEvent evt) {}
+	public void windowActivated(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowClosed(WindowEvent evt) {}
+	public void windowClosed(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowDeactivated(WindowEvent evt) {}
+	public void windowDeactivated(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowDeiconified(WindowEvent evt) {}
+	public void windowDeiconified(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowIconified(WindowEvent evt) {}
+	public void windowIconified(WindowEvent evt)
+	{
+	}
 
 	@Override
-	public void windowOpened(WindowEvent evt) {}
-	
+	public void windowOpened(WindowEvent evt)
+	{
+	}
 }

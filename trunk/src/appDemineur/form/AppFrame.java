@@ -129,16 +129,6 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 		return this.gameBoard;
 	}
 	
-	@Override
-	public void componentHidden(ComponentEvent e)
-	{
-	}
-	
-	@Override
-	public void componentMoved(ComponentEvent e)
-	{
-	}
-
 	/**
 	 * Méthode appelée quand la fenêtre est redimensionnée.
 	 * On s'assure que ses dimensions respectent la largeur et la hauteur minimales permises.
@@ -183,7 +173,17 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 	{
 		this.quitApplication();
 	}
-
+	
+	@Override
+	public void componentHidden(ComponentEvent e)
+	{
+	}
+	
+	@Override
+	public void componentMoved(ComponentEvent e)
+	{
+	}
+	
 	@Override
 	public void componentShown(ComponentEvent e)
 	{
