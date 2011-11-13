@@ -1,9 +1,4 @@
-/**
- * 
- */
 package appDemineur.model.test;
-
-import static org.junit.Assert.*;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,8 +7,10 @@ import appDemineur.model.Cell;
 import appDemineur.model.Cell.CellState;
 
 /**
- * @author Christian Lesage
+ * La classe de test JUnit 4 pour la classe Cell.java
+ * 
  * @author Alexandre Tremblay
+ * @author Christian Lesage
  *
  */
 public class CellTest
@@ -164,12 +161,12 @@ public class CellTest
 		// Cas 1 : la cellule n'est pas une mine
 		c.setAsMine(false);
 		c.setAdjacentMines(3);
-		assertEquals("3", c.toString());
+		Assert.assertEquals("3", c.toString());
 		
 		// Cas 1 : la cellule est une mine
 		c.setAsMine(true);
 		c.setAdjacentMines(3);
-		assertEquals("*", c.toString());
+		Assert.assertEquals("*", c.toString());
 	}
 
 }

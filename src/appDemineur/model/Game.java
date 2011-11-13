@@ -359,7 +359,6 @@ public class Game extends BaseMatrix
 		return Game.LEVELS[this.levelNum].mineAmount;
 	}
 	
-	// TODO : Méthode de test : getNbCellsShown
 	/**
 	 * Retourne le nombre de cases non minées dévoilées.
 	 * 
@@ -370,7 +369,6 @@ public class Game extends BaseMatrix
 		return this.nbCellsShown;
 	}
 	
-	// TODO : Méthode de test : getLevelNum
 	/**
 	 * Retourne le niveau de la partie en cours.
 	 * 
@@ -380,7 +378,7 @@ public class Game extends BaseMatrix
 	{
 		return this.levelNum;
 	}
-
+	
 	/**
 	 * Retourne la cellule à la position (x, y) spécifiée.
 	 * 
