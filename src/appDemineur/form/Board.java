@@ -72,14 +72,14 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	// Objet parent
 	private AppFrame parent = null;
 	
-	// Objet de gestion des meilleurs temps 
-	private BestTimes bestTimes = null;
+	// Indique que la minuterie a été démarrée
+	private boolean timerStarted;
 	
 	// Images utilisées pour le bouton newGameButton et la boîte de dialogue À propos
 	private static BufferedImage smileyWon = null;
 	private static BufferedImage smileyNormal = null;
 	private static BufferedImage smileyLost = null;
-	private static BufferedImage aboutLogo = null;
+//	private static BufferedImage aboutLogo = null;
 	
 	// Initialisation des images
 	static
@@ -89,7 +89,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 			Board.smileyWon = ImageIO.read(Board.class.getResource("../../smiley_won.png"));
 			Board.smileyNormal = ImageIO.read(Board.class.getResource("../../smiley_normal.png"));
 			Board.smileyLost = ImageIO.read(Board.class.getResource("../../smiley_lost.png"));
-			Board.aboutLogo = ImageIO.read(Board.class.getResource("../../demineur_logo.png"));
+//			Board.aboutLogo = ImageIO.read(Board.class.getResource("../../demineur_logo.png"));
 		}
 		catch (IOException e)
 		{
@@ -114,8 +114,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 		
 		this.parent = parent;
 
-		this.bestTimes = new BestTimes();
-		
         // Initialise les composantes
 		this.gamePanel = new DrawingPanel(this);
 		this.controlPanel = new JPanel();
@@ -197,6 +195,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 			
 			this.elapsedTime = 0;
 			this.timer.stop();
+			this.timerStarted = false;
 			this.timerLabel.setText("Temps : " + String.format("%03d", this.elapsedTime));
 			
 		}
@@ -217,61 +216,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Affiche la boîte de dialogue des meilleurs temps
-	 */
-	public void showScoresDialog()
-	{
-		String scoreboard = "";
-		
-		for (int i = 0; i < Game.LEVELS.length; i++)
-		{
-			String time =  this.bestTimes.getTime(i);
-			String player = this.bestTimes.getPlayer(i);
-			
-			scoreboard += String.format("%s :\n", Game.LEVELS[i].displayName);
-			
-			if (time != "" && player != "")
-			{
-				scoreboard += String.format("%s, %s seconde(s)\n\n", player, time);
-			}
-			else
-			{
-				scoreboard += "Aucun record\n\n";
-			}
-		}
-		
-		JOptionPane.showMessageDialog(this, 
-				scoreboard, 
-				"Meilleurs temps", 
-				JOptionPane.PLAIN_MESSAGE, 
-				new ImageIcon(Board.smileyWon));
-	}
-	
-	/**
-	 * Affiche la boîte de dialogue À propos
-	 */
-	public void showAboutDialog()
-	{
-		AppAboutDialog aboutDialog = new AppAboutDialog(this.parent);
-		aboutDialog.setLocationRelativeTo(this.parent);
-		aboutDialog.setVisible(true);
-	}
-	
-	/**
-	 * Affiche la boîte de dialogue d'aide
-	 */
-	public void showHelpDialog()
-	{
-		String aboutText = "Test";
-		
-		JOptionPane.showMessageDialog(this, 
-				aboutText, 
-				"À Propos", 
-				JOptionPane.PLAIN_MESSAGE, 
-				new ImageIcon(Board.aboutLogo));
 	}
 	
 	/**
@@ -429,6 +373,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 						if (hasChanged && nbCellsShown == 0)
 						{
 							this.timer.restart();
+							this.timerStarted = true;
 						}
 
 						// Sale tricheur !
@@ -454,84 +399,107 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 
 				if (this.game.isWon())
 				{
-					if (Board.smileyWon != null)
-					{
-						this.newGameButton.setIcon(new ImageIcon(Board.smileyWon));
-						this.newGameButton.setText("");
-					}
-					else
-					{
-						this.newGameButton.setIcon(null);
-						this.newGameButton.setText("8¬)");
-					}
-
-					JOptionPane.showMessageDialog(
-							this, 
-							"Vous avez gagné !", 
-							"Bravo !", 
-							JOptionPane.PLAIN_MESSAGE);
-					
-					int bestTime;
-					
-					try
-					{
-						bestTime = Integer.parseInt(this.bestTimes.getTime(this.game.getLevelNum()));
-					}
-					catch (NumberFormatException e)
-					{
-						bestTime = Integer.MAX_VALUE;
-					}
-					
-					// Ajout du nouveau temps seulement si il est plus bas et que la partie courante n'est pas
-					// en mode triche
-					if (this.elapsedTime < bestTime && !((AppMenu)this.parent.getJMenuBar()).getCheatMode())
-					{
-						// Demande le nom du joueur
-						String playerName = "";
-						
-						do
-						{
-							playerName = JOptionPane.showInputDialog(
-									this, 
-									"Entrez votre nom de joueur : ", 
-									"Nouveau record", 
-									JOptionPane.DEFAULT_OPTION);
-							
-							// Si le joueur à appuyer sur « Cancel », on met son nom de joueur à « Anonyme »
-							if (playerName == null)
-							{
-								playerName = "Anonyme";
-								break;
-							}
-						}
-						while (playerName.length() <= 0);
-						
-						// Inscrit le nouveau record
-						this.bestTimes.setPlayer(this.game.getLevelNum(), playerName);
-						this.bestTimes.setTime(this.game.getLevelNum(), "" + this.elapsedTime);
-						
-						// Écrit le fichier des meilleurs temps
-						this.bestTimes.write();
-						
-						// Montre les meilleurs temps
-						this.showScoresDialog();
-					}
-					
+					this.doGameWonStuff();
 				}
 				else if (this.game.isLost())
 				{
-					if (Board.smileyLost != null)
-					{
-						this.newGameButton.setIcon(new ImageIcon(Board.smileyLost));
-						this.newGameButton.setText("");
-					}
-					else
-					{
-						this.newGameButton.setIcon(null);
-						this.newGameButton.setText(":¬(");
-					}
+					this.doGameLostStuff();
 				}
 			}
+		}
+	}
+	
+	// Choses à faire quand une partie est gagnée
+	private void doGameWonStuff()
+	{
+		this.timer.stop();
+		
+		// Changer l'icône du bouton newGameButton
+		if (Board.smileyWon != null)
+		{
+			this.newGameButton.setIcon(new ImageIcon(Board.smileyWon));
+			this.newGameButton.setText("");
+		}
+		else
+		{
+			this.newGameButton.setIcon(null);
+			this.newGameButton.setText("8¬)");
+		}
+		
+		// Récupérer le meilleur temps pour le niveau de difficulté de la partie
+		
+		BestTimes bestTimes = new BestTimes();
+
+		int bestTimeForLevel;
+		
+		try
+		{
+			bestTimeForLevel = Integer.parseInt(bestTimes.getTime(this.game.getLevelNum()));
+		}
+		catch (NumberFormatException e)
+		{
+			bestTimeForLevel = Integer.MAX_VALUE;
+		}
+		
+		// Ajout du nouveau temps seulement s'il est plus bas et que la partie courante n'est pas
+		// en mode «tricher»
+		if (this.elapsedTime < bestTimeForLevel && !((AppMenu)this.parent.getJMenuBar()).getCheatMode())
+		{
+			// Demande le nom du joueur
+			String playerName = "";
+			
+			while (playerName.length() == 0)
+			{
+				playerName = JOptionPane.showInputDialog(
+						this, 
+						"Entrez votre nom de joueur : ", 
+						"Nouveau record", 
+						JOptionPane.DEFAULT_OPTION);
+				
+				// Si le joueur a appuyé sur « Cancel », on met son nom de joueur à « Anonyme »
+				if (playerName == null)
+				{
+					playerName = "Anonyme";
+					break;
+				}
+			} 
+			
+			// Inscrit le nouveau record
+			bestTimes.setPlayer(this.game.getLevelNum(), playerName);
+			bestTimes.setTime(this.game.getLevelNum(), "" + this.elapsedTime);
+			
+			// Écrit le fichier des meilleurs temps
+			bestTimes.write();
+			
+			// Montre les meilleurs temps
+			((AppMenu)this.parent.getJMenuBar()).showScoresDialog();
+		}
+		else
+		{
+			// Féliciter l'utilisateur
+			JOptionPane.showMessageDialog(
+					this, 
+					"Vous avez gagné !", 
+					"Bravo !", 
+					JOptionPane.PLAIN_MESSAGE);
+		}
+	}
+	
+	// Choses à faire quand une partie est perdu
+	private void doGameLostStuff()
+	{
+		this.timer.stop();
+
+		// Changer l'icône du bouton newGameButton
+		if (Board.smileyLost != null)
+		{
+			this.newGameButton.setIcon(new ImageIcon(Board.smileyLost));
+			this.newGameButton.setText("");
+		}
+		else
+		{
+			this.newGameButton.setIcon(null);
+			this.newGameButton.setText(":¬(");
 		}
 	}
 	
@@ -546,7 +514,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	@Override
 	public void focusGained(FocusEvent evt)
 	{
-		this.timer.start();
+		if (this.timerStarted && !this.game.isOver())
+		{
+			this.timer.start();
+		}
 	}
 	
 	/**

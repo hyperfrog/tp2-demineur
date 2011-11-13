@@ -3,8 +3,12 @@ package appDemineur.form;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  * La classe AppFrame permet de créer une fenêtre qui sert de contenant
@@ -14,7 +18,7 @@ import javax.swing.JFrame;
  * @author Alexandre Tremblay
  * 
  */
-public class AppFrame extends JFrame implements ComponentListener
+public class AppFrame extends JFrame implements ComponentListener, WindowListener
 {
 	// Sert à l'implémentation du singleton
 	private static AppFrame instance = null;
@@ -31,6 +35,9 @@ public class AppFrame extends JFrame implements ComponentListener
 	// Titre de la fenêtre
 	private static final String INIT_TITLE = "Démineur par Alexandre Tremblay et Christian Lesage";
 	
+	private static final String QUIT_MESSAGE = "Voulez-vous quitter le jeu ?";
+	private static final String QUIT_TITLE = "Quitter";
+
 	// Objet du plateau de jeu
 	private Board gameBoard;
 	
@@ -43,7 +50,8 @@ public class AppFrame extends JFrame implements ComponentListener
 	protected AppFrame()
 	{
 		super();
-		
+		this.setNativeLookAndFeel();
+
 		// Initialise le menu
 		this.appMenu = new AppMenu(this);
 		
@@ -52,7 +60,7 @@ public class AppFrame extends JFrame implements ComponentListener
 		this.setTitle(AppFrame.INIT_TITLE);
 		this.setSize(AppFrame.INIT_SIZE);
 		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		this.gameBoard = new Board(this);
 		this.getContentPane().add(this.gameBoard);
@@ -60,6 +68,34 @@ public class AppFrame extends JFrame implements ComponentListener
 		// Spécifie les écouteurs pour la fenêtre
 		this.addComponentListener(this);
 		this.addFocusListener(this.gameBoard);
+		
+		this.addWindowListener(this);
+	}
+	
+	public void quitterApplication()
+	{
+		int confirm = JOptionPane.showConfirmDialog(this,
+				AppFrame.QUIT_MESSAGE, AppFrame.QUIT_TITLE,
+				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		
+		if (confirm == JOptionPane.YES_OPTION)
+		{
+			this.dispose();
+			System.exit(0);
+		}
+
+	}	
+	
+	private void setNativeLookAndFeel()
+	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e)
+		{
+			System.out.println("Incapable de changer l'apparence de l'application.");
+		}
 	}
 	
 	// TODO : Tester le singleton?
@@ -91,27 +127,11 @@ public class AppFrame extends JFrame implements ComponentListener
 		return this.gameBoard;
 	}
 	
-	/** 
-	 * Méthode appelée quand la fenêtre est cachée.
-	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
-	 * 
-	 * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
-	 * 
-	 * @param e événement déclencheur
-	 */
 	@Override
 	public void componentHidden(ComponentEvent e)
 	{
 	}
 	
-	/**
-	 * Méthode appelée quand la fenêtre est déplacée.
-	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
-	 * 
-	 * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
-	 * 
-	 * @param e événement déclencheur
-	 */
 	@Override
 	public void componentMoved(ComponentEvent e)
 	{
@@ -150,16 +170,50 @@ public class AppFrame extends JFrame implements ComponentListener
 		}
 	}
 
-	/**
-	 * Méthode appelée quand la fenêtre est affichée.
+	/** 
+	 * Méthode appelée quand la fenêtre va être fermée.
 	 * Cette méthode doit être publique mais ne devrait pas être appelée directement.
-	 * 
-	 * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
 	 * 
 	 * @param e événement déclencheur
 	 */
 	@Override
+	public void windowClosing(WindowEvent e)
+	{
+		this.quitterApplication();
+	}
+
+	@Override
 	public void componentShown(ComponentEvent e)
+	{
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0)
+	{
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e)
 	{
 	}
 }
