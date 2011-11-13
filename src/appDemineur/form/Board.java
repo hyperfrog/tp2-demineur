@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.LineBorder;
 
-import appDemineur.model.Cell;
 import appDemineur.model.Game;
 import appDemineur.model.BestTimes;
 
@@ -38,7 +37,6 @@ import appDemineur.model.BestTimes;
  * @author Alexandre Tremblay
  *
  */
-
 public class Board extends JPanel implements ActionListener, MouseListener, FocusListener
 {
 	// Si vrai, la taille des cellules est fixée au plus grand entier inférieur à la taille possible
@@ -75,7 +73,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	// Indique que la minuterie a été démarrée
 	private boolean timerStarted;
 	
-	// Images utilisées pour le bouton newGameButton et la boîte de dialogue À propos
+	// Images utilisées pour le bouton newGameButton
 	private static BufferedImage smileyWon = null;
 	private static BufferedImage smileyNormal = null;
 	private static BufferedImage smileyLost = null;
@@ -85,9 +83,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	{
 		try
 		{
-			Board.smileyWon = ImageIO.read(Board.class.getResource("../../smiley_won.png"));
-			Board.smileyNormal = ImageIO.read(Board.class.getResource("../../smiley_normal.png"));
-			Board.smileyLost = ImageIO.read(Board.class.getResource("../../smiley_lost.png"));
+			Board.smileyWon = ImageIO.read(Board.class.getResource("../../res/smiley_won.png"));
+			Board.smileyNormal = ImageIO.read(Board.class.getResource("../../res/smiley_normal.png"));
+			Board.smileyLost = ImageIO.read(Board.class.getResource("../../res/smiley_lost.png"));
 		}
 		catch (IOException e)
 		{
@@ -115,7 +113,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
         // Initialise les composantes
 		this.gamePanel = new DrawingPanel(this);
 		this.gamePanel.setBackground(Color.LIGHT_GRAY);
-
+		
 		this.controlPanel = new JPanel();
 		this.newGameButton = new JButton();
 		this.timerLabel = new JLabel();
@@ -542,8 +540,23 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 		this.timer.stop();
 	}
 	
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
-	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+	}
+	
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+	}
 }

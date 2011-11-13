@@ -72,6 +72,7 @@ public class Game extends BaseMatrix
 		this.nbCellsShown = 0;
 	}
 	
+	// Valide que le niveau se situe entre 0 et le nombre de niveaux
 	private int validateLevelNum(int levelNum)
 	{
 		return Math.max(0, Math.min(Game.LEVELS.length - 1, levelNum));

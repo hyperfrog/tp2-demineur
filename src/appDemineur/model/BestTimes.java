@@ -35,7 +35,6 @@ import appDemineur.model.Game;
  * @author Alexandre Tremblay
  *
  */
-
 public class BestTimes
 {
 	// Document DOM qui reçoit le contenu du fichier XML lors de la lecture
@@ -43,7 +42,7 @@ public class BestTimes
 	private Document doc = null;
 	
 	// Chemin du fichier utilisé
-	private static final String FILE_PATH = "best_times.xml";
+	private static final String FILE_PATH = "./res/best_times.xml";
 	
 	// Nom des étiquettes et attributs utilisés
 	private static final String ROOT_TAG = "best_times";

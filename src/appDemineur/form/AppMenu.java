@@ -5,17 +5,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
@@ -64,27 +59,7 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 	private ButtonGroup difficultyGroup;
 	
 	// Objet parent
-	private AppFrame parent = null; 
-	
-	// Image pour la boîte de dialogue «À propos»
-	private static BufferedImage aboutLogo = null;
-	
-	// Initialisation des images
-	static
-	{
-		try
-		{
-			AppMenu.aboutLogo = ImageIO.read(Board.class.getResource("../../demineur_logo.png"));
-		}
-		catch (IOException e)
-		{
-			System.out.println(e.getMessage());
-		}
-		catch (IllegalArgumentException e)
-		{
-			System.out.println("Incapable de trouver une ou plusieurs image(s) de la classe Board.");
-		}
-	}
+	private AppFrame parent = null;
 	
 	/**
 	 * Construit la barre de menus du jeu application du Démineur.
@@ -184,13 +159,9 @@ public class AppMenu extends JMenuBar implements ActionListener, ItemListener
 	 */
 	private void showHelpDialog()
 	{
-		String aboutText = "Test";
-		
-		JOptionPane.showMessageDialog(this, 
-				aboutText, 
-				"Aide", 
-				JOptionPane.PLAIN_MESSAGE, 
-				AppMenu.aboutLogo != null ? new ImageIcon(AppMenu.aboutLogo) : null);
+		AppHelpDialog helpDialog = new AppHelpDialog(this.parent);
+		helpDialog.setLocationRelativeTo(this.parent);
+		helpDialog.setVisible(true);
 	}
 	
 	/**
