@@ -13,7 +13,6 @@ import appDemineur.model.Cell.CellState;
  * @author Christian Lesage
  *
  */
-
 public class GameTest
 {
 	/**
@@ -31,6 +30,7 @@ public class GameTest
 		Assert.assertEquals(0, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbCellsFlagged());
 		Assert.assertEquals(0, g.getNbCellsShown());
+		Assert.assertEquals(1, g.getLevelNum());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -44,6 +44,7 @@ public class GameTest
 		Assert.assertEquals(0, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbCellsFlagged());
 		Assert.assertEquals(0, g.getNbCellsShown());
+		Assert.assertEquals(0, g.getLevelNum());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -57,6 +58,7 @@ public class GameTest
 		Assert.assertEquals(0, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbCellsFlagged());
 		Assert.assertEquals(0, g.getNbCellsShown());
+		Assert.assertEquals(2, g.getLevelNum());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -70,6 +72,7 @@ public class GameTest
 		Assert.assertEquals(0, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbCellsFlagged());
 		Assert.assertEquals(0, g.getNbCellsShown());
+		Assert.assertEquals(0, g.getLevelNum());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -83,6 +86,7 @@ public class GameTest
 		Assert.assertEquals(0, this.mineOnGrid(g));
 		Assert.assertEquals(0, g.getNbCellsFlagged());
 		Assert.assertEquals(0, g.getNbCellsShown());
+		Assert.assertEquals(2, g.getLevelNum());
 		Assert.assertFalse(g.isOver());
 		Assert.assertFalse(g.isWon());
 		Assert.assertFalse(g.isLost());
@@ -590,30 +594,88 @@ public class GameTest
 		Assert.assertNull(g.getElement(1, 1));
 		Assert.assertFalse(g.getElement(1, 1) instanceof Cell);
 		
+		// Ce cas est impossible à simuler parce que la méthode setElement empèche l'insertion d'élémen null
+		
 		//Cas invalide 1 : La position demandée en (x, y) est valide et l'objet inséré à cette position est null 
 		//				   et n'est pas une instance de Cell.
-//		g.setElement(1, 2, null);
-//		Assert.assertNull(g.getElement(1, 2));
-//		Assert.assertFalse(g.getElement(1, 2) instanceof Cell);
+		// g.setElement(1, 2, null);
+		// Assert.assertNull(g.getElement(1, 2));
+		// Assert.assertFalse(g.getElement(1, 2) instanceof Cell);
 	}
 	
-	// TODO : À terminer testGetNbCellShown
 	/**
 	 * 	Méthode de test pour {@link appDemineur.model.Game#getNbCellsShown()}
 	 */
 	@Test
 	public void testGetNbCellsShown()
 	{
-		Game g = new Game(0);
-		
 		// Cas 1 : La partie vient d'être créée, donc aucune cellule n'est dévoilée.
+		Game g = new Game(0);
 		Assert.assertEquals(0, g.getNbCellsShown());
 		
 		// Cas 2 : La partie est en cours et le joueur n'a pas dévoilé toutes les cases non minées.
-
-		// Cas 3 : La partie est gagnée
-
-		// Cas 4 : La partie est perdue
+		g = new Game(0);
+		g.showCell(0, 0);
+		Assert.assertTrue(g.getNbCellsShown() > 0);
+		Assert.assertEquals(shownCell(g), g.getNbCellsShown());
 		
+		// Cas 3 : La partie est gagnée
+		g = new Game(0);
+		winGame(g);
+		Assert.assertTrue(g.getNbCellsShown() > 0);
+		Assert.assertEquals((g.getWidth() * g.getHeight()) - g.getMineAmount(), g.getNbCellsShown());
+		
+		// Cas 4 : La partie est perdue
+		g = new Game(0);
+		loseGame(g);
+		Assert.assertTrue(g.getNbCellsShown() > 0);
+		Assert.assertEquals(shownCell(g), g.getNbCellsShown());
+	}
+	
+	// Retourne le nombre de cellules dévoilées
+	private int shownCell(Game g)
+	{
+		int cellCount = 0;
+		
+		for (int i = 0; i < g.getWidth(); i++)
+		{
+			for (int j = 0; j < g.getHeight(); j++)
+			{
+				// Si c'est une mine, on incrémente le compteur de mines
+				if (g.getElement(i, j).getState().equals(CellState.SHOWN) && !g.getElement(i, j).isMine())
+				{
+					cellCount++;
+				}
+			}
+		}
+		
+		return cellCount;
+	}
+	
+	/**
+	 * 	Méthode de test pour {@link appDemineur.model.Game#getLevelNum()}
+	 */
+	@Test
+	public void testGetLevelNum()
+	{
+		// Cas valide 1 : Le niveau est situé entre 0 et 2.
+		Game g = new Game(1);
+		Assert.assertEquals(1, g.getLevelNum());
+		
+		// Cas limite 1 : Le niveau est 0
+		g = new Game(0);
+		Assert.assertEquals(0, g.getLevelNum());
+		
+		// Cas limite 2 : Le niveau est 2
+		g = new Game(2);
+		Assert.assertEquals(2, g.getLevelNum());
+		
+		// Cas invalide 1 : Le niveau est inférieur à 0
+		g = new Game(-1);
+		Assert.assertEquals(0, g.getLevelNum());
+		
+		// Cas invalide 2 : Le niveau est supérieur à 2
+		g = new Game(3);
+		Assert.assertEquals(2, g.getLevelNum());
 	}
 }

@@ -44,7 +44,7 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 	
 	// Menu de l'application
 	private AppMenu appMenu;
-
+	
 	/*
 	 * Crée la fenêtre du jeu, qui contient les menus et le plateau de jeu
 	 */
@@ -100,7 +100,6 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 		}
 	}
 	
-	// TODO : Tester le singleton?
 	/**
 	 * Crée et retourne la fenêtre du jeu en tant que singleton.
 	 *  
