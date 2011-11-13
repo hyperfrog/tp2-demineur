@@ -35,6 +35,7 @@ public class MainApp
 		classesToTest.add(util.test.BaseMatrixTest.class);
 		classesToTest.add(appDemineur.model.test.GameTest.class);
 		classesToTest.add(appDemineur.model.test.CellTest.class);
+		classesToTest.add(appDemineur.model.test.BestTimesTest.class);
 		
 		for(Class<?> someClass : classesToTest)
 		{

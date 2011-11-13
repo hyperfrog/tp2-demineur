@@ -1,7 +1,5 @@
 package appDemineur.model.test;
 
-import java.awt.Point;
-
 import org.junit.Assert;
 import org.junit.Test;
 

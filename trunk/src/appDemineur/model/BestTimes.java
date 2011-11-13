@@ -115,7 +115,7 @@ public class BestTimes
 	 * Retourne le meilleur temps pour le niveau de difficulté passé en paramètre.
 	 * 
 	 * @param levelNum le niveau de difficulté de la partie jouée
-	 * @return le meilleur temps pour le niveau de difficulté passé en paramètre
+	 * @return le meilleur temps pour le niveau spécifié ou null si le niveau n'est pas valide
 	 */
 	public String getTime(int levelNum)
 	{
@@ -128,7 +128,7 @@ public class BestTimes
 		}
 		catch (ArrayIndexOutOfBoundsException e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		return time;
@@ -136,6 +136,7 @@ public class BestTimes
 	
 	/**
 	 * Modifie le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * Ne fait rien si le niveau n'est pas valide dans l'intervalle [0, 2].
 	 * 
 	 * @param levelNum le niveau de difficulté de la partie jouée
 	 * @param time le nouveau meilleur temps
@@ -149,7 +150,7 @@ public class BestTimes
 		}
 		catch (ArrayIndexOutOfBoundsException e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 	
@@ -157,7 +158,7 @@ public class BestTimes
 	 * Retourne le nom du joueur qui possède le meilleur temps pour le niveau de difficulté passé en paramètre.
 	 * 
 	 * @param levelNum le niveau de difficulté de la partie jouée
-	 * @return le nom du joueur qui possède le meilleur temps
+	 * @return le nom du joueur ayant le meilleur temps pour le niveau spécifié ou null si le niveau n'est pas valide
 	 */
 	public String getPlayer(int levelNum)
 	{
@@ -170,7 +171,7 @@ public class BestTimes
 		}
 		catch (ArrayIndexOutOfBoundsException e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		return player;
@@ -178,6 +179,7 @@ public class BestTimes
 	
 	/**
 	 * Modifie le nom du joueur possédant le meilleur temps pour le niveau de difficulté passé en paramètre.
+	 * Ne fait rien si le niveau n'est pas valide dans l'intervalle [0, 2].
 	 * 
 	 * @param levelNum le niveau de difficulté de la partie jouée
 	 * @param player le nom du joueur
@@ -191,7 +193,7 @@ public class BestTimes
 		}
 		catch (ArrayIndexOutOfBoundsException e)
 		{
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 	
