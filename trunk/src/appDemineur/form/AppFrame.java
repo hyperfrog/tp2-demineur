@@ -78,7 +78,7 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 	{
 		int confirm = JOptionPane.showConfirmDialog(this,
 				AppFrame.QUIT_MESSAGE, AppFrame.QUIT_TITLE,
-				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		
 		if (confirm == JOptionPane.YES_OPTION)
 		{

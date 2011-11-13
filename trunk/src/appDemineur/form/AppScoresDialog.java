@@ -10,8 +10,10 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 
 import appDemineur.model.BestTimes;
 import appDemineur.model.Game;
@@ -50,6 +52,10 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
     // Objet de gestion des meilleurs temps
     private BestTimes bestTimes;
     
+	// Messages pour la boîte de dialogue de confirmation de l'effacement des scores
+	private static final String CONFIRM_MESSAGE = "Voulez-vous vraiment effacer les meilleurs temps?";
+	private static final String CONFIRM_TITLE = "Effacer";
+
 	/**
 	 * Construit la boîte de dialogue des meilleurs temps. 
 	 * 
@@ -59,25 +65,33 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
 	{
 		super(parent);
 		
-		// 
-		this.bestTimes = new BestTimes();
-		
 		this.setTitle("Démineurs les plus rapides");
 		this.setResizable(false);
 		this.setModal(true);
+		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		
 		// Initialise les composants
 		this.initComponents();
 		
+		// Initialise l'objet de gestion des meilleurs temps
+		this.bestTimes = new BestTimes();
+		
 		// Remplit les TextPanes avec l'information des meilleurs temps
 		this.showScores();
 		
-		this.pack();
-
-		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        this.pack();
 
 		// Cette boîte de dialogue implémente so propre écouteur Window 
 		this.addWindowListener(this);
+		
+		// Passe-passe pôur donner le focus au bouton OK
+		// Les autres méthodes ne fonctionnent pas bien...
+		SwingUtilities.invokeLater(new Runnable() { 
+			public void run() 
+			{ 
+				AppScoresDialog.this.okButton.requestFocus(); 
+			} 
+		}); 
 	}
 
 	// Initialise les composants
@@ -178,13 +192,28 @@ public class AppScoresDialog extends JDialog implements ActionListener, WindowLi
     // Efface les données des meilleurs temps
     private void eraseScores()
     {
-		for (int i = 0; i < Game.LEVELS.length; i++)
-    	{
-			this.bestTimes.setPlayer(i, "");
-			this.bestTimes.setTime(i, "");
-    	}
-		this.showScores();
-		this.bestTimes.write();
+		Object[] options = { "Oui", "Non" };
+		
+		int confirm = JOptionPane.showOptionDialog(
+				this, 
+				AppScoresDialog.CONFIRM_MESSAGE, 
+				AppScoresDialog.CONFIRM_TITLE,
+				JOptionPane.YES_NO_OPTION, 
+				JOptionPane.QUESTION_MESSAGE, 
+				null,
+				options, 
+				options[1]);
+		
+		if (confirm == 0) // Oui
+		{
+			for (int i = 0; i < Game.LEVELS.length; i++)
+	    	{
+				this.bestTimes.setPlayer(i, "");
+				this.bestTimes.setTime(i, "");
+	    	}
+			this.showScores();
+			this.bestTimes.write();
+		}
     }
     
     // Ferme la boîte de dialogue
