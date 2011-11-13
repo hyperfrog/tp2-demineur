@@ -63,7 +63,7 @@ public class AppFrame extends JFrame implements ComponentListener, WindowListene
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
-		this.gameBoard = new Board(this);
+		this.gameBoard = new Board(this, true);
 		this.getContentPane().add(this.gameBoard);
 		
 		// Spécifie les écouteurs pour la fenêtre
