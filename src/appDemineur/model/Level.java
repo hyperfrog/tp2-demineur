@@ -30,9 +30,15 @@ public class Level
 	 */
 	public Level(Dimension dim, int mineAmount, String name, String displayName)
 	{
+		// Matrice d'au moins 1 x 1
+		dim.width = Math.max(1, dim.width);
+		dim.height = Math.max(1, dim.height);
 		this.dim = dim;
-		this.mineAmount = mineAmount;
-		this.name = name;
-		this.displayName = displayName;
+		
+		// Nombre de mines : au moins 0 et au plus (largeur * hauteur) - 1  
+		this.mineAmount = Math.max(0, Math.min(this.dim.width * this.dim.height - 1, mineAmount));
+
+		this.name = (name == null || name.length() == 0) ? "unnamed_level" : name;
+		this.displayName = (displayName == null || displayName.length() == 0) ? "Niveau ?" : displayName;
 	}
 }
