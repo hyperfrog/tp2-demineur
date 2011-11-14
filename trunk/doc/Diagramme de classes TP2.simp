@@ -42,6 +42,7 @@
       <type id="Dimension" name="Dimension" description="" />
       <type id="float" name="float" description="" />
       <type id="BaseMatrix" name="BaseMatrix" description="" />
+      <type id="Document" name="Document" description="" />
     </custom-types>
   </types>
   <items>
@@ -432,7 +433,15 @@
             <parameter id="" name="parent" type="AppFrame" type-id="AppFrame" default-value="">
               <documentation />
             </parameter>
+            <parameter id="" name="useCellSizeFloor" type="boolean" type-id="boolean" default-value="">
+              <documentation />
+            </parameter>
           </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="replay" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
           <stereotypes />
           <documentation />
         </operation>
@@ -457,6 +466,48 @@
 }
 </documentation>
         </attribute>
+        <attribute id="" name="INIT_SIZE" type="Dimension" type-id="Dimension" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="INIT_TITLE" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="MIN_HEIGHT" type="int" type-id="int" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="MIN_WIDTH" type="int" type-id="int" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="QUIT_MESSAGE" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="QUIT_TITLE" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
       </attributes>
       <operations>
         <operation id="" name="AppFrame" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
@@ -472,12 +523,7 @@
 }
 </documentation>
         </operation>
-        <operation id="" name="getCheatMode" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
-          <parameters />
-          <stereotypes />
-          <documentation />
-        </operation>
-        <operation id="" name="getNextGameLevel" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+        <operation id="" name="getBoard" type="Board" type-id="Board" visibility="public" abstract="false" virtual="false" static="false">
           <parameters />
           <stereotypes />
           <documentation />
@@ -657,10 +703,16 @@
         <operation id="" name="changeCellState" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
           <parameters>
             <parameter id="" name="x " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
             <parameter id="" name=" y " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
           </parameters>
           <stereotypes />
@@ -672,10 +724,16 @@
         <operation id="" name="showCell" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
           <parameters>
             <parameter id="" name="x" type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
             <parameter id="" name="y" type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
           </parameters>
           <stereotypes />
@@ -687,10 +745,16 @@
         <operation id="" name="getElement" type="Cell" type-id="Cell" visibility="public" abstract="false" virtual="false" static="false">
           <parameters>
             <parameter id="" name="x " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
             <parameter id="" name=" y " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
           </parameters>
           <stereotypes />
@@ -959,6 +1023,57 @@
             <parameter id="" name="Graphics" type="g" type-id="g" default-value="">
               <documentation />
             </parameter>
+            <parameter id="" name="cellSize" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="showMines" type="boolean" type-id="boolean" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="gameIsWon" type="boolean" type-id="boolean" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getAdjacentMine" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getState" type="CellState" type-id="CellState" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="isMine" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="setAdjacentMine" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="n" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="setAsMine" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="isMine" type="boolean" type-id="boolean" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="setState" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="CellState newState" type="" type-id="" default-value="">
+              <documentation />
+            </parameter>
           </parameters>
           <stereotypes />
           <documentation />
@@ -1029,10 +1144,16 @@
         <operation id="" name="BaseMatrix" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
           <parameters>
             <parameter id="" name="width " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
             <parameter id="" name=" height " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
           </parameters>
           <stereotypes />
@@ -1044,10 +1165,16 @@
         <operation id="" name="redim" type="BaseMatrix" type-id="BaseMatrix" visibility="public" abstract="false" virtual="false" static="false">
           <parameters>
             <parameter id="" name="width  " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
             <parameter id="" name="  height  " type="int" type-id="int" default-value="">
-              <documentation />
+              <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang3084{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
             </parameter>
           </parameters>
           <stereotypes />
@@ -1118,6 +1245,14 @@
           <stereotypes />
           <documentation />
         </attribute>
+        <attribute id="" name="displayName" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="name" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
       </attributes>
       <operations>
         <operation id="" name="Level" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
@@ -1126,6 +1261,12 @@
               <documentation />
             </parameter>
             <parameter id="" name="mineAmount" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="name" type="String" type-id="Uml.String" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="displayName" type="String" type-id="Uml.String" default-value="">
               <documentation />
             </parameter>
           </parameters>
@@ -1187,6 +1328,397 @@
         <end-role id="" name="" multiplicity="" navigability="yes" association-type="association" visibility="private" />
       </relation>
     </item>
+    <item id="di351427114392314107" cid="C001" type="class" name="AppMenu" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="parent" type="AppFrame" type-id="AppFrame" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="AppMenu" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getCheatMode" type="boolean" type-id="boolean" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getNextGameLevel" type="int" type-id="int" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="showScoresDialog" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di296544969347846622" cid="C002" type="class" name="AppAboutDialog" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style background-type="vertical-linear" background-color="#FFD3D3D3" background-color2="#FFFFFFFF" border-color="#FF000000" border-width="1" shadow-type="smooth" shadow-offset="-2,-2" shadow-size="6,6" shadow-visible="true" shadow-color="#50000000" shadow-radius="6" gloss-effect="true" threed-gloss-effect="false" wrap-name-text="true" wrap-other-text="true" name-color="#FF000000" name-font="Arial;10;B" name-horizontal-alignment="center" name-vertical-alignment="center" part-header-color="#FF1E1E1E" part-header-font="Arial;9;I" part-header-horizontal-alignment="center" part-header-vertical-alignment="center" text-color="#FF000000" text-font="Arial;10;" text-horizontal-alignment="left" text-vertical-alignment="center" tagged-value-color="#FF1E1E1E" tagged-value-font="Arial;9;I" tagged-value-horizontal-alignment="center" tagged-value-vertical-alignment="center" stereotype-color="#FF1E1E1E" stereotype-font="Arial;9;I" stereotype-horizontal-alignment="center" stereotype-vertical-alignment="center" />
+      <attributes>
+        <attribute id="" name="APP_NAME" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="APP_VERSION" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="APP_AUTHOR_ONE" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="APP_AUTHOR_TWO" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="aboutLogo" type="BufferedImage" type-id="BufferedImage" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="AppAboutDialog" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="parent" type="AppFrame" type-id="AppFrame" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di311456199162292355" cid="C003" type="class" name="AppHelpDialog" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes />
+      <operations>
+        <operation id="" name="AppHelpDialog" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="parent" type="AppFrame" type-id="AppFrame" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di322732654746084369" cid="C004" type="class" name="AppScoresDialog" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="CONFIRM_MESSAGE" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+        <attribute id="" name="CONFIRM_TITLE" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation>{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif;}}
+\viewkind4\uc1\pard\f0\fs17\par
+}
+</documentation>
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="AppScoresDialog" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="parent" type="AppFrame" type-id="AppFrame" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di792006505782905118" cid="REL002" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di351427114392314107" to="di296544969347846622">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di472919998877466787" cid="REL003" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di792006505782905118" to="di792006505782905118">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di476223274696819736" cid="REL004" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di296544969347846622" to="di351427114392314107">
+        <start-role id="" name="parent" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di335219290354606870" cid="REL006" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di322732654746084369" to="di351427114392314107">
+        <start-role id="" name="parent" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di534547753695451058" cid="REL007" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style background-type="vertical-linear" background-color="#FFD3D3D3" background-color2="#FFFFFFFF" border-color="#FF000000" border-width="1" shadow-type="smooth" shadow-offset="-2,-2" shadow-size="6,6" shadow-visible="true" shadow-color="#50000000" shadow-radius="6" gloss-effect="true" threed-gloss-effect="false" wrap-name-text="true" wrap-other-text="true" name-color="#FF000000" name-font="Arial;10;B" name-horizontal-alignment="center" name-vertical-alignment="center" part-header-color="#FF1E1E1E" part-header-font="Arial;9;I" part-header-horizontal-alignment="center" part-header-vertical-alignment="center" text-color="#FF000000" text-font="Arial;10;" text-horizontal-alignment="left" text-vertical-alignment="center" tagged-value-color="#FF1E1E1E" tagged-value-font="Arial;9;I" tagged-value-horizontal-alignment="center" tagged-value-vertical-alignment="center" stereotype-color="#FF1E1E1E" stereotype-font="Arial;9;I" stereotype-horizontal-alignment="center" stereotype-vertical-alignment="center" />
+      <relation from="di311456199162292355" to="di351427114392314107">
+        <start-role id="" name="parent" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di447479240219430902" cid="REL008" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di237449427409736077" to="di351427114392314107">
+        <start-role id="" name="appMenu" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di427202500626387853" cid="REL009" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di296544969347846622" to="di351427114392314107">
+        <start-role id="" name="parent" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di899822317398079978" cid="REL010" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di311456199162292355" to="di351427114392314107">
+        <start-role id="" name="parent" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di787649073193882003" cid="REL011" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di322732654746084369" to="di351427114392314107">
+        <start-role id="" name="parent" multiplicity="1" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="parent" multiplicity="1" navigability="" association-type="composition" visibility="private" />
+      </relation>
+    </item>
+    <item id="di756590707644991060" cid="C005" type="class" name="BestTimes" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <attributes>
+        <attribute id="" name="FILE_PATH" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="LEVEL_TAG" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="LEVEL_XPATH" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="NAME_ATTR" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="PLAYER_TAG" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="PLAYER_XPATH" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="ROOT_TAG" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="TIME_TAG" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="TIME_XPATH" type="String" type-id="Uml.String" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+        <attribute id="" name="doc" type="Document" type-id="Document" visibility="private" abstract="false" virtual="false" default-value="">
+          <stereotypes />
+          <documentation />
+        </attribute>
+      </attributes>
+      <operations>
+        <operation id="" name="BestTimes" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getPlayer" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="levelNum" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="getTime" type="String" type-id="Uml.String" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="levelNum" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="setPlayer" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="levelNum" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="player" type="String" type-id="Uml.String" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="setTime" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters>
+            <parameter id="" name="levelNum" type="int" type-id="int" default-value="">
+              <documentation />
+            </parameter>
+            <parameter id="" name="time" type="String" type-id="Uml.String" default-value="">
+              <documentation />
+            </parameter>
+          </parameters>
+          <stereotypes />
+          <documentation />
+        </operation>
+        <operation id="" name="write" type="" type-id="" visibility="public" abstract="false" virtual="false" static="false">
+          <parameters />
+          <stereotypes />
+          <documentation />
+        </operation>
+      </operations>
+      <template-parameters />
+    </item>
+    <item id="di857541596815113415" cid="REL012" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di322732654746084369" to="di756590707644991060">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
+    <item id="di699593975167094380" cid="REL013" type="relationship" name="" style-class="" is-abstract="false">
+      <stereotypes />
+      <tagged-values />
+      <documentation />
+      <associated-diagrams />
+      <owned-items />
+      <style class="default" />
+      <relation from="di975531004501205257" to="di756590707644991060">
+        <start-role id="" name="" multiplicity="" navigability="" association-type="association" visibility="private" />
+        <end-role id="" name="" multiplicity="" navigability="yes" association-type="association" visibility="private" />
+      </relation>
+    </item>
   </items>
   <models>
     <model id="p596569284923989752" name="Model 1" type="model" namespace="">
@@ -1202,7 +1734,7 @@
           </authors>
           <description />
           <creation-date>09/23/2011 09:24:32</creation-date>
-          <change-date>11/08/2011 14:53:16</change-date>
+          <change-date>11/13/2011 19:53:17</change-date>
           <revision-count>0</revision-count>
           <version />
         </meta>
@@ -1212,55 +1744,55 @@
 </documentation>
         <layer name="Default" visible="true" enabled="true" locked="false">
           <item id="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="61" ay="-89" awidth="1475" aheight="819" x="61" y="-89" width="1475" height="819" />
+            <layout ax="64" ay="-89" awidth="2109" aheight="1200" x="64" y="-89" width="2109" height="1200" />
           </item>
           <item id="di925040645232202115" container="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="729" ay="81" awidth="789" aheight="602" x="729" y="81" width="789" height="602" />
+            <layout ax="961" ay="-25" awidth="1132" aheight="1055" x="961" y="-25" width="1132" height="1055" />
           </item>
           <item id="di346211912203185711" container="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="103" ay="-18" awidth="168" aheight="137" x="103" y="-18" width="168" height="137" />
+            <layout ax="439" ay="12" awidth="168" aheight="137" x="439" y="12" width="168" height="137" />
             <class />
           </item>
           <item id="di711628313583651250" container="di365485101325211857" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="82" ay="199" awidth="618" aheight="384" x="82" y="197" width="618" height="384" />
+            <layout ax="130" ay="216" awidth="740" aheight="810" x="130" y="216" width="740" height="810" />
           </item>
           <item id="di183625964853496055" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="442" ay="266" awidth="206" aheight="162" x="442" y="266" width="206" height="162" />
+            <layout ax="490" ay="283" awidth="346" aheight="166" x="459" y="283" width="346" height="166" />
             <class />
           </item>
           <item id="di237449427409736077" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="92" ay="271" awidth="191" aheight="155" x="92" y="272" width="191" height="155" />
+            <layout ax="166" ay="270" awidth="208" aheight="222" x="135" y="270" width="208" height="222" />
             <class />
           </item>
           <item id="di975531004501205257" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="824" ay="144" awidth="356" aheight="300" x="824" y="144" width="356" height="300" />
+            <layout ax="1056" ay="38" awidth="356" aheight="333" x="1065" y="112" width="356" height="333" />
             <class />
           </item>
           <item id="di168743522340463089" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="11,-10" x1="648" y1="335" x2="824" y2="315">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="11,-10" x1="836" y1="317" x2="1056" y2="255">
               <points>
-                <point x="648" y="335" />
-                <point x="824" y="315" />
+                <point x="836" y="317" />
+                <point x="1056" y="255" />
               </points>
             </layout>
             <relation from="di183625964853496055" to="di975531004501205257" />
             <role-positions start-role="25,15" end-role="47.702,23.34385" start-multiplicity="25,-15" end-multiplicity="25,-15" />
           </item>
           <item id="di180670361767670573" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="442" y1="347" x2="283" y2="348">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="490" y1="373" x2="374" y2="377">
               <points>
-                <point x="442" y="347" />
-                <point x="283" y="348" />
+                <point x="490" y="373" />
+                <point x="374" y="377" />
               </points>
             </layout>
             <relation from="di183625964853496055" to="di237449427409736077" />
             <role-positions start-role="48.09405,21.67443" end-role="29.99948,14.92859" start-multiplicity="25,-15" end-multiplicity="25,-15" />
           </item>
           <item id="di969948136447148851" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="35,-13" x1="187" y1="119" x2="188" y2="271">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="35,-13" x1="465" y1="149" x2="363" y2="270">
               <points>
-                <point x="187" y="119" />
-                <point x="188" y="271" />
+                <point x="465" y="149" />
+                <point x="363" y="270" />
               </points>
             </layout>
             <relation from="di346211912203185711" to="di237449427409736077" />
@@ -1278,11 +1810,11 @@ par Alexandre Tremblay et Christian Lesage</text>
             <layout ax="811" ay="-383" awidth="368" aheight="280" x="811" y="-383" width="368" height="280" />
           </item>
           <item id="di203138079580042572" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="1244" ay="168" awidth="253" aheight="253" x="1244" y="168" width="253" height="253" />
+            <layout ax="1476" ay="62" awidth="484" aheight="359" x="1485" y="136" width="484" height="359" />
             <class />
           </item>
           <item id="di323314330116563542" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="1316" ay="527" awidth="105" aheight="130" x="1316" y="527" width="105" height="130" />
+            <layout ax="1699" ay="499" awidth="105" aheight="130" x="1699" y="499" width="105" height="130" />
             <class />
           </item>
           <item id="di780838262996876782" container="di897768975496410271" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
@@ -1290,46 +1822,126 @@ par Alexandre Tremblay et Christian Lesage</text>
             <class />
           </item>
           <item id="di279970080668055398" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
-            <layout ax="870" ay="521" awidth="270" aheight="97" x="869" y="524" width="270" height="97" />
+            <layout ax="1434" ay="769" awidth="468" aheight="130" x="1434" y="769" width="468" height="130" />
             <class />
           </item>
           <item id="di391063864353256576" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="30,-4" x1="1004" y1="521" x2="1004" y2="444">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="30,-4" x1="1623" y1="769" x2="1349" y2="371">
               <points>
-                <point x="1004" y="521" />
-                <point x="1004" y="444" />
+                <point x="1623" y="769" />
+                <point x="1349" y="371" />
               </points>
             </layout>
             <relation from="di279970080668055398" to="di975531004501205257" />
             <role-positions start-role="16.21951,44.04297" end-role="25,15" start-multiplicity="22.9825,-16.9824" end-multiplicity="25,-15" />
           </item>
           <item id="di781721277953685086" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1000" y1="144" x2="997" y2="-103">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1145" y1="38" x2="1070" y2="-103">
               <points>
-                <point x="1000" y="144" />
-                <point x="997" y="-103" />
+                <point x="1145" y="38" />
+                <point x="1070" y="-103" />
               </points>
             </layout>
             <relation from="di975531004501205257" to="di897768975496410271" />
           </item>
           <item id="di832652365400915954" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1368" y1="527" x2="1369" y2="421">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1745" y1="499" x2="1737" y2="421">
               <points>
-                <point x="1368" y="527" />
-                <point x="1369" y="421" />
+                <point x="1745" y="499" />
+                <point x="1737" y="421" />
               </points>
             </layout>
             <relation from="di323314330116563542" to="di203138079580042572" />
             <role-positions start-role="24.08732,26.00753" end-role="25,15" start-multiplicity="25,-15" end-multiplicity="25,-15" />
           </item>
           <item id="di224980747294287562" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
-            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1180" y1="294" x2="1244" y2="294">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1412" y1="218" x2="1476" y2="223">
               <points>
-                <point x="1180" y="294" />
-                <point x="1244" y="294" />
+                <point x="1412" y="218" />
+                <point x="1476" y="223" />
               </points>
             </layout>
             <relation from="di975531004501205257" to="di203138079580042572" />
+            <role-positions start-role="25,15" end-role="25,15" start-multiplicity="25,-15" end-multiplicity="25,-15" />
+          </item>
+          <item id="di351427114392314107" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="175" ay="598" awidth="184" aheight="170" x="145" y="599" width="184" height="0" />
+            <class />
+          </item>
+          <item id="di296544969347846622" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="540" ay="541" awidth="259" aheight="170" x="509" y="541" width="259" height="0" />
+            <class />
+          </item>
+          <item id="di311456199162292355" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="185" ay="851" awidth="236" aheight="140" x="155" y="852" width="236" height="140" />
+            <class />
+          </item>
+          <item id="di322732654746084369" container="di711628313583651250" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="563" ay="799" awidth="261" aheight="134" x="533" y="800" width="261" height="134" />
+            <class />
+          </item>
+          <item id="di447479240219430902" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="268" y1="598" x2="269" y2="492">
+              <points>
+                <point x="268" y="598" />
+                <point x="269" y="492" />
+              </points>
+            </layout>
+            <relation from="di351427114392314107" to="di237449427409736077" />
+            <role-positions start-role="22.23601,40.02719" end-role="26.24527,40.9894" start-multiplicity="19.90587,-24.95239" end-multiplicity="24.87736,-27.99941" />
+          </item>
+          <item id="di427202500626387853" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="540" y1="644" x2="359" y2="670">
+              <points>
+                <point x="540" y="644" />
+                <point x="359" y="670" />
+              </points>
+            </layout>
+            <relation from="di296544969347846622" to="di351427114392314107" />
+            <role-positions start-role="25.00001,15" end-role="25.00001,15" start-multiplicity="25.00001,-15" end-multiplicity="25,-15" />
+          </item>
+          <item id="di899822317398079978" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="292" y1="851" x2="280" y2="768">
+              <points>
+                <point x="292" y="851" />
+                <point x="280" y="768" />
+              </points>
+            </layout>
+            <relation from="di311456199162292355" to="di351427114392314107" />
+            <role-positions start-role="14.79285,29.69066" end-role="13.80318,29.54752" start-multiplicity="19.22861,-30.99039" end-multiplicity="21.07693,-36.78554" />
+          </item>
+          <item id="di787649073193882003" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="563" y1="810" x2="359" y2="722">
+              <points>
+                <point x="563" y="810" />
+                <point x="359" y="722" />
+              </points>
+            </layout>
+            <relation from="di322732654746084369" to="di351427114392314107" />
+            <role-positions start-role="25.00001,15.00003" end-role="25.00001,15.00003" start-multiplicity="25.00001,-15.00003" end-multiplicity="25,-15" />
+          </item>
+          <item id="di756590707644991060" container="di925040645232202115" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="entity">
+            <layout ax="1066" ay="621" awidth="274" aheight="315" x="1066" y="621" width="274" height="315" />
+            <class />
+          </item>
+          <item id="di857541596815113415" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="824" y1="844" x2="1066" y2="802">
+              <points>
+                <point x="824" y="844" />
+                <point x="1066" y="802" />
+              </points>
+            </layout>
+            <relation from="di322732654746084369" to="di756590707644991060" />
+            <role-positions start-role="25,15" end-role="25,15" start-multiplicity="25,-15" end-multiplicity="24.99992,-14.99999" />
+          </item>
+          <item id="di699593975167094380" show-cid="false" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" type="relation">
+            <layout line-style="oblique" lock-start-point="false" lock-end-point="false" name-position="10,-10" x1="1225" y1="371" x2="1211" y2="621">
+              <points>
+                <point x="1225" y="371" />
+                <point x="1211" y="621" />
+              </points>
+            </layout>
+            <relation from="di975531004501205257" to="di756590707644991060" />
             <role-positions start-role="25,15" end-role="25,15" start-multiplicity="25,-15" end-multiplicity="25,-15" />
           </item>
         </layer>
