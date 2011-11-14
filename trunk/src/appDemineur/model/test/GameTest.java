@@ -576,7 +576,7 @@ public class GameTest
 	/**
 	 * Méthode de test pour {@link appDemineur.model.Game#getElement(int, int)}.
 	 * 
-	 * @see {@link util.BaseMatrix#getElement(int, int)}
+	 * @see util.BaseMatrix#getElement(int, int)
 	 */
 	@Test
 	public void testGetElementIntInt() 
