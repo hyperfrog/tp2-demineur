@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 public class AppAboutDialog extends JDialog implements ActionListener, WindowListener
 {
 	// Nom de l'application
-	private static final String APP_NAME = "Travail Pratique 2 : Démineur";
+	private static final String APP_NAME = "Travail pratique 2 : Démineur";
 	
 	// Version de l'application
 	private static final String APP_VERSION = "v 1.0";
