@@ -1,20 +1,17 @@
-/**
- * 
- */
 package appDemineur.model.test;
-
-import static org.junit.Assert.*;
 
 import java.awt.Dimension;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
+import org.junit.Assert;
 
 import appDemineur.model.Level;
 
 /**
- * @author Christian
+ * Classe de test JUnit 4 pour la classe Level.java
+ * 
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
  *
  */
 public class LevelTest
