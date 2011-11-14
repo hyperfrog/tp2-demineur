@@ -44,7 +44,7 @@ public class Game extends BaseMatrix
 	// Nombre de cases marquées d'un drapeau
 	private int nbCellsFlagged;
 	
-	// Nombre de cases non minées dévoilées
+	// Nombre de cases non minées qui sont dévoilées
 	private int nbCellsShown;
 	
 	/**

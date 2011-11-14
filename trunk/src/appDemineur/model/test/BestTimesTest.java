@@ -1,6 +1,3 @@
-/**
- * 
- */
 package appDemineur.model.test;
 
 import junit.framework.Assert;
@@ -11,7 +8,10 @@ import appDemineur.model.BestTimes;
 import appDemineur.model.Game;
 
 /**
- * @author Christian
+ * Classe de test JUnit 4 pour la classe BestTimes
+ * 
+ * @author Christian Lesage
+ * @author Alexandre Tremblay
  *
  */
 public class BestTimesTest

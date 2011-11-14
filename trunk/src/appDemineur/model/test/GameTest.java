@@ -592,15 +592,6 @@ public class GameTest
 		//				 mais n'est pas une instance de Cell.
 		g.setElement(1, 1, "PasUneCellule");
 		Assert.assertNull(g.getElement(1, 1));
-		Assert.assertFalse(g.getElement(1, 1) instanceof Cell);
-		
-		// Ce cas est impossible à simuler parce que la méthode setElement empèche l'insertion d'élémen null
-		
-		//Cas invalide 1 : La position demandée en (x, y) est valide et l'objet inséré à cette position est null 
-		//				   et n'est pas une instance de Cell.
-		// g.setElement(1, 2, null);
-		// Assert.assertNull(g.getElement(1, 2));
-		// Assert.assertFalse(g.getElement(1, 2) instanceof Cell);
 	}
 	
 	/**
@@ -617,7 +608,7 @@ public class GameTest
 		g = new Game(0);
 		g.showCell(0, 0);
 		Assert.assertTrue(g.getNbCellsShown() > 0);
-		Assert.assertEquals(shownCell(g), g.getNbCellsShown());
+		Assert.assertEquals(this.nbCellsShown(g), g.getNbCellsShown());
 		
 		// Cas 3 : La partie est gagnée
 		g = new Game(0);
@@ -629,11 +620,11 @@ public class GameTest
 		g = new Game(0);
 		loseGame(g);
 		Assert.assertTrue(g.getNbCellsShown() > 0);
-		Assert.assertEquals(shownCell(g), g.getNbCellsShown());
+		Assert.assertEquals(this.nbCellsShown(g), g.getNbCellsShown());
 	}
 	
-	// Retourne le nombre de cellules dévoilées
-	private int shownCell(Game g)
+	// Retourne le nombre de cellules non minées qui sont dévoilées
+	private int nbCellsShown(Game g)
 	{
 		int cellCount = 0;
 		

@@ -103,7 +103,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Focu
 	 * et contient 40 mines.
 	 * 
 	 * @param parent Objet parent du plateau
-	 * @param useCellSizeFloor TODO
+	 * @param useCellSizeFloor 
+	 * Si vrai, la taille des cellules est fixée au plus grand entier inférieur à la taille possible.
+	 * Si faux, la taille des cellules comporte une partie fractionnaire.
 	 */
 	public Board(AppFrame parent, boolean useCellSizeFloor)
 	{
