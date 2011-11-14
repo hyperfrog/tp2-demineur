@@ -120,7 +120,7 @@ public class AppHelpDialog extends JDialog implements ActionListener, WindowList
         
         this.goalPanel.setLayout(new BorderLayout());
         
-        this.goalLabel.setText("But : ");
+        this.goalLabel.setText("But");
         this.goalLabel.setFont(new Font(null, Font.BOLD, 14));
         this.goalPanel.add(this.goalLabel, BorderLayout.PAGE_START);
         
@@ -128,13 +128,14 @@ public class AppHelpDialog extends JDialog implements ActionListener, WindowList
         this.goalTextPane.setMinimumSize(null);
         this.goalTextPane.setEditable(false);
         this.goalTextPane.setOpaque(false);
+        this.goalTextPane.setFont(new Font("Monospaced", Font.PLAIN, 11));
         this.goalPanel.add(this.goalTextPane, BorderLayout.CENTER);
         
         this.helpPanel.add(this.goalPanel, BorderLayout.NORTH);
         
         this.rulesPanel.setLayout(new BorderLayout());
         
-        this.rulesLabel.setText("Règles : ");
+        this.rulesLabel.setText("Règles");
         this.rulesLabel.setFont(new Font(null, Font.BOLD, 14));
         this.rulesPanel.add(this.rulesLabel, BorderLayout.PAGE_START);
         
@@ -142,13 +143,14 @@ public class AppHelpDialog extends JDialog implements ActionListener, WindowList
         this.rulesTextPane.setMinimumSize(null);
         this.rulesTextPane.setEditable(false);
         this.rulesTextPane.setOpaque(false);
+        this.rulesTextPane.setFont(new Font("Monospaced", Font.PLAIN, 11));
         this.rulesPanel.add(this.rulesTextPane, BorderLayout.CENTER);
         
         this.helpPanel.add(this.rulesPanel, BorderLayout.CENTER);
         
         this.howtoPanel.setLayout(new BorderLayout());
         
-        this.howtoLabel.setText("Comment jouer : ");
+        this.howtoLabel.setText("Comment jouer");
         this.howtoLabel.setFont(new Font(null, Font.BOLD, 14));
         this.howtoPanel.add(this.howtoLabel, BorderLayout.PAGE_START);
         
@@ -156,6 +158,7 @@ public class AppHelpDialog extends JDialog implements ActionListener, WindowList
         this.howtoTextPane.setMinimumSize(null);
         this.howtoTextPane.setEditable(false);
         this.howtoTextPane.setOpaque(false);
+        this.howtoTextPane.setFont(new Font("Monospaced", Font.PLAIN, 11));
         this.howtoPanel.add(this.howtoTextPane, BorderLayout.CENTER);
         
         this.helpPanel.add(this.howtoPanel, BorderLayout.SOUTH);
@@ -171,25 +174,25 @@ public class AppHelpDialog extends JDialog implements ActionListener, WindowList
 	// Remplit les TextPanes avec l'information d'aide
     private void showHelp()
     {
-    	String goal = "- Le but du jeu est de dévoiler toutes les cases de la grille\n" + 
-    				  "tout en évitant de dévoiler une mine.\n" +
-    				  "- La partie de termine lorsque vous avez dévoilé toutes les cases\n" +
-    				  "sans avoir déclenché une seule mine. \n" +
-    				  "- Le plus rapide vous serez et meilleur votre pointage sera.";
+    	String goal = "• Le but du jeu est de dévoiler toutes les cases de la grille\n" + 
+    				  "  tout en évitant de dévoiler une mine.\n" +
+    				  "• La partie se termine lorsque vous avez dévoilé toutes les cases\n" +
+    				  "  sans avoir fait sauter une seule mine. \n" +
+    				  "• Plus vous serez rapide et meilleur votre pointage sera.";
     	
-    	String rules = "Les règles du démineur sont plutôt simple :\n" +
-    				   "    - Dévoilez une mine et la partie de termine;\n" +
-    				   "    - Dévoilez une case vide et vous pouvez continuer à jouer;\n" +
-    				   "    - Dévoilez une case avec un nombre et cela vous indique \n" +
-    				   "      combien des 8 cases autour de la case dévoilée sont des \n" +
-    				   "      mines. Vous devez utiliser cette information pour connaître\n" +
-    				   "      les endroit sécuritaire à dévoiler par la suite.";
+    	String rules = "Les règles du démineur sont plutôt simples :\n" +
+    				   "    • Dévoilez une mine et la partie se termine;\n" +
+    				   "    • Dévoilez une case vide et vous pouvez continuer à jouer;\n" +
+    				   "    • Dévoilez une case avec un nombre et cela vous indique \n" +
+    				   "      combien il y a de mines autour de la case dévoilée.\n" +
+    				   "      Vous devez utiliser cette information pour déterminer\n" +
+    				   "      les cases que vous pouvez dévoiler en toute sécurité.";
     	
-    	String howto = "- Clic gauche : Dévoile une case\n" +
-    				   "- Clic droit : Alterne l'état de la case entre cachée, avec un drapeau\n" +
-    				   "               et avec un point d'intérogation, mais seulement si la\n" +
-    				   "               case n'est pas encore dévoilée.\n\n" +
-    				   "Pssst : le clic central permet de gagner la partie instantanément ;)";
+    	String howto = "• Clic gauche : Dévoile une case.\n" +
+    				   "• Clic droit :  Si la case n'est pas dévoilée, son état alterne\n" +
+    				   "                entre : aucune marque, le drapeau et le point\n" +
+    				   "                d'interrogation.\n\n" +
+    				   "  Pssst : Il est interdit d'utiliser le bouton central ! ;)";
     	
 		// Remplit les TextPanes
 		this.goalTextPane.setText(goal);
